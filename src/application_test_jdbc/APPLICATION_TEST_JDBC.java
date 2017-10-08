@@ -16,7 +16,6 @@ public class APPLICATION_TEST_JDBC {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        <3<3
     }
     
 }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package application_test_jdbc;
+import java.sql.*;
 
 /**
  *
@@ -17,8 +18,31 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     public InterfaceMySQL(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        System.out.println("Essai de connexion JDBC");
+        try
+        {
+          Class leDriver = Class.forName("org.gjt.mm.mysql.Driver");
+          //Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
+        }
+        catch (ClassNotFoundException e)
+        { 
+            System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
+        }
+        
+        try
+        {
+            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/MySQL57","thib","1234");
+            System.out.println("Connexion à la BDD inpres-metal réalisée");
+            Statement instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+            ResultSet.CONCUR_UPDATABLE);
+            System.out.println("Création d'une instance d'instruction pour cette connexion");
+        }
+        catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
+        
+        
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
