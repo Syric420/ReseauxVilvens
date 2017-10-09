@@ -151,11 +151,11 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     DefaultTableModel jTableModel;
     jTableModel = (DefaultTableModel) jTable1.getModel();
     try{
-        ResultSet rs = instruc.executeQuery("select * from Avion");
+       // ResultSet rs = instruc.executeQuery("select * from Avion");
+       ResultSet rs = instruc.executeQuery(jTextField1.getText());
     switch(Table)
     {    
         case "Avion":
-            int cpt = 0;
             int idAvion,NbPlaces,PoidsMax;
             String TypeAvion;
             boolean Check_OK;
@@ -166,26 +166,78 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 TypeAvion=rs.getString("TypeAvion");
                 NbPlaces=rs.getInt("NbPlaces");
                 PoidsMax=rs.getInt("PoidsMax");
-                System.out.println(idAvion + " " +Check_OK + " " + TypeAvion + " " + NbPlaces + " " + PoidsMax);
-                Vector Temp = null;
-                Temp.add(idAvion);
-                Temp.add(Check_OK);
-                Temp.add(TypeAvion);
-                Temp.add(NbPlaces);
-                Temp.add(PoidsMax);
+                Vector Temp = new Vector();
+                Temp.addElement(idAvion);
+                Temp.addElement(Check_OK);
+                Temp.addElement(TypeAvion);
+                Temp.addElement(NbPlaces);
+                Temp.addElement(PoidsMax);
                 jTableModel.addRow(Temp);
-                
             }
                 break;
             case "Agents":
+            int idAgents;
+            String Role;
+            while (rs.next())
+            {
+                idAgents=rs.getInt("idAgents");
+                Role=rs.getString("Role");
+                Vector Temp = new Vector();
+                Temp.addElement(idAgents);
+                Temp.addElement(Role);
+                jTableModel.addRow(Temp);
+            }
                 break;
             case "Bagages":
+            int idBagages,Poids;
+            boolean Valise;
+            while (rs.next())
+            {
+                idBagages=rs.getInt("idBagages");
+                Valise=rs.getBoolean("Valise");
+                Poids=rs.getInt("Poids");
+                Vector Temp = new Vector();
+                Temp.addElement(idBagages);
+                Temp.addElement(Valise);
+                Temp.addElement(Poids);
+                jTableModel.addRow(Temp);
+            }
                 break;
             case "Billets":
-
+            int idBillets;
+            String Nom,Prenom,Num_id;
+            while (rs.next())
+            {
+                idBillets=rs.getInt("idBillets");
+                Nom=rs.getString("Nom");
+                Prenom=rs.getString("Prenom");
+                Num_id=rs.getString("Num_id");
+                Vector Temp = new Vector();
+                Temp.addElement(idBillets);
+                Temp.addElement(Nom);
+                Temp.addElement(Prenom);
+                Temp.addElement(Num_id);
+                jTableModel.addRow(Temp);
+            }
                 break;
             case "Vols":
-
+            int idVols,AvionUtilise;
+            String Destination,HeureArrivee,HeureDepart;
+            while (rs.next())
+            {
+                idVols=rs.getInt("idVols");
+                Destination=rs.getString("Destination");
+                HeureArrivee=rs.getString("HeureArrivee");
+                HeureDepart=rs.getString("HeureDepart");
+                AvionUtilise=rs.getInt("AvionUtilise");
+                Vector Temp = new Vector();
+                Temp.addElement(idVols);
+                Temp.addElement(Destination);
+                Temp.addElement(HeureArrivee);
+                Temp.addElement(HeureDepart);
+                Temp.addElement(AvionUtilise);
+                jTableModel.addRow(Temp);
+            }
                 break;
     }
     }
