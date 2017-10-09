@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 package application_test_jdbc;
-
 /**
  *
  * @author Vince
  */
 public class InterfaceApplication extends javax.swing.JFrame {
-
+    
+    InterfaceMySQL InterfaceMySql;
+    InterfaceOracle InterfaceOracle;
     /**
      * Creates new form InterfaceApplication
      */
@@ -29,27 +30,32 @@ public class InterfaceApplication extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        RadioButtion_Oracle = new javax.swing.JRadioButton();
+        RadioButtion_Mysql = new javax.swing.JRadioButton();
         BConnexion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Connection : ");
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("Oracle");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(RadioButtion_Oracle);
+        RadioButtion_Oracle.setSelected(true);
+        RadioButtion_Oracle.setText("Oracle");
+        RadioButtion_Oracle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                RadioButtion_OracleActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("MySQL");
+        buttonGroup1.add(RadioButtion_Mysql);
+        RadioButtion_Mysql.setText("MySQL");
 
         BConnexion.setText("Se connecter");
+        BConnexion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BConnexionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,9 +67,9 @@ public class InterfaceApplication extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton1)
+                        .addComponent(RadioButtion_Oracle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton2))
+                        .addComponent(RadioButtion_Mysql))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
                         .addComponent(BConnexion)))
@@ -75,8 +81,8 @@ public class InterfaceApplication extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
+                    .addComponent(RadioButtion_Oracle)
+                    .addComponent(RadioButtion_Mysql))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(BConnexion)
                 .addContainerGap())
@@ -85,9 +91,24 @@ public class InterfaceApplication extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void RadioButtion_OracleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioButtion_OracleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_RadioButtion_OracleActionPerformed
+
+    private void BConnexionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BConnexionActionPerformed
+        // TODO add your handling code here:
+        if(RadioButtion_Oracle.isSelected())
+        {
+            InterfaceOracle = new InterfaceOracle(this, true);
+            InterfaceOracle.setVisible(true);
+        }
+        else
+        {
+            InterfaceMySql = new InterfaceMySQL(this, true);
+            InterfaceMySql.setVisible(true);
+        }
+           
+    }//GEN-LAST:event_BConnexionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,9 +147,9 @@ public class InterfaceApplication extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BConnexion;
+    private javax.swing.JRadioButton RadioButtion_Mysql;
+    private javax.swing.JRadioButton RadioButtion_Oracle;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     // End of variables declaration//GEN-END:variables
 }
