@@ -14,7 +14,7 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class InterfaceMySQL extends javax.swing.JDialog {
     
-    DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
+    //DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
     ResultSet rs;
     /**
      * Creates new form InterfaceMySQL
@@ -22,8 +22,8 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     public InterfaceMySQL(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        CbModel.addElement("Select");CbModel.addElement("Update");
-        CB_TypeRequete.setModel(CbModel);
+        /*CbModel.addElement("Avion");CbModel.addElement("Agents");CbModel.addElement("Billets");CbModel.addElement("Bagages");CbModel.addElement("Vols");
+        CB_TypeRequete.setModel(CbModel);*/
         
         System.out.println("Essai de connexion JDBC");
         try
@@ -38,7 +38,8 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         
         try
         {  
-            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234");
+            //Connection con = DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234");
+            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234");
             //Connection con = DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123");
             System.out.println("Connexion à la BDD inpres-metal réalisée");
             Statement instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -46,21 +47,32 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             System.out.println("Création d'une instance d'instruction pour cette connexion");
             
             ResultSet rs = instruc.executeQuery("select * from Avion");
-            System.out.println("Instruction SELECT sur stocks envoyée à la BDD marie");
+            System.out.println("Instruction SELECT sur stocks envoyée à la BDD sys");
+ 
             int cpt = 0;
-            /*while (rs.next())
+            int idAvion,NbPlaces,PoidsMax;
+            String TypeAvion;
+            boolean Check_OK;
+            while (rs.next())
             {
-                if (cpt==0) System.out.println("Parcours du curseur"); cpt++;*/
+                idAvion=rs.getInt("idAvion");
+                Check_OK=rs.getBoolean("Check_OK");
+                TypeAvion=rs.getString("TypeAvion");
+                NbPlaces=rs.getInt("NbPlaces");
+                PoidsMax=rs.getInt("PoidsMax");
+                System.out.println(idAvion + " " +Check_OK + " " + TypeAvion + " " + NbPlaces + " " + PoidsMax);
+            }
+                /*if (cpt==0) System.out.println("Parcours du curseur"); cpt++;
                 boolean Check_ok = rs.getBoolean("Check_OK");
                 
                 System.out.println("Check ok = " +Check_ok);
-                /*System.out.println(" Récupération de codeSto");
+                System.out.println(" Récupération de codeSto");
                 int x = rs.getInt("x"); int y = rs.getInt("y");
                 System.out.println(" Récupération de x et y");
                 double q = rs.getDouble("quantite");
                 System.out.println(" Récupération de quantite");
                 System.out.println(cpt + ". " + cs + " : " + x + "/" + y + " -> " +q);*/
-            //}
+            //
         }
         catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
         
@@ -99,12 +111,24 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel1.setText("Requête:");
+        jLabel1.setText("Table :");
 
         jButton1.setText("Envoyer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        CB_TypeRequete.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Avion", "Billets", "Vols", "Agents", "Bagages" }));
+        CB_TypeRequete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CB_TypeRequeteActionPerformed(evt);
+            }
+        });
+        CB_TypeRequete.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                CB_TypeRequetePropertyChange(evt);
             }
         });
 
@@ -120,7 +144,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -150,6 +174,60 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void CB_TypeRequetePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_CB_TypeRequetePropertyChange
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
+                    }
+                ));
+    }//GEN-LAST:event_CB_TypeRequetePropertyChange
+
+    private void CB_TypeRequeteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CB_TypeRequeteActionPerformed
+               // TODO add your handling code here:
+        DefaultComboBoxModel CbModel = (DefaultComboBoxModel) CB_TypeRequete.getModel();
+        //CB_TypeRequete.getModel();
+        String Table;
+        Table = (String) CbModel.getSelectedItem();
+        switch(Table)
+        {
+            case "Avion":
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
+                    }
+                ));
+                break;
+            case "Agents":
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idAgents", "Role"
+                    }
+                ));
+                break;
+            case "Bagages":
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idBagages", "Valise", "Poids"
+                    }
+                ));
+                break;
+                
+        }
+    }//GEN-LAST:event_CB_TypeRequeteActionPerformed
 
     /**
      * @param args the command line arguments
