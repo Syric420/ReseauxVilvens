@@ -5,11 +5,14 @@
  */
 package application_test_jdbc;
 
+import database.utilities.BeanConnect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -19,6 +22,8 @@ import javax.swing.DefaultComboBoxModel;
 public class InterfaceOracle extends javax.swing.JDialog {
 
     DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
+    private ResultSet rs;
+    BeanConnect BeanConnect;
     /**
      * Creates new form InterfaceOracle
      */
@@ -28,28 +33,24 @@ public class InterfaceOracle extends javax.swing.JDialog {
         
         CbModel.addElement("Select");CbModel.addElement("Update");
         CB_TypeRequete.setModel(CbModel);
+        BeanConnect = new BeanConnect();
+        BeanConnect.setTypeBD("Oracle");
+        int cpt = 0;
+        String IDIntervenant, LibelleIntervenant;
         
-        System.out.println("Essai de connexion JDBC");
-        try
-        {
-          //Class leDriver = Class.forName("org.gjt.mm.mysql.Driver");
-          Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
-        }
-        catch (ClassNotFoundException e)
-        { 
-            System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
-        }
+        BeanConnect.connect();
         
-        try
-        {  
-            //Connection con = DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234");
-            Connection con = DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123");
-            System.out.println("Connexion à la BDD inpres-metal réalisée");
-            Statement instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-            ResultSet.CONCUR_UPDATABLE);
-            System.out.println("Création d'une instance d'instruction pour cette connexion");
+        rs = BeanConnect.getRs();
+        try {
+            while (rs.next())
+            {
+                IDIntervenant = rs.getString("IDINTERVENANT");
+                LibelleIntervenant = rs.getString("LIBELLEINTERVENANT");
+                System.out.println(""+IDIntervenant+" "+LibelleIntervenant);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceOracle.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
     }
 
     /**
