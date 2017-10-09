@@ -31,8 +31,9 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         }
         
         try
-        {
-            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/MySQL57","thib","1234");
+        {  
+            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234");
+            //Connection con = DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123");
             System.out.println("Connexion à la BDD inpres-metal réalisée");
             Statement instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
             ResultSet.CONCUR_UPDATABLE);
