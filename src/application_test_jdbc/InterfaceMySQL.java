@@ -150,6 +150,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     Table = (String) CbModel.getSelectedItem();
     DefaultTableModel jTableModel;
     jTableModel = (DefaultTableModel) jTable1.getModel();
+    jTableModel.setRowCount(0);
     try{
        // ResultSet rs = instruc.executeQuery("select * from Avion");
        ResultSet rs = instruc.executeQuery(jTextField1.getText());
