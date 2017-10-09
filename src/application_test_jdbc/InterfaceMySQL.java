@@ -15,6 +15,7 @@ import javax.swing.DefaultComboBoxModel;
 public class InterfaceMySQL extends javax.swing.JDialog {
     
     DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
+    ResultSet rs;
     /**
      * Creates new form InterfaceMySQL
      */
@@ -43,11 +44,29 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             Statement instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
             ResultSet.CONCUR_UPDATABLE);
             System.out.println("Création d'une instance d'instruction pour cette connexion");
+            
+            ResultSet rs = instruc.executeQuery("select * from Avion");
+            System.out.println("Instruction SELECT sur stocks envoyée à la BDD marie");
+            int cpt = 0;
+            /*while (rs.next())
+            {
+                if (cpt==0) System.out.println("Parcours du curseur"); cpt++;*/
+                boolean Check_ok = rs.getBoolean("Check_OK");
+                
+                System.out.println("Check ok = " +Check_ok);
+                /*System.out.println(" Récupération de codeSto");
+                int x = rs.getInt("x"); int y = rs.getInt("y");
+                System.out.println(" Récupération de x et y");
+                double q = rs.getDouble("quantite");
+                System.out.println(" Récupération de quantite");
+                System.out.println(cpt + ". " + cs + " : " + x + "/" + y + " -> " +q);*/
+            //}
         }
         catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
         
         
-    }
+}
+        
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -101,7 +120,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
