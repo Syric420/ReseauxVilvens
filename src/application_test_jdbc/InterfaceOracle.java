@@ -52,7 +52,6 @@ public class InterfaceOracle extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        CB_TypeRequete = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
@@ -92,8 +91,6 @@ public class InterfaceOracle extends javax.swing.JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -105,10 +102,8 @@ public class InterfaceOracle extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -139,7 +134,6 @@ public class InterfaceOracle extends javax.swing.JDialog {
                 i = Table.indexOf(" ",i)+1;
                 if(buf.equals("count(*)"))
                     count = true;
-                    ;
                 if(buf.equals("from"))
                     break;
             }while(Table.indexOf(" ",i) != -1);
@@ -166,7 +160,7 @@ public class InterfaceOracle extends javax.swing.JDialog {
             
                 switch(table)
                 {   
-                    case "Activites":
+                    case "activites":
                         IniTable("activites",count);
                         jTableModel = (DefaultTableModel) jTable1.getModel();
 
@@ -195,8 +189,8 @@ public class InterfaceOracle extends javax.swing.JDialog {
                         }
 
                     break;
-                    case "Intervenants":
-                        IniTable("avion",count);
+                    case "intervenants":
+                        IniTable("intervenants",count);
                         jTableModel = (DefaultTableModel) jTable1.getModel();
 
                         if(count)
@@ -254,7 +248,7 @@ public class InterfaceOracle extends javax.swing.JDialog {
                     }
                 ));
                 break;
-            case "Intervenants":
+            case "intervenants":
                 if(count)
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
@@ -319,7 +313,6 @@ public class InterfaceOracle extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> CB_TypeRequete;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

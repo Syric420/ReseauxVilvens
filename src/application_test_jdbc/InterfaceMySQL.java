@@ -106,7 +106,6 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             i = Table.indexOf(" ",i)+1;
             if(buf.equals("count(*)"))
                 count = true;
-                ;
             if(buf.equals("from"))
                 break;
         }while(Table.indexOf(" ",i) != -1);
