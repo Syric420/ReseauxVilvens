@@ -17,7 +17,7 @@ public class BeanConnect {
     
     public BeanConnect()
     {
-        typeBD = null;
+        typeBD = "";
     }
     /**
      * @return the typeBD
@@ -67,14 +67,14 @@ public class BeanConnect {
     public synchronized int  connect()
     {
         Class leDriver;
-        if(getTypeBD().equals(null))
+        if(getTypeBD().equals(""))
             return -1;
         else
         {
             System.out.println("Essai de connexion JDBC");
             try
             {
-                if(getTypeBD().equals("Oracle"))
+                if(getTypeBD().equalsIgnoreCase("Oracle"))
                     leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
                 else
                     leDriver = Class.forName("org.gjt.mm.mysql.Driver");
