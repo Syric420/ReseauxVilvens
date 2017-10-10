@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package application_test_jdbc;
+import database.utilities.BeanConnect;
 import java.sql.*;
+import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
@@ -15,45 +17,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfaceMySQL extends javax.swing.JDialog {
     
-    //DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
-    Statement instruc;
-    ResultSet rs;
-    /**
-     * Creates new form InterfaceMySQL
-     */
+    BeanConnect BeanConnect;
+
     public InterfaceMySQL(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        /*CbModel.addElement("Avion");CbModel.addElement("Agents");CbModel.addElement("Billets");CbModel.addElement("Bagages");CbModel.addElement("Vols");
-        CB_TypeRequete.setModel(CbModel);*/
-        
-        System.out.println("Essai de connexion JDBC");
-        try
-        {
-          Class leDriver = Class.forName("org.gjt.mm.mysql.Driver");
-          //Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
-        }
-        catch (ClassNotFoundException e)
-        { 
-            System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
-        }
-        
-        try
-        {  
-            //Connection con = DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234");
-            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234");
-            //Connection con = DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123");
-            System.out.println("Connexion à la BDD inpres-metal réalisée");
-            instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-            ResultSet.CONCUR_UPDATABLE);
-            System.out.println("Création d'une instance d'instruction pour cette connexion");
-            System.out.println("Instruction SELECT sur stocks envoyée à la BDD sys");
- 
-            
-        }
-        catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
-        
-        
+        BeanConnect = new BeanConnect();
+        BeanConnect.setTypeBD("MySql");
+        BeanConnect.connect();
+        //instruc=BeanConnect.getInstruc();      
 }
         
     @SuppressWarnings("unchecked")
@@ -63,9 +35,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        CB_TypeRequete = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -82,24 +52,10 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel1.setText("Table :");
-
         jButton1.setText("Envoyer");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
-            }
-        });
-
-        CB_TypeRequete.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Avion", "Billets", "Vols", "Agents", "Bagages" }));
-        CB_TypeRequete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CB_TypeRequeteActionPerformed(evt);
-            }
-        });
-        CB_TypeRequete.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                CB_TypeRequetePropertyChange(evt);
             }
         });
 
@@ -111,12 +67,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTextField1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(149, 149, 149)
@@ -126,11 +77,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(CB_TypeRequete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(37, Short.MAX_VALUE)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -143,135 +90,193 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    DefaultComboBoxModel CbModel = (DefaultComboBoxModel) CB_TypeRequete.getModel();
-    //CB_TypeRequete.getModel();
-    
-    
+   
     String Table,buf,requete,table="";
+    boolean count = false;
     Table=jTextField1.getText();
     int i = 0;
     //selection de la requete
-    //si pas bon faut sortir
     if(Table.indexOf(" ",i) != 1)
     {
         requete=Table.substring(i, Table.indexOf(" ",i));
-        System.out.println("Requete = " + requete);
         i = Table.indexOf(" ",i)+1;
-            //selection des champs a sélectionner
-        //faudra verifier que champs existent tous
         do
         {   
             buf=Table.substring(i, Table.indexOf(" ",i));
-            System.out.println("champs = " + buf);
             i = Table.indexOf(" ",i)+1;
             if(buf.equals("count(*)"))
-                //mettre count
+                count = true;
                 ;
             if(buf.equals("from"))
                 break;
         }while(Table.indexOf(" ",i) != -1);
         //selection table
-        //verification necessaire sur l'existence de la table
-        table=Table.substring(i,Table.indexOf(" ",i));
-        System.out.println("table = " + table);
+        if(Table.indexOf(" ",i) != -1)
+            table=Table.substring(i,Table.indexOf(" ",i));
+        else
+            table=Table.substring(i);
     }
-
-
-    
-    
-    
-    Table = (String) CbModel.getSelectedItem();
+    else
+        System.out.println("Erreur");
     DefaultTableModel jTableModel;
-    jTableModel = (DefaultTableModel) jTable1.getModel();
-    jTableModel.setRowCount(0);
+  
     try{
-       // ResultSet rs = instruc.executeQuery("select * from Avion");
-       ResultSet rs = instruc.executeQuery(jTextField1.getText());
-    switch(table)
-    {    
-        case "Avion":
-            int idAvion,NbPlaces,PoidsMax;
-            String TypeAvion;
-            boolean Check_OK;
-            while (rs.next())
+        BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
+        table=table.toLowerCase(Locale.FRANCE);
+        switch(table)
+        {    
+        case "avion":
+            IniTable("avion",count);
+            jTableModel = (DefaultTableModel) jTable1.getModel();
+            if(count)
             {
-                idAvion=rs.getInt("idAvion");
-                Check_OK=rs.getBoolean("Check_OK");
-                TypeAvion=rs.getString("TypeAvion");
-                NbPlaces=rs.getInt("NbPlaces");
-                PoidsMax=rs.getInt("PoidsMax");
+                int countA;
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
-                Temp.addElement(idAvion);
-                Temp.addElement(Check_OK);
-                Temp.addElement(TypeAvion);
-                Temp.addElement(NbPlaces);
-                Temp.addElement(PoidsMax);
+                Temp.addElement(countA);
                 jTableModel.addRow(Temp);
             }
-                break;
-            case "Agents":
-            int idAgents;
-            String Role;
-            while (rs.next())
+            else
             {
-                idAgents=rs.getInt("idAgents");
-                Role=rs.getString("Role");
-                Vector Temp = new Vector();
-                Temp.addElement(idAgents);
-                Temp.addElement(Role);
-                jTableModel.addRow(Temp);
+                int idAvion,NbPlaces,PoidsMax;
+                String TypeAvion;
+                boolean Check_OK;
+                while (BeanConnect.getRs().next())
+                {
+                    idAvion=BeanConnect.getRs().getInt("idAvion");
+                    Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
+                    TypeAvion=BeanConnect.getRs().getString("TypeAvion");
+                    NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
+                    PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
+                    Vector Temp = new Vector();
+                    Temp.addElement(idAvion);
+                    Temp.addElement(Check_OK);
+                    Temp.addElement(TypeAvion);
+                    Temp.addElement(NbPlaces);
+                    Temp.addElement(PoidsMax);
+                    jTableModel.addRow(Temp);
+                }
             }
                 break;
-            case "Bagages":
-            int idBagages,Poids;
-            boolean Valise;
-            while (rs.next())
+            case "agents":
+            IniTable("agents",count);
+            jTableModel = (DefaultTableModel) jTable1.getModel();
+            if(count)
             {
-                idBagages=rs.getInt("idBagages");
-                Valise=rs.getBoolean("Valise");
-                Poids=rs.getInt("Poids");
+                int countA;
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
-                Temp.addElement(idBagages);
-                Temp.addElement(Valise);
-                Temp.addElement(Poids);
+                Temp.addElement(countA);
                 jTableModel.addRow(Temp);
             }
-                break;
-            case "Billets":
-            int idBillets;
-            String Nom,Prenom,Num_id;
-            while (rs.next())
+            else
             {
-                idBillets=rs.getInt("idBillets");
-                Nom=rs.getString("Nom");
-                Prenom=rs.getString("Prenom");
-                Num_id=rs.getString("Num_id");
-                Vector Temp = new Vector();
-                Temp.addElement(idBillets);
-                Temp.addElement(Nom);
-                Temp.addElement(Prenom);
-                Temp.addElement(Num_id);
-                jTableModel.addRow(Temp);
+                int idAgents;
+                String Role;
+                while (BeanConnect.getRs().next())
+                {
+                    idAgents=BeanConnect.getRs().getInt("idAgents");
+                    Role=BeanConnect.getRs().getString("Role");
+                    Vector Temp = new Vector();
+                    Temp.addElement(idAgents);
+                    Temp.addElement(Role);
+                    jTableModel.addRow(Temp);
+                }
             }
                 break;
-            case "Vols":
-            int idVols,AvionUtilise;
-            String Destination,HeureArrivee,HeureDepart;
-            while (rs.next())
+            case "bagages":
+            IniTable("bagages",count);
+            jTableModel = (DefaultTableModel) jTable1.getModel();
+            if(count)
             {
-                idVols=rs.getInt("idVols");
-                Destination=rs.getString("Destination");
-                HeureArrivee=rs.getString("HeureArrivee");
-                HeureDepart=rs.getString("HeureDepart");
-                AvionUtilise=rs.getInt("AvionUtilise");
+                int countA;
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
-                Temp.addElement(idVols);
-                Temp.addElement(Destination);
-                Temp.addElement(HeureArrivee);
-                Temp.addElement(HeureDepart);
-                Temp.addElement(AvionUtilise);
+                Temp.addElement(countA);
                 jTableModel.addRow(Temp);
+            }
+            else
+            {
+                int idBagages,Poids;
+                boolean Valise;
+                while (BeanConnect.getRs().next())
+                {
+                    idBagages=BeanConnect.getRs().getInt("idBagages");
+                    Valise=BeanConnect.getRs().getBoolean("Valise");
+                    Poids=BeanConnect.getRs().getInt("Poids");
+                    Vector Temp = new Vector();
+                    Temp.addElement(idBagages);
+                    Temp.addElement(Valise);
+                    Temp.addElement(Poids);
+                    jTableModel.addRow(Temp);
+                }
+            }
+                break;
+            case "billets":
+            IniTable("billets",count);
+            jTableModel = (DefaultTableModel) jTable1.getModel();
+            if(count)
+            {
+                int countA;
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
+                Vector Temp = new Vector();
+                Temp.addElement(countA);
+                jTableModel.addRow(Temp);
+            }
+            else
+            {
+                int idBillets;
+                String Nom,Prenom,Num_id;
+                while (BeanConnect.getRs().next())
+                {
+                    idBillets=BeanConnect.getRs().getInt("idBillets");
+                    Nom=BeanConnect.getRs().getString("Nom");
+                    Prenom=BeanConnect.getRs().getString("Prenom");
+                    Num_id=BeanConnect.getRs().getString("Num_id");
+                    Vector Temp = new Vector();
+                    Temp.addElement(idBillets);
+                    Temp.addElement(Nom);
+                    Temp.addElement(Prenom);
+                    Temp.addElement(Num_id);
+                    jTableModel.addRow(Temp);
+                }
+            }
+                break;
+            case "vols":
+            IniTable("vols",count);
+            jTableModel = (DefaultTableModel) jTable1.getModel();
+            if(count)
+            {
+                int countA;
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
+                Vector Temp = new Vector();
+                Temp.addElement(countA);
+                jTableModel.addRow(Temp);
+            }
+            else
+            {
+                int idVols,AvionUtilise;
+                String Destination,HeureArrivee,HeureDepart;
+                while (BeanConnect.getRs().next())
+                {
+                    idVols=BeanConnect.getRs().getInt("idVols");
+                    Destination=BeanConnect.getRs().getString("Destination");
+                    HeureArrivee=BeanConnect.getRs().getString("HeureArrivee");
+                    HeureDepart=BeanConnect.getRs().getString("HeureDepart");
+                    AvionUtilise=BeanConnect.getRs().getInt("AvionUtilise");
+                    Vector Temp = new Vector();
+                    Temp.addElement(idVols);
+                    Temp.addElement(Destination);
+                    Temp.addElement(HeureArrivee);
+                    Temp.addElement(HeureDepart);
+                    Temp.addElement(AvionUtilise);
+                    jTableModel.addRow(Temp);
+                }
             }
                 break;
     }
@@ -279,27 +284,21 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void CB_TypeRequetePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_CB_TypeRequetePropertyChange
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel
+    private void IniTable(String Table,boolean count)
+    {
+        switch(Table)
+        {
+            case "avion":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
                     },
                     new String [] {
-                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
+                        "Nombre de tuples d'avion"
                     }
                 ));
-    }//GEN-LAST:event_CB_TypeRequetePropertyChange
-
-    private void CB_TypeRequeteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CB_TypeRequeteActionPerformed
-               // TODO add your handling code here:
-        DefaultComboBoxModel CbModel = (DefaultComboBoxModel) CB_TypeRequete.getModel();
-        //CB_TypeRequete.getModel();
-        String Table;
-        Table = (String) CbModel.getSelectedItem();
-        switch(Table)
-        {
-            case "Avion":
+                else  
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -309,7 +308,17 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     }
                 ));
                 break;
-            case "Agents":
+            case "agents":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples d'agents"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -319,7 +328,17 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     }
                 ));
                 break;
-            case "Bagages":
+            case "bagages":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de bagages"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -329,7 +348,17 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     }
                 ));
                 break;
-            case "Billets":
+            case "billets":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de billets"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -339,7 +368,17 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                     }
                 ));
                 break;
-            case "Vols":
+            case "vols":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de vols"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -350,8 +389,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 ));
                 break;
         }
-    }//GEN-LAST:event_CB_TypeRequeteActionPerformed
-
+    }
     /**
      * @param args the command line arguments
      */
@@ -395,9 +433,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> CB_TypeRequete;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

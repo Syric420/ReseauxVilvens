@@ -17,7 +17,7 @@ public class BeanConnect {
     
     public BeanConnect()
     {
-        typeBD = null;
+        typeBD = "";
     }
     /**
      * @return the typeBD
@@ -67,14 +67,14 @@ public class BeanConnect {
     public synchronized int  connect()
     {
         Class leDriver;
-        if(getTypeBD().equals(null))
+        if(getTypeBD().equals(""))
             return -1;
         else
         {
             System.out.println("Essai de connexion JDBC");
             try
             {
-                if(getTypeBD().equals("Oracle"))
+                if(getTypeBD().equalsIgnoreCase("Oracle"))
                     leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
                 else
                     leDriver = Class.forName("org.gjt.mm.mysql.Driver");
@@ -96,10 +96,7 @@ public class BeanConnect {
                     setCon(DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234"));
                     System.out.println("Connexion avec mySQL");
                 }
-                System.out.println("Connexion à la BDD inpres-metal réalisée");
                 setInstruc(getCon().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE));
-                System.out.println("Création d'une instance d'instruction pour cette connexion");
-                rs = instruc.executeQuery("select * from Intervenants");
             }
             catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
             return 0;
