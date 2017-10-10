@@ -5,7 +5,7 @@
  */
 package application_test_jdbc;
 
-import database.utilities.BeanConnect;
+import database.utilities.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -116,39 +116,14 @@ public class InterfaceOracle extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       String Table,buf,requete="",table="";
-        boolean count = false;
+        BeanRequete BeanRequete = new BeanRequete();
+        String Table;
+        //selection de la BeanRequete.
         Table=jTextField1.getText();
-        int i = 0;
-        //selection de la requete
-        if(Table.indexOf(" ",i) != 1)
-        {
-            requete=Table.substring(i, Table.indexOf(" ",i));
-            System.out.println("Requete = " + requete);
-            i = Table.indexOf(" ",i)+1;
-            //selection des champs a sélectionner
-            do
-            {   
-                buf=Table.substring(i, Table.indexOf(" ",i));
-                System.out.println("champs = " + buf);
-                i = Table.indexOf(" ",i)+1;
-                if(buf.equals("count(*)"))
-                    count = true;
-                if(buf.equals("from"))
-                    break;
-            }while(Table.indexOf(" ",i) != -1);
-            //selection table
-            if(Table.indexOf(" ",i) != -1)
-                table=Table.substring(i,Table.indexOf(" ",i));
-            else
-                table=Table.substring(i);
-            System.out.println("table = " + table);
-        }
-        else
-            System.out.println("Erreur");
+        BeanRequete.traiteRequete(Table);
         DefaultTableModel jTableModel;    
         try {
-                if(requete.equalsIgnoreCase("update"))
+                if(BeanRequete.getRequete().equalsIgnoreCase("update"))
                 {
                     BeanConnect.getInstruc().executeUpdate(jTextField1.getText()) ;
                     javax.swing.JOptionPane.showMessageDialog(null,"Update réussie"); 
@@ -156,15 +131,15 @@ public class InterfaceOracle extends javax.swing.JDialog {
                 else
                 {
                     BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;                  
-                    table=table.toLowerCase(Locale.FRANCE);
+                    BeanRequete.setTable(BeanRequete.getTable().toLowerCase(Locale.FRANCE));
             
-                switch(table)
+                switch(BeanRequete.getTable())
                 {   
                     case "activites":
-                        IniTable("activites",count);
+                        IniTable("activites",BeanRequete.isCount());
                         jTableModel = (DefaultTableModel) jTable1.getModel();
 
-                        if(count)
+                        if(BeanRequete.isCount())
                         {
                             int countA;
                             BeanConnect.getRs().next();
@@ -190,10 +165,10 @@ public class InterfaceOracle extends javax.swing.JDialog {
 
                     break;
                     case "intervenants":
-                        IniTable("intervenants",count);
+                        IniTable("intervenants",BeanRequete.isCount());
                         jTableModel = (DefaultTableModel) jTable1.getModel();
 
-                        if(count)
+                        if(BeanRequete.isCount())
                         {
                             int countA;
                             BeanConnect.getRs().next();
