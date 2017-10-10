@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package application_test_jdbc;
+import database.utilities.BeanConnect;
 import java.sql.*;
 import java.util.Locale;
 import java.util.Vector;
@@ -16,45 +17,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfaceMySQL extends javax.swing.JDialog {
     
-    //DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
-    Statement instruc;
-    ResultSet rs;
-    /**
-     * Creates new form InterfaceMySQL
-     */
+    BeanConnect BeanConnect;
+
     public InterfaceMySQL(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        /*CbModel.addElement("Avion");CbModel.addElement("Agents");CbModel.addElement("Billets");CbModel.addElement("Bagages");CbModel.addElement("Vols");
-        CB_TypeRequete.setModel(CbModel);*/
-        
-        System.out.println("Essai de connexion JDBC");
-        try
-        {
-          Class leDriver = Class.forName("org.gjt.mm.mysql.Driver");
-          //Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
-        }
-        catch (ClassNotFoundException e)
-        { 
-            System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
-        }
-        
-        try
-        {  
-            //Connection con = DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234");
-            Connection con = DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234");
-            //Connection con = DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123");
-            System.out.println("Connexion à la BDD inpres-metal réalisée");
-            instruc = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-            ResultSet.CONCUR_UPDATABLE);
-            System.out.println("Création d'une instance d'instruction pour cette connexion");
-            System.out.println("Instruction SELECT sur stocks envoyée à la BDD sys");
- 
-            
-        }
-        catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
-        
-        
+        BeanConnect = new BeanConnect();
+        BeanConnect.setTypeBD("MySql");
+        BeanConnect.connect();
+        //instruc=BeanConnect.getInstruc();      
 }
         
     @SuppressWarnings("unchecked")
@@ -119,11 +90,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-  //  DefaultComboBoxModel CbModel = (DefaultComboBoxModel) CB_TypeRequete.getModel();
-    //CB_TypeRequete.getModel();
-    
-    
+   
     String Table,buf,requete,table="";
     boolean count = false;
     Table=jTextField1.getText();
@@ -135,7 +102,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         requete=Table.substring(i, Table.indexOf(" ",i));
         System.out.println("Requete = " + requete);
         i = Table.indexOf(" ",i)+1;
-            //selection des champs a sélectionner
+        //selection des champs a sélectionner
         //faudra verifier que champs existent tous
         do
         {   
@@ -158,28 +125,21 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     }
     else
         System.out.println("Erreur");
-
-    
-    
-    
-    //Table = (String) CbModel.getSelectedItem();
     DefaultTableModel jTableModel;
-   
-    //jTableModel.setRowCount(0);
+  
     try{
-       // ResultSet rs = instruc.executeQuery("select * from Avion");
-       ResultSet rs = instruc.executeQuery(jTextField1.getText());
+        BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
         table=table.toLowerCase(Locale.FRANCE);
         switch(table)
         {    
         case "avion":
-            IniTable("avion");
+            IniTable("avion",count);
             jTableModel = (DefaultTableModel) jTable1.getModel();
             if(count)
             {
                 int countA;
-                rs.next();
-                countA=rs.getInt("count(*)");
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
                 Temp.addElement(countA);
                 jTableModel.addRow(Temp);
@@ -189,13 +149,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 int idAvion,NbPlaces,PoidsMax;
                 String TypeAvion;
                 boolean Check_OK;
-                while (rs.next())
+                while (BeanConnect.getRs().next())
                 {
-                    idAvion=rs.getInt("idAvion");
-                    Check_OK=rs.getBoolean("Check_OK");
-                    TypeAvion=rs.getString("TypeAvion");
-                    NbPlaces=rs.getInt("NbPlaces");
-                    PoidsMax=rs.getInt("PoidsMax");
+                    idAvion=BeanConnect.getRs().getInt("idAvion");
+                    Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
+                    TypeAvion=BeanConnect.getRs().getString("TypeAvion");
+                    NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
+                    PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
                     Vector Temp = new Vector();
                     Temp.addElement(idAvion);
                     Temp.addElement(Check_OK);
@@ -207,13 +167,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             }
                 break;
             case "agents":
-            IniTable("agents");
+            IniTable("agents",count);
             jTableModel = (DefaultTableModel) jTable1.getModel();
             if(count)
             {
                 int countA;
-                rs.next();
-                countA=rs.getInt("count(*)");
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
                 Temp.addElement(countA);
                 jTableModel.addRow(Temp);
@@ -222,10 +182,10 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             {
                 int idAgents;
                 String Role;
-                while (rs.next())
+                while (BeanConnect.getRs().next())
                 {
-                    idAgents=rs.getInt("idAgents");
-                    Role=rs.getString("Role");
+                    idAgents=BeanConnect.getRs().getInt("idAgents");
+                    Role=BeanConnect.getRs().getString("Role");
                     Vector Temp = new Vector();
                     Temp.addElement(idAgents);
                     Temp.addElement(Role);
@@ -234,13 +194,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             }
                 break;
             case "bagages":
-            IniTable("bagages");
+            IniTable("bagages",count);
             jTableModel = (DefaultTableModel) jTable1.getModel();
             if(count)
             {
                 int countA;
-                rs.next();
-                countA=rs.getInt("count(*)");
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
                 Temp.addElement(countA);
                 jTableModel.addRow(Temp);
@@ -249,11 +209,11 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             {
                 int idBagages,Poids;
                 boolean Valise;
-                while (rs.next())
+                while (BeanConnect.getRs().next())
                 {
-                    idBagages=rs.getInt("idBagages");
-                    Valise=rs.getBoolean("Valise");
-                    Poids=rs.getInt("Poids");
+                    idBagages=BeanConnect.getRs().getInt("idBagages");
+                    Valise=BeanConnect.getRs().getBoolean("Valise");
+                    Poids=BeanConnect.getRs().getInt("Poids");
                     Vector Temp = new Vector();
                     Temp.addElement(idBagages);
                     Temp.addElement(Valise);
@@ -263,13 +223,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             }
                 break;
             case "billets":
-            IniTable("billets");
+            IniTable("billets",count);
             jTableModel = (DefaultTableModel) jTable1.getModel();
             if(count)
             {
                 int countA;
-                rs.next();
-                countA=rs.getInt("count(*)");
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
                 Temp.addElement(countA);
                 jTableModel.addRow(Temp);
@@ -278,12 +238,12 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             {
                 int idBillets;
                 String Nom,Prenom,Num_id;
-                while (rs.next())
+                while (BeanConnect.getRs().next())
                 {
-                    idBillets=rs.getInt("idBillets");
-                    Nom=rs.getString("Nom");
-                    Prenom=rs.getString("Prenom");
-                    Num_id=rs.getString("Num_id");
+                    idBillets=BeanConnect.getRs().getInt("idBillets");
+                    Nom=BeanConnect.getRs().getString("Nom");
+                    Prenom=BeanConnect.getRs().getString("Prenom");
+                    Num_id=BeanConnect.getRs().getString("Num_id");
                     Vector Temp = new Vector();
                     Temp.addElement(idBillets);
                     Temp.addElement(Nom);
@@ -294,13 +254,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             }
                 break;
             case "vols":
-            IniTable("vols");
+            IniTable("vols",count);
             jTableModel = (DefaultTableModel) jTable1.getModel();
             if(count)
             {
                 int countA;
-                rs.next();
-                countA=rs.getInt("count(*)");
+                BeanConnect.getRs().next();
+                countA=BeanConnect.getRs().getInt("count(*)");
                 Vector Temp = new Vector();
                 Temp.addElement(countA);
                 jTableModel.addRow(Temp);
@@ -309,13 +269,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
             {
                 int idVols,AvionUtilise;
                 String Destination,HeureArrivee,HeureDepart;
-                while (rs.next())
+                while (BeanConnect.getRs().next())
                 {
-                    idVols=rs.getInt("idVols");
-                    Destination=rs.getString("Destination");
-                    HeureArrivee=rs.getString("HeureArrivee");
-                    HeureDepart=rs.getString("HeureDepart");
-                    AvionUtilise=rs.getInt("AvionUtilise");
+                    idVols=BeanConnect.getRs().getInt("idVols");
+                    Destination=BeanConnect.getRs().getString("Destination");
+                    HeureArrivee=BeanConnect.getRs().getString("HeureArrivee");
+                    HeureDepart=BeanConnect.getRs().getString("HeureDepart");
+                    AvionUtilise=BeanConnect.getRs().getInt("AvionUtilise");
                     Vector Temp = new Vector();
                     Temp.addElement(idVols);
                     Temp.addElement(Destination);
@@ -331,11 +291,21 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void IniTable(String Table)
+    private void IniTable(String Table,boolean count)
     {
         switch(Table)
         {
             case "avion":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples d'avion"
+                    }
+                ));
+                else  
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -346,6 +316,16 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 ));
                 break;
             case "agents":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples d'agents"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -356,6 +336,16 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 ));
                 break;
             case "bagages":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de bagages"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -366,6 +356,16 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 ));
                 break;
             case "billets":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de billets"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
@@ -376,6 +376,16 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 ));
                 break;
             case "vols":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de vols"
+                    }
+                ));
+                else 
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
