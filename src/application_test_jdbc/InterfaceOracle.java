@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 public class InterfaceOracle extends javax.swing.JDialog {
 
     DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
-    private ResultSet rs;
     BeanConnect BeanConnect;
     /**
      * Creates new form InterfaceOracle
@@ -34,25 +34,11 @@ public class InterfaceOracle extends javax.swing.JDialog {
         initComponents();
         
         CbModel.addElement("Select");CbModel.addElement("Update");
-        CB_TypeRequete.setModel(CbModel);
         BeanConnect = new BeanConnect();
         BeanConnect.setTypeBD("Oracle");
-        int cpt = 0;
-        String IDIntervenant, LibelleIntervenant;
         
         BeanConnect.connect();
         
-        rs = BeanConnect.getRs();
-        try {
-            while (rs.next())
-            {
-                IDIntervenant = rs.getString("IDINTERVENANT");
-                LibelleIntervenant = rs.getString("LIBELLEINTERVENANT");
-                System.out.println(""+IDIntervenant+" "+LibelleIntervenant);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(InterfaceOracle.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -136,39 +122,140 @@ public class InterfaceOracle extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String Table, table ="";
-        
-        Table = (String) CbModel.getSelectedItem();
+       String Table,buf,requete,table="";
+        boolean count = false;
+        Table=jTextField1.getText();
+        int i = 0;
+        //selection de la requete
+        //si pas bon faut sortir
+        if(Table.indexOf(" ",i) != 1)
+        {
+            requete=Table.substring(i, Table.indexOf(" ",i));
+            System.out.println("Requete = " + requete);
+            i = Table.indexOf(" ",i)+1;
+            //selection des champs a sélectionner
+            //faudra verifier que champs existent tous
+            do
+            {   
+                buf=Table.substring(i, Table.indexOf(" ",i));
+                System.out.println("champs = " + buf);
+                i = Table.indexOf(" ",i)+1;
+                if(buf.equals("count(*)"))
+                    count = true;
+                    ;
+                if(buf.equals("from"))
+                    break;
+            }while(Table.indexOf(" ",i) != -1);
+            //selection table
+            //verification necessaire sur l'existence de la table
+            if(Table.indexOf(" ",i) != -1)
+                table=Table.substring(i,Table.indexOf(" ",i));
+            else
+                table=Table.substring(i);
+            System.out.println("table = " + table);
+        }
+        else
+            System.out.println("Erreur");
         DefaultTableModel jTableModel;
-        jTableModel = (DefaultTableModel) jTable1.getModel();
-        jTableModel.setRowCount(0);
+        
+        
         try {
+            //BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
+            ResultSet rs = BeanConnect.getRs();
+            table=table.toLowerCase(Locale.FRANCE);
+            
             switch(table)
-            {    
-                case "Activites":
-                    String IDActivites; 
-                    String LibelleActivite;
-                    while (rs.next())
+            {   
+                case "Exemple":
+                     IniTable("avion",count);
+                    jTableModel = (DefaultTableModel) jTable1.getModel();
+                    if(count)
                     {
-                        IDActivites=rs.getString("IDACTIVITES");
-                        LibelleActivite=rs.getString("LIBELLEACTIVITE");
+                        int countA;
+                        BeanConnect.getRs().next();
+                        countA=BeanConnect.getRs().getInt("count(*)");
                         Vector Temp = new Vector();
-                        Temp.addElement(IDActivites);
-                        Temp.addElement(LibelleActivite);
+                        Temp.addElement(countA);
                         jTableModel.addRow(Temp);
                     }
+                    else
+                    {
+                        int idAvion,NbPlaces,PoidsMax;
+                        String TypeAvion;
+                        boolean Check_OK;
+                        while (BeanConnect.getRs().next())
+                        {
+                            idAvion=BeanConnect.getRs().getInt("idAvion");
+                            Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
+                            TypeAvion=BeanConnect.getRs().getString("TypeAvion");
+                            NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
+                            PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
+                            Vector Temp = new Vector();
+                            Temp.addElement(idAvion);
+                            Temp.addElement(Check_OK);
+                            Temp.addElement(TypeAvion);
+                            Temp.addElement(NbPlaces);
+                            Temp.addElement(PoidsMax);
+                            jTableModel.addRow(Temp);
+                        }
+                    }
+                    break;
+                case "Activites":
+                    IniTable("avion",count);
+                    jTableModel = (DefaultTableModel) jTable1.getModel();
+                    
+                    if(count)
+                    {
+                        int countA;
+                        BeanConnect.getRs().next();
+                        countA=BeanConnect.getRs().getInt("count(*)");
+                        Vector Temp = new Vector();
+                        Temp.addElement(countA);
+                        jTableModel.addRow(Temp);
+                    }
+                    else
+                    {
+                        String IDActivites; 
+                        String LibelleActivite;
+                        while (rs.next())
+                        {
+                            IDActivites=rs.getString("IDACTIVITES");
+                            LibelleActivite=rs.getString("LIBELLEACTIVITE");
+                            Vector Temp = new Vector();
+                            Temp.addElement(IDActivites);
+                            Temp.addElement(LibelleActivite);
+                            jTableModel.addRow(Temp);
+                        }
+                    }
+                    
                 break;
                 case "Intervenants":
-                    String IDIntervenant, LibelleIntervenant;
-                    while (rs.next())
+                    IniTable("avion",count);
+                    jTableModel = (DefaultTableModel) jTable1.getModel();
+                    
+                    if(count)
                     {
-                        IDIntervenant=rs.getString("IDIntervenant");
-                        LibelleIntervenant = rs.getString("LibelleIntervenant");
+                        int countA;
+                        BeanConnect.getRs().next();
+                        countA=BeanConnect.getRs().getInt("count(*)");
                         Vector Temp = new Vector();
-                        Temp.addElement(IDIntervenant);
-                        Temp.addElement(LibelleIntervenant);
+                        Temp.addElement(countA);
                         jTableModel.addRow(Temp);
                     }
+                    else
+                    {
+                        String IDIntervenant, LibelleIntervenant;
+                        while (rs.next())
+                        {
+                            IDIntervenant = rs.getString("IDINTERVENANT");
+                            LibelleIntervenant = rs.getString("LIBELLEINTERVENANT");
+                            Vector Temp = new Vector();
+                            Temp.addElement(IDIntervenant);
+                            Temp.addElement(LibelleIntervenant);
+                            jTableModel.addRow(Temp);
+                        }
+                    }
+                    
                 break;
             }
         } catch (SQLException ex) {
@@ -176,6 +263,112 @@ public class InterfaceOracle extends javax.swing.JDialog {
             }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void IniTable(String Table,boolean count)
+    {
+        switch(Table)
+        {
+            case "avion":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples d'avion"
+                    }
+                ));
+                else  
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
+                    }
+                ));
+                break;
+            case "agents":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples d'agents"
+                    }
+                ));
+                else 
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idAgents", "Role"
+                    }
+                ));
+                break;
+            case "bagages":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de bagages"
+                    }
+                ));
+                else 
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idBagages", "Valise", "Poids"
+                    }
+                ));
+                break;
+            case "billets":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de billets"
+                    }
+                ));
+                else 
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idBillets", "Nom", "Prenom","Num_id"
+                    }
+                ));
+                break;
+            case "vols":
+                if(count)
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "Nombre de tuples de vols"
+                    }
+                ));
+                else 
+                jTable1.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    new Object [][] {
+                    },
+                    new String [] {
+                        "idVols", "Destination", "HeureArrivee","HeureDepart","AvionUtilise"
+                    }
+                ));
+                break;
+        }
+    }
     /**
      * @param args the command line arguments
      */
