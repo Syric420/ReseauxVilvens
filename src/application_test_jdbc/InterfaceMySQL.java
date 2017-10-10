@@ -91,7 +91,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
    
-    String Table,buf,requete,table="";
+    String Table,buf,requete="",table="";
     boolean count = false;
     Table=jTextField1.getText();
     int i = 0;
@@ -120,168 +120,178 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         System.out.println("Erreur");
     DefaultTableModel jTableModel;
   
-    try{
-        BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
-        table=table.toLowerCase(Locale.FRANCE);
-        switch(table)
-        {    
-        case "avion":
-            IniTable("avion",count);
-            jTableModel = (DefaultTableModel) jTable1.getModel();
-            if(count)
-            {
-                int countA;
-                BeanConnect.getRs().next();
-                countA=BeanConnect.getRs().getInt("count(*)");
-                Vector Temp = new Vector();
-                Temp.addElement(countA);
-                jTableModel.addRow(Temp);
-            }
-            else
-            {
-                int idAvion,NbPlaces,PoidsMax;
-                String TypeAvion;
-                boolean Check_OK;
-                while (BeanConnect.getRs().next())
+    try
+    {
+        if(requete.equalsIgnoreCase("update"))
+        {
+            BeanConnect.getInstruc().executeUpdate(jTextField1.getText()) ;
+        }
+        else
+        {
+            BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
+            table=table.toLowerCase(Locale.FRANCE);
+            switch(table)
+            {    
+            case "avion":
+                IniTable("avion",count);
+                jTableModel = (DefaultTableModel) jTable1.getModel();
+                if(count)
                 {
-                    idAvion=BeanConnect.getRs().getInt("idAvion");
-                    Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
-                    TypeAvion=BeanConnect.getRs().getString("TypeAvion");
-                    NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
-                    PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
+                    int countA;
+                    BeanConnect.getRs().next();
+                    countA=BeanConnect.getRs().getInt("count(*)");
                     Vector Temp = new Vector();
-                    Temp.addElement(idAvion);
-                    Temp.addElement(Check_OK);
-                    Temp.addElement(TypeAvion);
-                    Temp.addElement(NbPlaces);
-                    Temp.addElement(PoidsMax);
+                    Temp.addElement(countA);
                     jTableModel.addRow(Temp);
                 }
-            }
-                break;
-            case "agents":
-            IniTable("agents",count);
-            jTableModel = (DefaultTableModel) jTable1.getModel();
-            if(count)
-            {
-                int countA;
-                BeanConnect.getRs().next();
-                countA=BeanConnect.getRs().getInt("count(*)");
-                Vector Temp = new Vector();
-                Temp.addElement(countA);
-                jTableModel.addRow(Temp);
-            }
-            else
-            {
-                int idAgents;
-                String Role;
-                while (BeanConnect.getRs().next())
+                else
                 {
-                    idAgents=BeanConnect.getRs().getInt("idAgents");
-                    Role=BeanConnect.getRs().getString("Role");
+                    int idAvion,NbPlaces,PoidsMax;
+                    String TypeAvion;
+                    boolean Check_OK;
+                    while (BeanConnect.getRs().next())
+                    {
+                        idAvion=BeanConnect.getRs().getInt("idAvion");
+                        Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
+                        TypeAvion=BeanConnect.getRs().getString("TypeAvion");
+                        NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
+                        PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
+                        Vector Temp = new Vector();
+                        Temp.addElement(idAvion);
+                        Temp.addElement(Check_OK);
+                        Temp.addElement(TypeAvion);
+                        Temp.addElement(NbPlaces);
+                        Temp.addElement(PoidsMax);
+                        jTableModel.addRow(Temp);
+                    }
+                }
+                    break;
+                case "agents":
+                IniTable("agents",count);
+                jTableModel = (DefaultTableModel) jTable1.getModel();
+                if(count)
+                {
+                    int countA;
+                    BeanConnect.getRs().next();
+                    countA=BeanConnect.getRs().getInt("count(*)");
                     Vector Temp = new Vector();
-                    Temp.addElement(idAgents);
-                    Temp.addElement(Role);
+                    Temp.addElement(countA);
                     jTableModel.addRow(Temp);
                 }
-            }
-                break;
-            case "bagages":
-            IniTable("bagages",count);
-            jTableModel = (DefaultTableModel) jTable1.getModel();
-            if(count)
-            {
-                int countA;
-                BeanConnect.getRs().next();
-                countA=BeanConnect.getRs().getInt("count(*)");
-                Vector Temp = new Vector();
-                Temp.addElement(countA);
-                jTableModel.addRow(Temp);
-            }
-            else
-            {
-                int idBagages,Poids;
-                boolean Valise;
-                while (BeanConnect.getRs().next())
+                else
                 {
-                    idBagages=BeanConnect.getRs().getInt("idBagages");
-                    Valise=BeanConnect.getRs().getBoolean("Valise");
-                    Poids=BeanConnect.getRs().getInt("Poids");
+                    int idAgents;
+                    String Role;
+                    while (BeanConnect.getRs().next())
+                    {
+                        idAgents=BeanConnect.getRs().getInt("idAgents");
+                        Role=BeanConnect.getRs().getString("Role");
+                        Vector Temp = new Vector();
+                        Temp.addElement(idAgents);
+                        Temp.addElement(Role);
+                        jTableModel.addRow(Temp);
+                    }
+                }
+                    break;
+                case "bagages":
+                IniTable("bagages",count);
+                jTableModel = (DefaultTableModel) jTable1.getModel();
+                if(count)
+                {
+                    int countA;
+                    BeanConnect.getRs().next();
+                    countA=BeanConnect.getRs().getInt("count(*)");
                     Vector Temp = new Vector();
-                    Temp.addElement(idBagages);
-                    Temp.addElement(Valise);
-                    Temp.addElement(Poids);
+                    Temp.addElement(countA);
                     jTableModel.addRow(Temp);
                 }
-            }
-                break;
-            case "billets":
-            IniTable("billets",count);
-            jTableModel = (DefaultTableModel) jTable1.getModel();
-            if(count)
-            {
-                int countA;
-                BeanConnect.getRs().next();
-                countA=BeanConnect.getRs().getInt("count(*)");
-                Vector Temp = new Vector();
-                Temp.addElement(countA);
-                jTableModel.addRow(Temp);
-            }
-            else
-            {
-                int idBillets;
-                String Nom,Prenom,Num_id;
-                while (BeanConnect.getRs().next())
+                else
                 {
-                    idBillets=BeanConnect.getRs().getInt("idBillets");
-                    Nom=BeanConnect.getRs().getString("Nom");
-                    Prenom=BeanConnect.getRs().getString("Prenom");
-                    Num_id=BeanConnect.getRs().getString("Num_id");
+                    int idBagages,Poids;
+                    boolean Valise;
+                    while (BeanConnect.getRs().next())
+                    {
+                        idBagages=BeanConnect.getRs().getInt("idBagages");
+                        Valise=BeanConnect.getRs().getBoolean("Valise");
+                        Poids=BeanConnect.getRs().getInt("Poids");
+                        Vector Temp = new Vector();
+                        Temp.addElement(idBagages);
+                        Temp.addElement(Valise);
+                        Temp.addElement(Poids);
+                        jTableModel.addRow(Temp);
+                    }
+                }
+                    break;
+                case "billets":
+                IniTable("billets",count);
+                jTableModel = (DefaultTableModel) jTable1.getModel();
+                if(count)
+                {
+                    int countA;
+                    BeanConnect.getRs().next();
+                    countA=BeanConnect.getRs().getInt("count(*)");
                     Vector Temp = new Vector();
-                    Temp.addElement(idBillets);
-                    Temp.addElement(Nom);
-                    Temp.addElement(Prenom);
-                    Temp.addElement(Num_id);
+                    Temp.addElement(countA);
                     jTableModel.addRow(Temp);
                 }
-            }
-                break;
-            case "vols":
-            IniTable("vols",count);
-            jTableModel = (DefaultTableModel) jTable1.getModel();
-            if(count)
-            {
-                int countA;
-                BeanConnect.getRs().next();
-                countA=BeanConnect.getRs().getInt("count(*)");
-                Vector Temp = new Vector();
-                Temp.addElement(countA);
-                jTableModel.addRow(Temp);
-            }
-            else
-            {
-                int idVols,AvionUtilise;
-                String Destination,HeureArrivee,HeureDepart;
-                while (BeanConnect.getRs().next())
+                else
                 {
-                    idVols=BeanConnect.getRs().getInt("idVols");
-                    Destination=BeanConnect.getRs().getString("Destination");
-                    HeureArrivee=BeanConnect.getRs().getString("HeureArrivee");
-                    HeureDepart=BeanConnect.getRs().getString("HeureDepart");
-                    AvionUtilise=BeanConnect.getRs().getInt("AvionUtilise");
+                    int idBillets;
+                    String Nom,Prenom,Num_id;
+                    while (BeanConnect.getRs().next())
+                    {
+                        idBillets=BeanConnect.getRs().getInt("idBillets");
+                        Nom=BeanConnect.getRs().getString("Nom");
+                        Prenom=BeanConnect.getRs().getString("Prenom");
+                        Num_id=BeanConnect.getRs().getString("Num_id");
+                        Vector Temp = new Vector();
+                        Temp.addElement(idBillets);
+                        Temp.addElement(Nom);
+                        Temp.addElement(Prenom);
+                        Temp.addElement(Num_id);
+                        jTableModel.addRow(Temp);
+                    }
+                }
+                    break;
+                case "vols":
+                IniTable("vols",count);
+                jTableModel = (DefaultTableModel) jTable1.getModel();
+                if(count)
+                {
+                    int countA;
+                    BeanConnect.getRs().next();
+                    countA=BeanConnect.getRs().getInt("count(*)");
                     Vector Temp = new Vector();
-                    Temp.addElement(idVols);
-                    Temp.addElement(Destination);
-                    Temp.addElement(HeureArrivee);
-                    Temp.addElement(HeureDepart);
-                    Temp.addElement(AvionUtilise);
+                    Temp.addElement(countA);
                     jTableModel.addRow(Temp);
                 }
+                else
+                {
+                    int idVols,AvionUtilise;
+                    String Destination,HeureArrivee,HeureDepart;
+                    while (BeanConnect.getRs().next())
+                    {
+                        idVols=BeanConnect.getRs().getInt("idVols");
+                        Destination=BeanConnect.getRs().getString("Destination");
+                        HeureArrivee=BeanConnect.getRs().getString("HeureArrivee");
+                        HeureDepart=BeanConnect.getRs().getString("HeureDepart");
+                        AvionUtilise=BeanConnect.getRs().getInt("AvionUtilise");
+                        Vector Temp = new Vector();
+                        Temp.addElement(idVols);
+                        Temp.addElement(Destination);
+                        Temp.addElement(HeureArrivee);
+                        Temp.addElement(HeureDepart);
+                        Temp.addElement(AvionUtilise);
+                        jTableModel.addRow(Temp);
+                    }
+                }
+                    break;
             }
-                break;
-    }
-    }
+        }
+        }
     catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
+    
+    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void IniTable(String Table,boolean count)
