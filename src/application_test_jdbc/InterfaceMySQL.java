@@ -129,6 +129,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
   
     try{
         BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
+        
         table=table.toLowerCase(Locale.FRANCE);
         switch(table)
         {    
