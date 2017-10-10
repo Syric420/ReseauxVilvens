@@ -146,7 +146,41 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         // TODO add your handling code here:
     DefaultComboBoxModel CbModel = (DefaultComboBoxModel) CB_TypeRequete.getModel();
     //CB_TypeRequete.getModel();
-    String Table;
+    
+    
+    String Table,buf,requete,table="";
+    Table=jTextField1.getText();
+    int i = 0;
+    //selection de la requete
+    //si pas bon faut sortir
+    if(Table.indexOf(" ",i) != 1)
+    {
+        requete=Table.substring(i, Table.indexOf(" ",i));
+        System.out.println("Requete = " + requete);
+        i = Table.indexOf(" ",i)+1;
+            //selection des champs a sélectionner
+        //faudra verifier que champs existent tous
+        do
+        {   
+            buf=Table.substring(i, Table.indexOf(" ",i));
+            System.out.println("champs = " + buf);
+            i = Table.indexOf(" ",i)+1;
+            if(buf.equals("count(*)"))
+                //mettre count
+                ;
+            if(buf.equals("from"))
+                break;
+        }while(Table.indexOf(" ",i) != -1);
+        //selection table
+        //verification necessaire sur l'existence de la table
+        table=Table.substring(i,Table.indexOf(" ",i));
+        System.out.println("table = " + table);
+    }
+
+
+    
+    
+    
     Table = (String) CbModel.getSelectedItem();
     DefaultTableModel jTableModel;
     jTableModel = (DefaultTableModel) jTable1.getModel();
@@ -154,7 +188,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     try{
        // ResultSet rs = instruc.executeQuery("select * from Avion");
        ResultSet rs = instruc.executeQuery(jTextField1.getText());
-    switch(Table)
+    switch(table)
     {    
         case "Avion":
             int idAvion,NbPlaces,PoidsMax;
