@@ -30,7 +30,10 @@ public class BeanConnect {
      * @param typeBD the typeBD to set
      */
     public void setTypeBD(String typeBD) {
-        this.typeBD = typeBD;
+        if(typeBD.equalsIgnoreCase("oracle") || typeBD.equalsIgnoreCase("mysql"))
+            this.typeBD = typeBD;
+        else
+            javax.swing.JOptionPane.showMessageDialog(null, "Erreur - deux choix possible : \"Oracle\" ou \"MySQL\"");
     }
 
     /**
@@ -61,7 +64,7 @@ public class BeanConnect {
         this.instruc = instruc;
     }
     
-    public int connect()
+    public synchronized int  connect()
     {
         Class leDriver;
         if(getTypeBD().equals(null))
