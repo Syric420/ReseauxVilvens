@@ -121,20 +121,17 @@ public class InterfaceOracle extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-       String Table,buf,requete,table="";
+       String Table,buf,requete="",table="";
         boolean count = false;
         Table=jTextField1.getText();
         int i = 0;
         //selection de la requete
-        //si pas bon faut sortir
         if(Table.indexOf(" ",i) != 1)
         {
             requete=Table.substring(i, Table.indexOf(" ",i));
             System.out.println("Requete = " + requete);
             i = Table.indexOf(" ",i)+1;
             //selection des champs a sélectionner
-            //faudra verifier que champs existent tous
             do
             {   
                 buf=Table.substring(i, Table.indexOf(" ",i));
@@ -147,7 +144,6 @@ public class InterfaceOracle extends javax.swing.JDialog {
                     break;
             }while(Table.indexOf(" ",i) != -1);
             //selection table
-            //verification necessaire sur l'existence de la table
             if(Table.indexOf(" ",i) != -1)
                 table=Table.substring(i,Table.indexOf(" ",i));
             else
@@ -156,108 +152,79 @@ public class InterfaceOracle extends javax.swing.JDialog {
         }
         else
             System.out.println("Erreur");
-        DefaultTableModel jTableModel;
-        
-        
+        DefaultTableModel jTableModel;    
         try {
-            //BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;
-            ResultSet rs = BeanConnect.getRs();
-            table=table.toLowerCase(Locale.FRANCE);
+                if(requete.equalsIgnoreCase("update"))
+                {
+                    BeanConnect.getInstruc().executeUpdate(jTextField1.getText()) ;
+                    javax.swing.JOptionPane.showMessageDialog(null,"Update réussie"); 
+                }
+                else
+                {
+                    BeanConnect.setRs(BeanConnect.getInstruc().executeQuery(jTextField1.getText())) ;                  
+                    table=table.toLowerCase(Locale.FRANCE);
             
-            switch(table)
-            {   
-                case "Exemple":
-                     IniTable("avion",count);
-                    jTableModel = (DefaultTableModel) jTable1.getModel();
-                    if(count)
-                    {
-                        int countA;
-                        BeanConnect.getRs().next();
-                        countA=BeanConnect.getRs().getInt("count(*)");
-                        Vector Temp = new Vector();
-                        Temp.addElement(countA);
-                        jTableModel.addRow(Temp);
-                    }
-                    else
-                    {
-                        int idAvion,NbPlaces,PoidsMax;
-                        String TypeAvion;
-                        boolean Check_OK;
-                        while (BeanConnect.getRs().next())
+                switch(table)
+                {   
+                    case "Activites":
+                        IniTable("activites",count);
+                        jTableModel = (DefaultTableModel) jTable1.getModel();
+
+                        if(count)
                         {
-                            idAvion=BeanConnect.getRs().getInt("idAvion");
-                            Check_OK=BeanConnect.getRs().getBoolean("Check_OK");
-                            TypeAvion=BeanConnect.getRs().getString("TypeAvion");
-                            NbPlaces=BeanConnect.getRs().getInt("NbPlaces");
-                            PoidsMax=BeanConnect.getRs().getInt("PoidsMax");
+                            int countA;
+                            BeanConnect.getRs().next();
+                            countA=BeanConnect.getRs().getInt("count(*)");
                             Vector Temp = new Vector();
-                            Temp.addElement(idAvion);
-                            Temp.addElement(Check_OK);
-                            Temp.addElement(TypeAvion);
-                            Temp.addElement(NbPlaces);
-                            Temp.addElement(PoidsMax);
+                            Temp.addElement(countA);
                             jTableModel.addRow(Temp);
                         }
-                    }
+                        else
+                        {
+                            String IDActivites; 
+                            String LibelleActivite;
+                            while (BeanConnect.getRs().next())
+                            {
+                                IDActivites=BeanConnect.getRs().getString("IDACTIVITES");
+                                LibelleActivite=BeanConnect.getRs().getString("LIBELLEACTIVITE");
+                                Vector Temp = new Vector();
+                                Temp.addElement(IDActivites);
+                                Temp.addElement(LibelleActivite);
+                                jTableModel.addRow(Temp);
+                            }
+                        }
+
                     break;
-                case "Activites":
-                    IniTable("avion",count);
-                    jTableModel = (DefaultTableModel) jTable1.getModel();
-                    
-                    if(count)
-                    {
-                        int countA;
-                        BeanConnect.getRs().next();
-                        countA=BeanConnect.getRs().getInt("count(*)");
-                        Vector Temp = new Vector();
-                        Temp.addElement(countA);
-                        jTableModel.addRow(Temp);
-                    }
-                    else
-                    {
-                        String IDActivites; 
-                        String LibelleActivite;
-                        while (rs.next())
+                    case "Intervenants":
+                        IniTable("avion",count);
+                        jTableModel = (DefaultTableModel) jTable1.getModel();
+
+                        if(count)
                         {
-                            IDActivites=rs.getString("IDACTIVITES");
-                            LibelleActivite=rs.getString("LIBELLEACTIVITE");
+                            int countA;
+                            BeanConnect.getRs().next();
+                            countA=BeanConnect.getRs().getInt("count(*)");
                             Vector Temp = new Vector();
-                            Temp.addElement(IDActivites);
-                            Temp.addElement(LibelleActivite);
+                            Temp.addElement(countA);
                             jTableModel.addRow(Temp);
                         }
-                    }
-                    
-                break;
-                case "Intervenants":
-                    IniTable("avion",count);
-                    jTableModel = (DefaultTableModel) jTable1.getModel();
-                    
-                    if(count)
-                    {
-                        int countA;
-                        BeanConnect.getRs().next();
-                        countA=BeanConnect.getRs().getInt("count(*)");
-                        Vector Temp = new Vector();
-                        Temp.addElement(countA);
-                        jTableModel.addRow(Temp);
-                    }
-                    else
-                    {
-                        String IDIntervenant, LibelleIntervenant;
-                        while (rs.next())
+                        else
                         {
-                            IDIntervenant = rs.getString("IDINTERVENANT");
-                            LibelleIntervenant = rs.getString("LIBELLEINTERVENANT");
-                            Vector Temp = new Vector();
-                            Temp.addElement(IDIntervenant);
-                            Temp.addElement(LibelleIntervenant);
-                            jTableModel.addRow(Temp);
+                            String IDIntervenant, LibelleIntervenant;
+                            while (BeanConnect.getRs().next())
+                            {
+                                IDIntervenant = BeanConnect.getRs().getString("IDINTERVENANT");
+                                LibelleIntervenant = BeanConnect.getRs().getString("LIBELLEINTERVENANT");
+                                Vector Temp = new Vector();
+                                Temp.addElement(IDIntervenant);
+                                Temp.addElement(LibelleIntervenant);
+                                jTableModel.addRow(Temp);
+                            }
                         }
-                    }
-                    
-                break;
-            }
+
+                    break;
+                }
+                }
         } catch (SQLException ex) {
                 Logger.getLogger(InterfaceOracle.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -267,14 +234,14 @@ public class InterfaceOracle extends javax.swing.JDialog {
     {
         switch(Table)
         {
-            case "avion":
+            case "activites":
                 if(count)
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
                     },
                     new String [] {
-                        "Nombre de tuples d'avion"
+                        "Nombre de tuples d'activites"
                     }
                 ));
                 else  
@@ -283,18 +250,18 @@ public class InterfaceOracle extends javax.swing.JDialog {
                     new Object [][] {
                     },
                     new String [] {
-                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
+                        "IDActivites", "LibelleActivite"
                     }
                 ));
                 break;
-            case "agents":
+            case "Intervenants":
                 if(count)
                 jTable1.setModel(new javax.swing.table.DefaultTableModel
                 (
                     new Object [][] {
                     },
                     new String [] {
-                        "Nombre de tuples d'agents"
+                        "Nombre de tuples d'Intervenants"
                     }
                 ));
                 else 
@@ -303,67 +270,7 @@ public class InterfaceOracle extends javax.swing.JDialog {
                     new Object [][] {
                     },
                     new String [] {
-                        "idAgents", "Role"
-                    }
-                ));
-                break;
-            case "bagages":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de bagages"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idBagages", "Valise", "Poids"
-                    }
-                ));
-                break;
-            case "billets":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de billets"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idBillets", "Nom", "Prenom","Num_id"
-                    }
-                ));
-                break;
-            case "vols":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de vols"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idVols", "Destination", "HeureArrivee","HeureDepart","AvionUtilise"
+                        "IDIntervenant", "LibelleIntervenant"
                     }
                 ));
                 break;
