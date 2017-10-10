@@ -88,11 +88,13 @@ public class BeanConnect {
             {  
                 if(getTypeBD().equals("Oracle"))
                 {
-                    setCon(DriverManager.getConnection("jdbc:oracle:thin:@192.168.253.138:1521:xe","thib","123"));
+                    //setCon(DriverManager.getConnection("jdbc:oracle:thin:@192.168.253.138:1521:xe","thib","123"));
+                    setCon(DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123"));
                     System.out.println("Connexion avec BD Oracle");
                 }
                 else
                 {
+                    setCon(DriverManager.getConnection("jdbc:mysql://192.168.253.138:3306/sys","thib","1234"));
                     setCon(DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234"));
                     System.out.println("Connexion avec mySQL");
                 }
