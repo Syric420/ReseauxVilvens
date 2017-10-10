@@ -125,6 +125,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
         if(requete.equalsIgnoreCase("update"))
         {
             BeanConnect.getInstruc().executeUpdate(jTextField1.getText()) ;
+            javax.swing.JOptionPane.showMessageDialog(null,"Update réussie"); 
         }
         else
         {
