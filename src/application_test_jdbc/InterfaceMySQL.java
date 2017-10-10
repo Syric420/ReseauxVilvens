@@ -96,18 +96,13 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     Table=jTextField1.getText();
     int i = 0;
     //selection de la requete
-    //si pas bon faut sortir
     if(Table.indexOf(" ",i) != 1)
     {
         requete=Table.substring(i, Table.indexOf(" ",i));
-        System.out.println("Requete = " + requete);
         i = Table.indexOf(" ",i)+1;
-        //selection des champs a sélectionner
-        //faudra verifier que champs existent tous
         do
         {   
             buf=Table.substring(i, Table.indexOf(" ",i));
-            System.out.println("champs = " + buf);
             i = Table.indexOf(" ",i)+1;
             if(buf.equals("count(*)"))
                 count = true;
@@ -116,12 +111,10 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 break;
         }while(Table.indexOf(" ",i) != -1);
         //selection table
-        //verification necessaire sur l'existence de la table
         if(Table.indexOf(" ",i) != -1)
             table=Table.substring(i,Table.indexOf(" ",i));
         else
             table=Table.substring(i);
-        System.out.println("table = " + table);
     }
     else
         System.out.println("Erreur");
