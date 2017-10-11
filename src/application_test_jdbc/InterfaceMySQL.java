@@ -8,6 +8,8 @@ import database.utilities.*;
 import java.sql.*;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -131,7 +133,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                 switch(BeanRequete.getTable())
                 {    
                 case "avion":
-                    IniTable("avion",BeanRequete.isCount());
+                    IniTable();
                     jTableModel = (DefaultTableModel) jTable1.getModel();
                     if(BeanRequete.isCount())
                     {
@@ -164,7 +166,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                         }
                     }
                         break;
-                    case "agents":
+                    /*case "agents":
                     IniTable("agents",BeanRequete.isCount());
                     jTableModel = (DefaultTableModel) jTable1.getModel();
                     if(BeanRequete.isCount())
@@ -283,7 +285,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
                             jTableModel.addRow(Temp);
                         }
                     }
-                        break;
+                        break;*/
                 }
             }
             }
@@ -293,111 +295,30 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void IniTable(String Table,boolean count)
+    private void IniTable()
     {
-        switch(Table)
-        {
-            case "avion":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples d'avion"
-                    }
-                ));
-                else  
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idAvion", "Check_OK", "TypeAvion", "NbPlaces","Poids Max"
-                    }
-                ));
-                break;
-            case "agents":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples d'agents"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idAgents", "Role"
-                    }
-                ));
-                break;
-            case "bagages":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de bagages"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idBagages", "Valise", "Poids"
-                    }
-                ));
-                break;
-            case "billets":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de billets"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idBillets", "Nom", "Prenom","Num_id"
-                    }
-                ));
-                break;
-            case "vols":
-                if(count)
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "Nombre de tuples de vols"
-                    }
-                ));
-                else 
-                jTable1.setModel(new javax.swing.table.DefaultTableModel
-                (
-                    new Object [][] {
-                    },
-                    new String [] {
-                        "idVols", "Destination", "HeureArrivee","HeureDepart","AvionUtilise"
-                    }
-                ));
-                break;
+        String monVec[]={};
+        try {
+            ResultSetMetaData rsmd = BeanConnect.getRs().getMetaData();
+            int nbrCol = rsmd.getColumnCount();
+            for(int i=0; i<nbrCol;i++)
+            {
+                 monVec[i]=rsmd.getColumnName(i);
+            }
+            
+            jTable1.setModel(new javax.swing.table.DefaultTableModel
+                        (
+                                new Object [][] {
+                                },
+                                monVec
+                        ));
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfaceMySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
+                
+                
+                
+                
     }
     /**
      * @param args the command line arguments
