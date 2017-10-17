@@ -3,19 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clientServeurSocket;
+package Server;
+
+import java.util.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Vince
  */
-public class InterfaceServeur extends javax.swing.JFrame {
+public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServeur {
 
     /**
      * Creates new form InterfaceServeur
      */
+    private int port;
     public InterfaceServeur() {
         initComponents();
+        TraceEvenements("serveur#initialisation#main");
     }
 
     /**
@@ -41,6 +46,11 @@ public class InterfaceServeur extends javax.swing.JFrame {
         jLabel1.setText("Serveur");
 
         jButton1.setText("Démarrer");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Arrêter");
 
@@ -100,6 +110,14 @@ public class InterfaceServeur extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        port = 5000;
+        TraceEvenements("serveur#acquisition du port#main");
+        ThreadServeur ts = new ThreadServeur(port, new ListeTaches(), this);
+        ts.start();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -143,4 +161,14 @@ public class InterfaceServeur extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void TraceEvenements(String commentaire) {
+        Vector ligne = new Vector();
+        StringTokenizer parser = new StringTokenizer(commentaire,"#");
+        while (parser.hasMoreTokens())
+            ligne.add(parser.nextToken());
+        DefaultTableModel dtm = (DefaultTableModel)jTable1.getModel();
+        dtm.insertRow(dtm.getRowCount(),ligne);
+    }
 }
