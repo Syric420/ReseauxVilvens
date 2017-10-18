@@ -5,7 +5,16 @@
  */
 package clientServeurSocket;
 
+import Utilities.*;
+import java.security.MessageDigest;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  *
  * @author Vince
@@ -16,8 +25,9 @@ public class InterfaceConnexion extends javax.swing.JDialog {
      * Creates new form InterfaceConnexion
      */
     public InterfaceConnexion(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
+        login();
+        /*super(parent, modal);
+        initComponents();*/
     }
 
     /**
@@ -105,6 +115,40 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    void login()
+    {
+        /*Security.addProvider(new BouncyCastleProvider());
+        try {
+            String login = "THIB",password = "456";
+            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            md.update(login.getBytes());
+            md.update(password.getBytes());
+            System.out.println(login + " " + password + " " + md.digest());
+            
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }*/
+        Identify log = new Identify();
+        log.setLogin("Thib");
+        log.setPassword("azerty");
+        log.setMd();
+        //MessageDigest MD = log.getMd();
+        System.out.println("1" + log.getLogin() + " " + log.getPassword() + " " + log.getMd());
+        
+        Identify log2 = new Identify();
+        log2.setLogin("Thib");
+        log2.setPassword("azerty");
+        log2.setMd();
+        //MessageDigest MD = log.getMd();
+        System.out.println("2" + log2.getLogin() + " " + log2.getPassword() + " " + log2.getMd());
+        if(MessageDigest.isEqual(log.getMd(), log2.getMd()))
+             System.out.println("C'est bon ca marche :)");
+        else
+            System.out.println("PUTEUH");
+    }
     /**
      * @param args the command line arguments
      */
