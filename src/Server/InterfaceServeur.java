@@ -22,7 +22,6 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     /**
      * Creates new form InterfaceServeur
      */
-    private int port;
     int PORT_CHECKIN;
     int PORT_BAGAGES;
     String IP_ADDRESS;
@@ -36,10 +35,10 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         ReadProperties rP ;
         try {
             rP = new ReadProperties("/Server/Config.properties");
-            IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            //IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
             PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
-            System.out.println("Adresse ip = " + IP_ADDRESS);
+            //System.out.println("Adresse ip = " + IP_ADDRESS);
             System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
             System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);
         } catch (IOException ex) {
@@ -135,9 +134,8 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        port = 5000;
         TraceEvenements("serveur#acquisition du port#main");
-        ThreadServeur ts = new ThreadServeur(port, new ListeTaches(), this);
+        ThreadServeur ts = new ThreadServeur(PORT_CHECKIN, new ListeTaches(), this);
         ts.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
