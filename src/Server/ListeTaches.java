@@ -5,6 +5,7 @@
  */
 package Server;
 
+import java.net.Socket;
 import java.util.LinkedList;
 
 /**
@@ -33,4 +34,5 @@ public class ListeTaches implements SourceTaches {
         System.out.println("ListeTaches : tache dans la file");
         notify();
     }
+
 }

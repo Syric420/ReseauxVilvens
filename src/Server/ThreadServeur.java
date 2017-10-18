@@ -34,8 +34,7 @@ public class ThreadServeur extends Thread {
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {
-            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +
-            String.valueOf(i));
+            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +String.valueOf(i));
             thr.start();
         }
 
@@ -47,8 +46,7 @@ public class ThreadServeur extends Thread {
             {
                 System.out.println("************ Serveur en attente");
                 CSocket = SSocket.accept();
-                guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+
-                "#accept#thread serveur");
+                guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
             }
             catch (IOException e)
             {
@@ -60,8 +58,7 @@ public class ThreadServeur extends Thread {
             {
                 ois = new ObjectInputStream(CSocket.getInputStream());
                 req = (RequeteSUM)ois.readObject();
-                System.out.println("Requete lue par le serveur, instance de " +
-                req.getClass().getName());
+                System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
             }
             catch (ClassNotFoundException e)
             {

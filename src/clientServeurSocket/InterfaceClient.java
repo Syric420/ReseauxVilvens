@@ -50,6 +50,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         LReponse = new javax.swing.JTextField();
+        JB_Connect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -82,6 +83,13 @@ public class InterfaceClient extends javax.swing.JFrame {
 
         jLabel4.setText("Réponse reçue:");
 
+        JB_Connect.setText("Se connecter");
+        JB_Connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JB_ConnectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,27 +97,30 @@ public class InterfaceClient extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TFAdresseServeur)
-                            .addComponent(TFPortServeur)))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(RBMail)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton2))
-                            .addComponent(jSeparator1)))
+                        .addComponent(RBMail)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jRadioButton2))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(TFRequete)))
+                        .addComponent(TFRequete))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(JB_Connect)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(TFAdresseServeur)
+                                    .addComponent(TFPortServeur)))
+                            .addComponent(jSeparator1))))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(68, 68, 68)
@@ -136,12 +147,14 @@ public class InterfaceClient extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(TFPortServeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(JB_Connect)
+                .addGap(8, 8, 8)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RBMail)
-                    .addComponent(jRadioButton2))
-                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton2)
+                    .addComponent(RBMail))
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TFRequete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -153,7 +166,7 @@ public class InterfaceClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(LReponse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -173,19 +186,6 @@ public class InterfaceClient extends javax.swing.JFrame {
             req = new RequeteSUM(RequeteSUM.REQUEST_E_MAIL, chargeUtile);
         else 
             req = new RequeteSUM(RequeteSUM.REQUEST_TEMPORARY_KEY,chargeUtile);
-        // Connexion au serveur
-        ois=null; oos=null; cliSock = null;
-        String adresse = TFAdresseServeur.getText();
-        int port = Integer.parseInt(TFPortServeur.getText());
-        try
-        {
-            cliSock = new Socket(adresse, port);
-            System.out.println(cliSock.getInetAddress().toString());
-        }
-        catch (UnknownHostException e)
-        { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
-        catch (IOException e)
-        { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
         // Envoie de la requête
         try
         {
@@ -213,6 +213,23 @@ public class InterfaceClient extends javax.swing.JFrame {
             System.out.println("--- erreur IO = " + e.getMessage()); }
         LReponse.setText(rep.getChargeUtile());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void JB_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JB_ConnectActionPerformed
+        // TODO add your handling code here:
+         // Connexion au serveur
+        ois=null; oos=null; cliSock = null;
+        String adresse = TFAdresseServeur.getText();
+        int port = Integer.parseInt(TFPortServeur.getText());
+        try
+        {
+            cliSock = new Socket(adresse, port);
+            System.out.println(cliSock.getInetAddress().toString());
+        }
+        catch (UnknownHostException e)
+        { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
+        catch (IOException e)
+        { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
+    }//GEN-LAST:event_JB_ConnectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,6 +267,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JB_Connect;
     private javax.swing.JTextField LReponse;
     private javax.swing.JRadioButton RBMail;
     private javax.swing.JTextField TFAdresseServeur;
