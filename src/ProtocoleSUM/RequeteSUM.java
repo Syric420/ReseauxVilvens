@@ -98,7 +98,7 @@ public class RequeteSUM implements Requete, Serializable
         {
             oos = new ObjectOutputStream(sock.getOutputStream());
             oos.writeObject(rep); oos.flush();
-            oos.close();
+            //oos.close();
         }
         catch (IOException e)
         {
