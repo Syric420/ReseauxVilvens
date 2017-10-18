@@ -5,6 +5,8 @@
  */
 package Server;
 
+import java.net.Socket;
+
 /**
  *
  * @author Vince
@@ -21,17 +23,17 @@ public class ThreadClient extends Thread {
     
     public void run()
     {
-    while (!isInterrupted())
-    {
-        try
+        while (!isInterrupted())
         {
-            System.out.println("Tread client avant get");
-            tacheEnCours = tachesAExecuter.getTache();
-        }
-        catch (InterruptedException e)
-        {
-            System.out.println("Interruption : " + e.getMessage());
-        }
+            try
+            {
+                System.out.println("Tread client avant get");
+                tacheEnCours = tachesAExecuter.getTache();
+            }
+            catch (InterruptedException e)
+            {
+                System.out.println("Interruption : " + e.getMessage());
+            }
             System.out.println("run de tachesencours");
             tacheEnCours.run();
         }

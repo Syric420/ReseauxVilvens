@@ -72,13 +72,12 @@ public class RequeteSUM implements Requete, Serializable
         System.out.println("Début de traiteRequete : adresse distante = " + adresseDistante);
         // la charge utile est le nom du client
         String eMail = (String)tableMails.get(getChargeUtile());
-        cs.TraceEvenements(adresseDistante+"#Mail de "+
-        getChargeUtile()+"#"+Thread.currentThread().getName());
+        cs.TraceEvenements(adresseDistante+"#Mail de "+ getChargeUtile()+"#"+Thread.currentThread().getName());
         if (eMail != null)
             System.out.println("E-Mail trouvé pour " + getChargeUtile());
         else
         {
-            System.out.println("E-Mailnon trouvé pour " + getChargeUtile() + " : " + eMail);
+            System.out.println("E-Mail non trouvé pour " + getChargeUtile() + " : " + eMail);
             eMail="?@?";
         }
         // Construction d'une réponse

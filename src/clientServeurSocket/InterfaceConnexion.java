@@ -98,6 +98,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         if(myHash.get(user).equals(mdp))
         {
             System.out.println("Réussi");
+            this.setVisible(false);
         }
         else
             System.out.println("Raté");
