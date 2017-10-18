@@ -17,7 +17,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
      */
     public InterfaceConnexion(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
+        initComponents();//aa
     }
 
     /**
