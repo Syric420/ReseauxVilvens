@@ -44,9 +44,9 @@ public class InterfaceClient extends javax.swing.JFrame {
         ReadProperties rP ;
         try {
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
-            //IP_ADDRESS = rP.getProp("IP_ADDRESS");
-            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            //IP_ADDRESS = rP.getProp("IP_ADDRESS")
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
             //System.out.println("Adresse ip = " + IP_ADDRESS);
             System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
             System.out.println("IP_ADDRESS = " + IP_ADDRESS);
