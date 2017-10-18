@@ -22,7 +22,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     /**
      * Creates new form InterfaceServeur
      */
-    int PORT_CHECKIN=5020;
+    int PORT_CHECKIN;
     int PORT_BAGAGES;
     String IP_ADDRESS;
     ThreadServeur ts;

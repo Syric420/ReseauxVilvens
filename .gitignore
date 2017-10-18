@@ -2,4 +2,5 @@
 /build/
 /dist/
 /src/clientserveursocket/Config.properties
+/src/clientServeurSocket/Config.properties
 /src/Server/Config.properties
