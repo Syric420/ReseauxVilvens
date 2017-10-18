@@ -39,7 +39,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     {
         ReadProperties rP ;
         try {
-            rP = new ReadProperties("/Server/Config.properties");
+            rP = new ReadProperties("/clientserveursocket/Config.properties");
             //IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
