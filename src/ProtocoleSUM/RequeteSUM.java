@@ -8,7 +8,7 @@ import Server.ConsoleServeur;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import server.*;
+import Server.*;
 
 /**
  *
