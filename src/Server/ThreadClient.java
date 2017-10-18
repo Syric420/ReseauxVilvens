@@ -32,41 +32,47 @@ public class ThreadClient extends Thread {
     {
         while (!isInterrupted())
         {
-            ObjectInputStream ois=null;
-            RequeteSUM req = null;
-            try
+            System.out.println("MySock = "+mySock);
+            while(mySock!=null)
             {
-                ois = new ObjectInputStream(mySock.getInputStream());
-                req = (RequeteSUM)ois.readObject();
-                System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                
+                ObjectInputStream ois=null;
+                RequeteSUM req = null;
+                try
+                {
+                    ois = new ObjectInputStream(mySock.getInputStream());
+                    req = (RequeteSUM)ois.readObject();
+                    System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                }
+                catch (ClassNotFoundException e)
+                {
+                    System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
+                }
+                catch (IOException e)
+                {
+                    System.err.println("Erreur ? [" + e.getMessage() + "]");
+                }
+                Runnable travail = req.createRunnable(mySock, guiApplication);
+                if (travail != null)
+                {
+                    tachesAExecuter.recordTache(travail);
+                    System.out.println("Travail mis dans la file");
+                }
+                else System.out.println("Pas de mise en file");
+
+                try
+                {
+                    System.out.println("Tread client avant get");
+                    tacheEnCours = tachesAExecuter.getTache();
+                }
+                catch (InterruptedException e)
+                {
+                    System.out.println("Interruption : " + e.getMessage());
+                }
+                System.out.println("run de tachesencours");
+                tacheEnCours.run();
             }
-            catch (ClassNotFoundException e)
-            {
-                System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
-            }
-            catch (IOException e)
-            {
-                System.err.println("Erreur ? [" + e.getMessage() + "]");
-            }
-            Runnable travail = req.createRunnable(mySock, guiApplication);
-            if (travail != null)
-            {
-                tachesAExecuter.recordTache(travail);
-                System.out.println("Travail mis dans la file");
-            }
-            else System.out.println("Pas de mise en file");
             
-            try
-            {
-                System.out.println("Tread client avant get");
-                tacheEnCours = tachesAExecuter.getTache();
-            }
-            catch (InterruptedException e)
-            {
-                System.out.println("Interruption : " + e.getMessage());
-            }
-            System.out.println("run de tachesencours");
-            tacheEnCours.run();
         }
     }
 

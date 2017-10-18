@@ -17,7 +17,7 @@ public class ThreadServeur extends Thread {
     private int port;
     private ConsoleServeur guiApplication;
     private ServerSocket SSocket = null;
-    private ThreadClient []thr;
+    private ThreadClient thr;
     
     public ThreadServeur(int p, ConsoleServeur fs)
     {
@@ -36,7 +36,8 @@ public class ThreadServeur extends Thread {
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {
-            thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
+            thr = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
+            
         }
 
         // Mise en attente du serveur
@@ -49,7 +50,10 @@ public class ThreadServeur extends Thread {
                 CSocket = SSocket.accept();
                 guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
                 //On assigne la socket à un thread Client
-                assigneAThread(CSocket);
+                //assigneAThread(CSocket);
+                System.out.println("MySock = "+CSocket);
+                thr.setMySock(CSocket);
+                thr.start();
             }
             catch (IOException e)
             {
@@ -83,7 +87,7 @@ public class ThreadServeur extends Thread {
         }
     }
     
-    public void assigneAThread(Socket sock)
+    /*public void assigneAThread(Socket sock)
     {
         int i;
         for(i=0; i<thr.length;i++)
@@ -99,5 +103,5 @@ public class ThreadServeur extends Thread {
             System.out.println("Plus de thread disponible");
             System.exit(0);
         }       
-    }
+    }*/
 }
