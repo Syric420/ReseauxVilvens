@@ -112,7 +112,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        port = 5000;
+        port = 52000;
         TraceEvenements("serveur#acquisition du port#main");
         ThreadServeur ts = new ThreadServeur(port, new ListeTaches(), this);
         ts.start();

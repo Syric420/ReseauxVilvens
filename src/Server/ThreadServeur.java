@@ -5,6 +5,7 @@
  */
 package Server;
 
+import ProtocoleSUM.*;
 import java.net.*;
 import java.io.*;
 /**
@@ -13,70 +14,70 @@ import java.io.*;
  */
 public class ThreadServeur extends Thread {
     private int port;
-private SourceTaches tachesAExecuter;
-private ConsoleServeur guiApplication;
-private ServerSocket SSocket = null;
-public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs)
-{
-    port = p; tachesAExecuter = st; guiApplication = fs;
-}
-public void run()
-{
-    try
+    private SourceTaches tachesAExecuter;
+    private ConsoleServeur guiApplication;
+    private ServerSocket SSocket = null;
+    public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs)
     {
-        SSocket = new ServerSocket(port);
+        port = p; tachesAExecuter = st; guiApplication = fs;
     }
-    catch (IOException e)
+    public void run()
     {
-        System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
-    }
-    // Démarrage du pool de threads
-    for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
-    {
-        ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +
-        String.valueOf(i));
-        thr.start();
-    }
+        try
+        {
+            SSocket = new ServerSocket(port);
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
+        }
+        // Démarrage du pool de threads
+        for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
+        {
+            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +
+            String.valueOf(i));
+            thr.start();
+        }
 
-    // Mise en attente du serveur
-    Socket CSocket = null;
-    while (!isInterrupted())
-    {
-        try
+        // Mise en attente du serveur
+        Socket CSocket = null;
+        while (!isInterrupted())
         {
-            System.out.println("************ Serveur en attente");
-            CSocket = SSocket.accept();
-            guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+
-            "#accept#thread serveur");
+            try
+            {
+                System.out.println("************ Serveur en attente");
+                CSocket = SSocket.accept();
+                guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+
+                "#accept#thread serveur");
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur d'accept ! ? [" + e.getMessage() + "]"); System.exit(1);
+            }
+            ObjectInputStream ois=null;
+            RequeteSUM req = null;
+            try
+            {
+                ois = new ObjectInputStream(CSocket.getInputStream());
+                req = (RequeteSUM)ois.readObject();
+                System.out.println("Requete lue par le serveur, instance de " +
+                req.getClass().getName());
+            }
+            catch (ClassNotFoundException e)
+            {
+                System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur ? [" + e.getMessage() + "]");
+            }
+            Runnable travail = req.createRunnable(CSocket, guiApplication);
+            if (travail != null)
+            {
+                tachesAExecuter.recordTache(travail);
+                System.out.println("Travail mis dans la file");
+            }
+            else System.out.println("Pas de mise en file");
         }
-        catch (IOException e)
-        {
-            System.err.println("Erreur d'accept ! ? [" + e.getMessage() + "]"); System.exit(1);
-        }
-        ObjectInputStream ois=null;
-        Requete req = null;
-        try
-        {
-            ois = new ObjectInputStream(CSocket.getInputStream());
-            req = (Requete)ois.readObject();
-            System.out.println("Requete lue par le serveur, instance de " +
-            req.getClass().getName());
-        }
-        catch (ClassNotFoundException e)
-        {
-            System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur ? [" + e.getMessage() + "]");
-        }
-        Runnable travail = req.createRunnable(CSocket, guiApplication);
-        if (travail != null)
-        {
-            tachesAExecuter.recordTache(travail);
-            System.out.println("Travail mis dans la file");
-        }
-        else System.out.println("Pas de mise en file");
     }
-}
 }
