@@ -15,7 +15,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
- *
+ * 
+ * fdfdf
+ * 
+ * 
+ *gdsgfsggd
  * @author Vince
  */
 public class InterfaceClient extends javax.swing.JFrame {
