@@ -8,8 +8,18 @@ import java.io.*;
 import java.net.*;
 
 import ProtocoleSUM.*;
+import Utilities.ReadProperties;
+import java.security.Provider;
+import java.security.Security;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
- *
+ * 
+ * fdfdf
+ * 
+ * 
+ *gdsgfsggd
  * @author Vince
  */
 public class InterfaceClient extends javax.swing.JFrame {
@@ -17,16 +27,42 @@ public class InterfaceClient extends javax.swing.JFrame {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
     private Socket cliSock;
+    int PORT_CHECKIN;
+    String IP_ADDRESS;
     InterfaceConnexion InterfaceCo = new InterfaceConnexion(this, true);
     /**
      * Creates new form InterfaceClient
      */
     public InterfaceClient() {
+        Conf();
         initComponents();
         
         InterfaceCo.setVisible(true);
     }
+        private void Conf()
+    {
+        ReadProperties rP ;
+        try {
+            rP = new ReadProperties("/clientserveursocket/Config.properties");
+            //IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            //System.out.println("Adresse ip = " + IP_ADDRESS);
+            System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
+            System.out.println("IP_ADDRESS = " + IP_ADDRESS);
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Security.addProvider(new BouncyCastleProvider());
+        /*Provider prov[] = Security.getProviders();
+        
+        for (int i=0; i<prov.length; i++)
+        {
+        System.out.println(prov[i].getName() + "/" + prov[i].getVersion());
+        prov[i].list(System.out);*/
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
