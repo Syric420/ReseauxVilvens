@@ -35,9 +35,9 @@ public class InterfaceClient extends javax.swing.JFrame {
      */
     public InterfaceClient() {
         Conf();
-        //initComponents();
+        initComponents();
         
-        //InterfaceCo.setVisible(true);
+        InterfaceCo.setVisible(true);
     }
         private void Conf()
     {
