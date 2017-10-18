@@ -16,6 +16,7 @@ import Server.*;
  */
 public class RequeteSUM implements Requete, Serializable
 {
+    //public static int REQUEST_CONNECT = 3;
     public static int REQUEST_E_MAIL = 1;
     public static int REQUEST_TEMPORARY_KEY = 2;
     public static Hashtable tableMails = new Hashtable();
@@ -47,6 +48,16 @@ public class RequeteSUM implements Requete, Serializable
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
+        /*if(type==REQUEST_CONNECT)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiteClient(s, cs);
+                }
+            };
+        }*/
         if (type==REQUEST_E_MAIL)
             return new Runnable()
             {
@@ -94,6 +105,7 @@ public class RequeteSUM implements Requete, Serializable
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
         }
     }
+
 
     private void traiteRequeteKey(Socket sock, ConsoleServeur cs)
     {

@@ -8,18 +8,20 @@ package Server;
 import ProtocoleSUM.*;
 import java.net.*;
 import java.io.*;
+import java.util.LinkedList;
 /**
  *
  * @author Vince
  */
 public class ThreadServeur extends Thread {
     private int port;
-    private SourceTaches tachesAExecuter;
     private ConsoleServeur guiApplication;
     private ServerSocket SSocket = null;
-    public ThreadServeur(int p, SourceTaches st, ConsoleServeur fs)
+    private ThreadClient []thr;
+    
+    public ThreadServeur(int p, ConsoleServeur fs)
     {
-        port = p; tachesAExecuter = st; guiApplication = fs;
+        port = p;  guiApplication = fs;
     }
     public void run()
     {
@@ -34,8 +36,7 @@ public class ThreadServeur extends Thread {
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {
-            ThreadClient thr = new ThreadClient (tachesAExecuter, "Thread du pool n°" +String.valueOf(i));
-            thr.start();
+            thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
         }
 
         // Mise en attente du serveur
@@ -47,11 +48,15 @@ public class ThreadServeur extends Thread {
                 System.out.println("************ Serveur en attente");
                 CSocket = SSocket.accept();
                 guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
+                //On assigne la socket à un thread Client
+                assigneAThread(CSocket);
             }
             catch (IOException e)
             {
                 System.err.println("Erreur d'accept ! ? [" + e.getMessage() + "]"); System.exit(1);
             }
+            
+            /*
             ObjectInputStream ois=null;
             RequeteSUM req = null;
             try
@@ -74,7 +79,25 @@ public class ThreadServeur extends Thread {
                 tachesAExecuter.recordTache(travail);
                 System.out.println("Travail mis dans la file");
             }
-            else System.out.println("Pas de mise en file");
+            else System.out.println("Pas de mise en file");*/
         }
+    }
+    
+    public void assigneAThread(Socket sock)
+    {
+        int i;
+        for(i=0; i<thr.length;i++)
+        {
+            if(thr[i].getMySock() == null)
+            {
+                thr[i].setMySock(sock);
+                thr[i].start();
+            }    
+        }
+        if(i==thr.length)
+        {
+            System.out.println("Plus de thread disponible");
+            System.exit(0);
+        }       
     }
 }

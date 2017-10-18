@@ -25,6 +25,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     int PORT_CHECKIN;
     int PORT_BAGAGES;
     String IP_ADDRESS;
+    ThreadServeur ts;
     public InterfaceServeur() {
         Conf();
         initComponents();
@@ -75,6 +76,11 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         });
 
         jButton2.setText("Arrêter");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,9 +141,14 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         TraceEvenements("serveur#acquisition du port#main");
-        ThreadServeur ts = new ThreadServeur(PORT_CHECKIN, new ListeTaches(), this);
+        ts = new ThreadServeur(PORT_CHECKIN, this);
         ts.start();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        ts.interrupt();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
