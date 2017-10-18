@@ -5,7 +5,12 @@
  */
 package Server;
 
+import Utilities.ReadProperties;
+import clientServeurSocket.InterfaceClient;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,11 +23,29 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
      * Creates new form InterfaceServeur
      */
     private int port;
+    int PORT_CHECKIN;
+    int PORT_BAGAGES;
+    String IP_ADDRESS;
     public InterfaceServeur() {
+        Conf();
         initComponents();
         TraceEvenements("serveur#initialisation#main");
     }
-
+    private void Conf()
+    {
+        ReadProperties rP ;
+        try {
+            rP = new ReadProperties("/Server/Config.properties");
+            IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
+            System.out.println("Adresse ip = " + IP_ADDRESS);
+            System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
+            System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
