@@ -9,6 +9,7 @@ import java.net.*;
 
 import ProtocoleSUM.*;
 import Utilities.ReadProperties;
+import static java.lang.System.exit;
 import java.security.Provider;
 import java.security.Security;
 import java.util.logging.Level;
@@ -34,10 +35,13 @@ public class InterfaceClient extends javax.swing.JFrame {
      * Creates new form InterfaceClient
      */
     public InterfaceClient() {
-        Conf();
+   
         initComponents();
+        Conf();
         InterfaceCo = new InterfaceConnexion(this, true,cliSock);
         InterfaceCo.setVisible(true);
+        if(!InterfaceCo.isLogged())
+            exit(0);
     }
         private void Conf()
     {
@@ -65,7 +69,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
         catch (IOException e)
         { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
-
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.

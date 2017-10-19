@@ -17,11 +17,14 @@ public class ReponseSUM implements Reponse, Serializable
     public static int EMAIL_NOT_FOUND = 501;
     public static int KEY_GENERATED = 202;
     public static int WRONG_PASSWORD = 401;
+    public static int LOGIN_OK = 101;
+    public static int LOGIN_FAIL = 102;
     private int codeRetour;
     private String chargeUtile;
     public ReponseSUM(int c, String chu)
     {
-        codeRetour = c; setChargeUtile(chu);
+        codeRetour = c; 
+        setChargeUtile(chu);
     }
     public int getCode() { return codeRetour; }
     public String getChargeUtile() { return chargeUtile; }
