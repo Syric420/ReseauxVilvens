@@ -55,11 +55,13 @@ public class Identify {
 
     public void setMd() { 
         try {
+            
             md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(login.getBytes());
             md.update(password.getBytes());
             temps= (new Date()).getTime();
             alea = Math.random();
+            System.out.println("SetMD " + login +";" + password + ";" + temps + ";" + alea);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
             bdos.writeLong(temps);
@@ -79,12 +81,40 @@ public class Identify {
                 Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    
+        
+    public void setMd(String U,String Pass, long T, double A) { 
+        try {
+            
+            md = MessageDigest.getInstance("SHA-1", "BC");
+            System.out.println("SetMD " + U +";" + Pass + ";" + T + ";" + A);
+            md.update(U.getBytes());
+            md.update(Pass.getBytes());
+            temps= T;
+            alea = A;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(alea);
+
+            md.update(baos.toByteArray());
+            msgD= md.digest();
+            System.out.println(U + " " + Pass + " " + msgD);
+            
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+        catch (IOException ex) {
+                Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     public RequeteSUM sendLogin()
     {
 
            System.out.println("Envoi du message digest");
-           String connect = (login + ";" + temps + ";" + alea + ";" + msgD.length + ";" + msgD);
+           String connect = (login + ";" + temps + ";" + alea + ";" + msgD);
            req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
            System.out.println(req.getType());
            return req;
