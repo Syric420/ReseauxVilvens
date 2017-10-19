@@ -1,10 +1,14 @@
 package Utilities;
 
 import ProtocoleSUM.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -114,14 +118,14 @@ public class Identify {
     {
 
            System.out.println("Envoi du message digest");
-           String connect = (login + ";" + temps + ";" + alea + ";" + msgD);
+           String connect = (login + ";" + temps + ";" + alea);
            req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
            System.out.println(req.getType());
+           req.ByteArray=getMd();
            return req;
     }
     public void answerLogin(DataInputStream dis)
     {
         
     }
-
 }

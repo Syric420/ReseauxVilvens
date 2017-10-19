@@ -27,6 +27,7 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_TEMPORARY_KEY = 2;
     public static int REQUEST_CONNECT = 3;
     public static Hashtable tableMails = new Hashtable();
+    public byte [] ByteArray;
     static
     {
     tableMails.put("Vilvens", "claude.vilvens@prov-liege.be");
@@ -106,6 +107,9 @@ public class RequeteSUM implements Requete, Serializable
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
             System.out.println(i + ": " + tab[i]);
+        
+        
+        System.out.println("Digest : " + ByteArray);
         try {
             Bc.setRs(Bc.getInstruc().executeQuery("Select password from login where user = '" + tab[0] + "'"));
             Bc.getRs().next();
@@ -116,7 +120,7 @@ public class RequeteSUM implements Requete, Serializable
             id.setMd(tab[0],s,temps,alea);
             System.out.println("Hash 1: " + tab[3].getBytes() + "Hash 2: " + id.getMd());
             
-            if (MessageDigest.isEqual(tab[3].getBytes(), id.getMd()) )
+            if (MessageDigest.isEqual(ByteArray, id.getMd()) )
             {
                 System.out.println("OK - vous pouvez etre connecte au serveur");
             }
