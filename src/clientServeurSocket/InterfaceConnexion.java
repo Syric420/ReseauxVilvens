@@ -36,7 +36,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     public InterfaceConnexion(java.awt.Frame parent, boolean modal,Socket cliS) {
         super(parent, modal);
         cliSock = cliS;
-        login();
+        //login();
         initComponents();
     }
 
@@ -109,7 +109,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Hashtable myHash = new Hashtable();
+       /* Hashtable myHash = new Hashtable();
         myHash.put("Vince", "123");
         System.out.println(myHash.values());
         String user,mdp;
@@ -121,15 +121,16 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             this.setVisible(false);
         }
         else
-            System.out.println("Raté");
-        
+            System.out.println("Raté");*/
+        login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     void login()
     {
         Identify log = new Identify();
-        log.setLogin("Thib");
-        log.setPassword("azerty");
+        if(jTextField1.getText() != null && jTextField1.getText() != "" && jTextField1.getText() != null && jTextField1.getText() != "")
+        {  log.setLogin(jTextField1.getText());
+            log.setPassword(jPasswordField1.getText());
         log.setMd();
         /*byte [] byteArray = log.getMd();
         byte[] encoded = Base64.getEncoder().encode(log.getMd());
@@ -152,6 +153,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
         System.out.println("Apres lancement message");
+        }
     }
 
     public static void main(String args[]) {
