@@ -113,7 +113,8 @@ public class RequeteSUM implements Requete, Serializable
         
         System.out.println("Digest : " + getByteArray());
         String s = Bc.findPassword(tab[0]);
-        Identify id = null; 
+        Identify id = null;
+        ReponseSUM rep;
         if(s != null)
         {
             id = new Identify();
@@ -124,11 +125,27 @@ public class RequeteSUM implements Requete, Serializable
             System.out.println("Hash 1: " + getByteArray() + " Hash 2: " + id.getMd());
             if (MessageDigest.isEqual(getByteArray(), id.getMd()) )
             {
-                System.out.println("OK - vous pouvez etre connecte au serveur");
+                System.out.println("Digest OK");
+                rep= new ReponseSUM(ReponseSUM.LOGIN_OK,"LOGIN OK");
             }
-            else System.out.println("FAIL");
+            else
+                rep= new ReponseSUM(ReponseSUM.LOGIN_FAIL,"LOGIN FAILED");
         }
-
+        else
+        {
+            rep= new ReponseSUM(ReponseSUM.LOGIN_FAIL,"LOGIN FAILED");
+        }
+        System.out.println("rep : " + rep.getChargeUtile());
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(rep); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
 
     }
     private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
