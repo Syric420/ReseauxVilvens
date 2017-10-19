@@ -27,7 +27,7 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_TEMPORARY_KEY = 2;
     public static int REQUEST_CONNECT = 3;
     public static Hashtable tableMails = new Hashtable();
-    public byte [] ByteArray;
+    private byte [] ByteArray;
     static
     {
     tableMails.put("Vilvens", "claude.vilvens@prov-liege.be");
@@ -49,10 +49,12 @@ public class RequeteSUM implements Requete, Serializable
     public RequeteSUM(int t, String chu)
     {
         type = t; setChargeUtile(chu);
+        ByteArray = null;
     }
     public RequeteSUM(int t, String chu, Socket s)
     {
         type = t; setChargeUtile(chu); socketClient =s;
+        ByteArray = null;
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
@@ -109,28 +111,25 @@ public class RequeteSUM implements Requete, Serializable
             System.out.println(i + ": " + tab[i]);
         
         
-        System.out.println("Digest : " + ByteArray);
-        try {
-            Bc.setRs(Bc.getInstruc().executeQuery("Select password from login where user = '" + tab[0] + "'"));
-            Bc.getRs().next();
-            String s =Bc.getRs().getString("password");
-            Identify id = new Identify();
+        System.out.println("Digest : " + getByteArray());
+        String s = Bc.findPassword(tab[0]);
+        Identify id = null; 
+        if(s != null)
+        {
+            id = new Identify();
             long temps = Long.parseLong(tab[1]);
             double alea = Double.parseDouble(tab[2]);
             id.setMd(tab[0],s,temps,alea);
-                //byte [] B=null;
-            
-            System.out.println("Hash 1: " + ByteArray + " Hash 2: " + id.getMd());
-            
-            if (MessageDigest.isEqual(ByteArray, id.getMd()) )
+            //byte [] B=null;
+            System.out.println("Hash 1: " + getByteArray() + " Hash 2: " + id.getMd());
+            if (MessageDigest.isEqual(getByteArray(), id.getMd()) )
             {
                 System.out.println("OK - vous pouvez etre connecte au serveur");
             }
             else System.out.println("FAIL");
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(RequeteSUM.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
     private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
     {
@@ -180,4 +179,20 @@ public class RequeteSUM implements Requete, Serializable
     public int getType() {
         return type;
     }
+
+    /**
+     * @return the ByteArray
+     */
+    public byte[] getByteArray() {
+        return ByteArray;
+    }
+
+    /**
+     * @param ByteArray the ByteArray to set
+     */
+    public void setByteArray(byte[] ByteArray) {
+        this.ByteArray = ByteArray;
+    }
+
+    
 }

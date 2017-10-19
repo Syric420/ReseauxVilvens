@@ -5,6 +5,8 @@
  */
 package database.utilities;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Vince
@@ -117,5 +119,16 @@ public class BeanConnect {
      */
     public void setRs(ResultSet rs) {
         this.rs = rs;
+    }
+    public String findPassword(String user){
+        try {
+            setRs(getInstruc().executeQuery("Select password from login where user = '" + user + "'"));
+            getRs().next();
+            String s =getRs().getString("password");
+            return s;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }
