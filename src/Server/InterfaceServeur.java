@@ -27,7 +27,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     String IP_ADDRESS;
     ThreadServeur ts;
     public InterfaceServeur() {
-        //Conf();
+        Conf();
         initComponents();
         TraceEvenements("serveur#initialisation#main");
     }
