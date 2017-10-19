@@ -1,14 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilities;
 
+import ProtocoleSUM.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -20,6 +21,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 public class Identify {
    private String login;
    private String password;
+   long temps;
+   double alea;
+   RequeteSUM req;
    private MessageDigest md;
    private byte[] msgD;
     public Identify() {
@@ -49,12 +53,19 @@ public class Identify {
         return msgD;
     }
 
-    public void setMd() {
-        
+    public void setMd() { 
         try {
             md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(login.getBytes());
             md.update(password.getBytes());
+            temps= (new Date()).getTime();
+            alea = Math.random();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(alea);
+
+            md.update(baos.toByteArray());
             msgD= md.digest();
             System.out.println(login + " " + password + " " + msgD);
             
@@ -64,5 +75,23 @@ public class Identify {
             Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
             
         }
+        catch (IOException ex) {
+                Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
+    
+    public RequeteSUM sendLogin()
+    {
+
+           System.out.println("Envoi du message digest");
+           String connect = (login + ";" + temps + ";" + alea + ";" + msgD.length + ";" + msgD);
+           req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
+           System.out.println(req.getType());
+           return req;
+    }
+    public void answerLogin(DataInputStream dis)
+    {
+        
+    }
+
 }

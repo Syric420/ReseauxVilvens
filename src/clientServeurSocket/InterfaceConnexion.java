@@ -5,7 +5,11 @@
  */
 package clientServeurSocket;
 
+import ProtocoleSUM.RequeteSUM;
 import Utilities.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,10 +28,11 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     /**
      * Creates new form InterfaceConnexion
      */
-    public InterfaceConnexion(java.awt.Frame parent, boolean modal) {
+    Socket cliSock;
+    public InterfaceConnexion(java.awt.Frame parent, boolean modal,Socket cliS) {
         super(parent, modal);
+        cliSock = cliS;
         login();
-        
         initComponents();
     }
 
@@ -118,41 +123,30 @@ public class InterfaceConnexion extends javax.swing.JDialog {
 
     void login()
     {
-        /*Security.addProvider(new BouncyCastleProvider());
-        try {
-            String login = "THIB",password = "456";
-            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
-            md.update(login.getBytes());
-            md.update(password.getBytes());
-            System.out.println(login + " " + password + " " + md.digest());
-            
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchProviderException ex) {
-            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
-            
-        }*/
         Identify log = new Identify();
         log.setLogin("Thib");
         log.setPassword("azerty");
         log.setMd();
-        //MessageDigest MD = log.getMd();
         System.out.println("1" + log.getLogin() + " " + log.getPassword() + " " + log.getMd());
+        RequeteSUM req;
+        req=log.sendLogin();
         
-        Identify log2 = new Identify();
-        log2.setLogin("Thib");
-        log2.setPassword("azerty");
-        log2.setMd();
-        //MessageDigest MD = log.getMd();
-        System.out.println("2" + log2.getLogin() + " " + log2.getPassword() + " " + log2.getMd());
-        if(MessageDigest.isEqual(log.getMd(), log2.getMd()))
-             System.out.println("C'est bon ca marche :)");
-        else
-            System.out.println("PUTEUH");
+        System.out.println("Avant lancement message");
+        System.out.println("Socket : " + cliSock.getInetAddress().toString());
+        ObjectOutputStream oos =null;
+        try
+        {
+            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            System.out.println("ok connection");
+            oos.writeObject(req); oos.flush();
+        }
+        catch (IOException e)
+        { 
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+        }
+        System.out.println("Apres lancement message");
     }
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -180,14 +174,14 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InterfaceConnexion dialog = new InterfaceConnexion(new javax.swing.JFrame(), true);
+                /*InterfaceConnexion dialog = new InterfaceConnexion(new javax.swing.JFrame(), true,);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
                 });
-                dialog.setVisible(true);
+                dialog.setVisible(true);*/
             }
         });
     }
