@@ -19,6 +19,7 @@ public class RequeteSUM implements Requete, Serializable
     //public static int REQUEST_CONNECT = 3;
     public static int REQUEST_E_MAIL = 1;
     public static int REQUEST_TEMPORARY_KEY = 2;
+    public static int REQUEST_CONNECT = 3;
     public static Hashtable tableMails = new Hashtable();
     static
     {
@@ -58,7 +59,7 @@ public class RequeteSUM implements Requete, Serializable
                 }
             };
         }*/
-        if (type==REQUEST_E_MAIL)
+        if (getType()==REQUEST_E_MAIL)
             return new Runnable()
             {
                 public void run()
@@ -66,7 +67,7 @@ public class RequeteSUM implements Requete, Serializable
                     traiteRequeteEMail(s, cs);
                 }
             };
-        else if (type==REQUEST_TEMPORARY_KEY)
+        else if (getType()==REQUEST_TEMPORARY_KEY)
             return new Runnable()
             {
                 public void run()
@@ -74,7 +75,21 @@ public class RequeteSUM implements Requete, Serializable
                     traiteRequeteKey(s, cs);
                 }
             };
+        else if(getType() == REQUEST_CONNECT)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiterConnect(s, cs);
+                }
+            };
+        }
         else return null;
+    }
+    private void traiterConnect(Socket sock, ConsoleServeur cs)
+    {
+        System.out.println("Traiter Connect");
     }
     private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
     {
@@ -116,5 +131,12 @@ public class RequeteSUM implements Requete, Serializable
     public void setChargeUtile(String chargeUtile)
     {
         this.chargeUtile = chargeUtile;
+    }
+
+    /**
+     * @return the type
+     */
+    public int getType() {
+        return type;
     }
 }

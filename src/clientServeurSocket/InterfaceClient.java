@@ -29,14 +29,14 @@ public class InterfaceClient extends javax.swing.JFrame {
     private Socket cliSock;
     int PORT_CHECKIN;
     String IP_ADDRESS;
-    InterfaceConnexion InterfaceCo = new InterfaceConnexion(this, true);
+    InterfaceConnexion InterfaceCo;
     /**
      * Creates new form InterfaceClient
      */
     public InterfaceClient() {
         Conf();
         initComponents();
-        
+        InterfaceCo = new InterfaceConnexion(this, true,cliSock);
         InterfaceCo.setVisible(true);
     }
         private void Conf()
@@ -44,10 +44,9 @@ public class InterfaceClient extends javax.swing.JFrame {
         ReadProperties rP ;
         try {
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
-            //IP_ADDRESS = rP.getProp("IP_ADDRESS")
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
-            //System.out.println("Adresse ip = " + IP_ADDRESS);
+
             System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
             System.out.println("IP_ADDRESS = " + IP_ADDRESS);
         } catch (IOException ex) {
@@ -55,12 +54,17 @@ public class InterfaceClient extends javax.swing.JFrame {
         }
         
         Security.addProvider(new BouncyCastleProvider());
-        /*Provider prov[] = Security.getProviders();
-        
-        for (int i=0; i<prov.length; i++)
+
+        ois=null; oos=null; cliSock = null;
+        try
         {
-        System.out.println(prov[i].getName() + "/" + prov[i].getVersion());
-        prov[i].list(System.out);*/
+            cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+            System.out.println(cliSock.getInetAddress().toString());
+        }
+        catch (UnknownHostException e)
+        { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
+        catch (IOException e)
+        { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
 
     }
     /**
@@ -252,19 +256,7 @@ public class InterfaceClient extends javax.swing.JFrame {
 
     private void JB_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JB_ConnectActionPerformed
         // TODO add your handling code here:
-         // Connexion au serveur
-        ois=null; oos=null; cliSock = null;
-        String adresse = TFAdresseServeur.getText();
-        int port = Integer.parseInt(TFPortServeur.getText());
-        try
-        {
-            cliSock = new Socket(adresse, port);
-            System.out.println(cliSock.getInetAddress().toString());
-        }
-        catch (UnknownHostException e)
-        { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
-        catch (IOException e)
-        { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
+    
     }//GEN-LAST:event_JB_ConnectActionPerformed
 
     /**

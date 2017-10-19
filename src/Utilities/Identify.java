@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Utilities;
 
+import ProtocoleSUM.*;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,6 +23,7 @@ public class Identify {
    private String password;
    long temps;
    double alea;
+   RequeteSUM req;
    private MessageDigest md;
    private byte[] msgD;
     public Identify() {
@@ -83,29 +80,18 @@ public class Identify {
             }
     }
     
-    public void sendLogin(DataOutputStream dos)
+    public RequeteSUM sendLogin()
     {
-       try {
+
            System.out.println("Envoi du message digest");
-           dos.writeUTF(login);
-           dos.writeLong(temps);
-           dos.writeDouble(alea);
-           dos.writeInt(msgD.length);
-           dos.write(msgD);
-       } catch (IOException ex) {
-           Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
-       }
+           String connect = (login + ";" + temps + ";" + alea + ";" + msgD.length + ";" + msgD);
+           req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
+           System.out.println(req.getType());
+           return req;
     }
-    
-    public boolean answerLogin(DataInputStream dis)
+    public void answerLogin(DataInputStream dis)
     {
-       try {
-           String réponse = dis.readUTF();
-           System.out.println("Réponse du serveur = " + réponse);
-       } catch (IOException ex) {
-           Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
-       }
-       return true;
+        
     }
 
 }
