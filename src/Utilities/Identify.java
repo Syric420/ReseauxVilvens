@@ -5,10 +5,15 @@
  */
 package Utilities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -20,6 +25,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 public class Identify {
    private String login;
    private String password;
+   long temps;
+   double alea;
    private MessageDigest md;
    private byte[] msgD;
     public Identify() {
@@ -49,12 +56,19 @@ public class Identify {
         return msgD;
     }
 
-    public void setMd() {
-        
+    public void setMd() { 
         try {
             md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(login.getBytes());
             md.update(password.getBytes());
+            temps= (new Date()).getTime();
+            alea = Math.random();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(alea);
+
+            md.update(baos.toByteArray());
             msgD= md.digest();
             System.out.println(login + " " + password + " " + msgD);
             
@@ -64,5 +78,34 @@ public class Identify {
             Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
             
         }
+        catch (IOException ex) {
+                Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
+    
+    public void sendLogin(DataOutputStream dos)
+    {
+       try {
+           System.out.println("Envoi du message digest");
+           dos.writeUTF(login);
+           dos.writeLong(temps);
+           dos.writeDouble(alea);
+           dos.writeInt(msgD.length);
+           dos.write(msgD);
+       } catch (IOException ex) {
+           Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }
+    
+    public boolean answerLogin(DataInputStream dis)
+    {
+       try {
+           String réponse = dis.readUTF();
+           System.out.println("Réponse du serveur = " + réponse);
+       } catch (IOException ex) {
+           Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
+       }
+       return true;
+    }
+
 }
