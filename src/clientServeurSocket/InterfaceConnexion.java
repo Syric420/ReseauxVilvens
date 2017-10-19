@@ -9,12 +9,16 @@ import ProtocoleSUM.RequeteSUM;
 import Utilities.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.lang.Object;
 import java.security.MessageDigest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,10 +131,13 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         log.setLogin("Thib");
         log.setPassword("azerty");
         log.setMd();
-        System.out.println("1" + log.getLogin() + " " + log.getPassword() + " " + log.getMd());
+        /*byte [] byteArray = log.getMd();
+        byte[] encoded = Base64.getEncoder().encode(log.getMd());
+        String s =new String(encoded);*/
+        System.out.println("1" + log.getLogin() + " " + log.getPassword());
+        
         RequeteSUM req;
         req=log.sendLogin();
-        
         System.out.println("Avant lancement message");
         System.out.println("Socket : " + cliSock.getInetAddress().toString());
         ObjectOutputStream oos =null;
@@ -141,7 +148,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             oos.writeObject(req); oos.flush();
         }
         catch (IOException e)
-        { 
+        {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
         System.out.println("Apres lancement message");
