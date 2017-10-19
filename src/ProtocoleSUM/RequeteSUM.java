@@ -9,6 +9,12 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import Server.*;
+import Utilities.Identify;
+import database.utilities.BeanConnect;
+import java.security.MessageDigest;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -89,7 +95,37 @@ public class RequeteSUM implements Requete, Serializable
     }
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {
-        System.out.println("Traiter Connect");
+        BeanConnect Bc;
+        Bc = new BeanConnect();
+        Bc.setTypeBD("MySql");
+        Bc.connect();
+        
+        String chaine = getChargeUtile();
+        String tab []= null;
+        System.out.println("Traiter Connect : " + chaine);
+        tab = chaine.split(";");
+        for(int i = 0 ; i < tab.length ; i++)
+            System.out.println(i + ": " + tab[i]);
+        try {
+            Bc.setRs(Bc.getInstruc().executeQuery("Select password from login where user = '" + tab[0] + "'"));
+            Bc.getRs().next();
+            String s =Bc.getRs().getString("password");
+            Identify id = new Identify();
+            long temps = Long.parseLong(tab[1]);
+            double alea = Double.parseDouble(tab[2]);
+            id.setMd(tab[0],s,temps,alea);
+            
+            System.out.println("Hash 1: " + tab[3].getBytes() + "Hash 2: " + id.getMd());
+            
+            if (MessageDigest.isEqual(tab[3].getBytes(), id.getMd()) )
+            {
+                System.out.println("OK - vous pouvez etre connecte au serveur");
+            }
+            else System.out.println("FAIL");
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(RequeteSUM.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
     {
