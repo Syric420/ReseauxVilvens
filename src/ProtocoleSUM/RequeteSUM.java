@@ -96,9 +96,9 @@ public class RequeteSUM implements Requete, Serializable
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {
         BeanConnect Bc;
-        Bc = new BeanConnect();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
+        //Bc = new BeanConnect();
+        //Bc.setTypeBD("MySql");
+        //Bc.connect();
         
         String chaine = getChargeUtile();
         String tab []= null;
@@ -106,15 +106,15 @@ public class RequeteSUM implements Requete, Serializable
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
             System.out.println(i + ": " + tab[i]);
-        try {
-            Bc.setRs(Bc.getInstruc().executeQuery("Select password from login where user = '" + tab[0] + "'"));
-            Bc.getRs().next();
-            String s =Bc.getRs().getString("password");
+        //try {
+            //Bc.setRs(Bc.getInstruc().executeQuery("Select password from login where user = '" + tab[0] + "'"));
+            //Bc.getRs().next();
+            //String s =Bc.getRs().getString("password");
             Identify id = new Identify();
             long temps = Long.parseLong(tab[1]);
             double alea = Double.parseDouble(tab[2]);
-            id.setMd(tab[0],s,temps,alea);
-            
+            id.setMd(tab[0],"123",temps,alea);
+            System.out.println("");
             System.out.println("Hash 1: " + tab[3].getBytes() + "Hash 2: " + id.getMd());
             
             if (MessageDigest.isEqual(tab[3].getBytes(), id.getMd()) )
@@ -123,9 +123,9 @@ public class RequeteSUM implements Requete, Serializable
             }
             else System.out.println("FAIL");
             
-        } catch (SQLException ex) {
+       /* } catch (SQLException ex) {
             Logger.getLogger(RequeteSUM.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
     private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
     {
