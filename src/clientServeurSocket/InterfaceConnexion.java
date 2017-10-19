@@ -9,12 +9,16 @@ import ProtocoleSUM.RequeteSUM;
 import Utilities.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.lang.Object;
 import java.security.MessageDigest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +36,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     public InterfaceConnexion(java.awt.Frame parent, boolean modal,Socket cliS) {
         super(parent, modal);
         cliSock = cliS;
-        login();
+        //login();
         initComponents();
     }
 
@@ -105,7 +109,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Hashtable myHash = new Hashtable();
+       /* Hashtable myHash = new Hashtable();
         myHash.put("Vince", "123");
         System.out.println(myHash.values());
         String user,mdp;
@@ -117,20 +121,24 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             this.setVisible(false);
         }
         else
-            System.out.println("Raté");
-        
+            System.out.println("Raté");*/
+        login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     void login()
     {
         Identify log = new Identify();
-        log.setLogin("Thib");
-        log.setPassword("azerty");
+        if(jTextField1.getText() != null && jTextField1.getText() != "" && jTextField1.getText() != null && jTextField1.getText() != "")
+        {  log.setLogin(jTextField1.getText());
+            log.setPassword(jPasswordField1.getText());
         log.setMd();
-        System.out.println("1" + log.getLogin() + " " + log.getPassword() + " " + log.getMd());
+        /*byte [] byteArray = log.getMd();
+        byte[] encoded = Base64.getEncoder().encode(log.getMd());
+        String s =new String(encoded);*/
+        System.out.println("1" + log.getLogin() + " " + log.getPassword());
+        
         RequeteSUM req;
         req=log.sendLogin();
-        
         System.out.println("Avant lancement message");
         System.out.println("Socket : " + cliSock.getInetAddress().toString());
         ObjectOutputStream oos =null;
@@ -141,10 +149,11 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             oos.writeObject(req); oos.flush();
         }
         catch (IOException e)
-        { 
+        {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
         System.out.println("Apres lancement message");
+        }
     }
 
     public static void main(String args[]) {
