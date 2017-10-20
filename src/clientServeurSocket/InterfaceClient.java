@@ -218,6 +218,19 @@ public class InterfaceClient extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
+        System.out.println("Envoie d'une deconnexion");
+        String chargeUtile;
+        chargeUtile = "InterfaceClient avec socket ="+cliSock.toString()+" se déconnecte";
+        RequeteSUM req = new RequeteSUM(RequeteSUM.REQUEST_DECONNECT, chargeUtile);;
+         try
+        {
+            oos = new ObjectOutputStream(cliSock.getOutputStream());
+            oos.writeObject(req); oos.flush();
+        }
+        catch (IOException e)
+        { 
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+        }
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
 

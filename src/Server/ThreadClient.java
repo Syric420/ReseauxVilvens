@@ -51,6 +51,8 @@ public class ThreadClient extends Thread {
                 catch (IOException e)
                 {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
+                    mySock=null;
+                    this.interrupt();
                 }
                 Runnable travail = req.createRunnable(mySock, guiApplication);
                 if (travail != null)
