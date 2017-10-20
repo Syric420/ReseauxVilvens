@@ -90,7 +90,7 @@ public class RequeteSUM implements Requete, Serializable
             System.out.println("Entre dans traiterDeconnect");
             oos = new ObjectOutputStream(sock.getOutputStream());
             oos.close();
-            sock.close();
+            sock=null;
         }
         catch (IOException e)
         {

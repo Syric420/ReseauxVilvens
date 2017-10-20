@@ -9,6 +9,8 @@ import ProtocoleSUM.RequeteSUM;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -51,8 +53,6 @@ public class ThreadClient extends Thread {
                 catch (IOException e)
                 {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
-                    mySock=null;
-                    this.interrupt();
                 }
                 Runnable travail = req.createRunnable(mySock, guiApplication);
                 if (travail != null)
