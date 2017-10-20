@@ -96,8 +96,8 @@ public class BeanConnect {
                 }
                 else
                 {
-                    //setCon(DriverManager.getConnection("jdbc:mysql://192.168.190.132:3306/sys","thib","1234"));
-                    setCon(DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234"));
+                    setCon(DriverManager.getConnection("jdbc:mysql://192.168.190.132:3306/sys","thib","1234"));
+                    //setCon(DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234"));
                     System.out.println("Connexion avec mySQL");
                 }
                 setInstruc(getCon().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE));
