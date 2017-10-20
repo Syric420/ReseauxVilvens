@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package database.utilities;
+import Utilities.ReadProperties;
+import java.io.IOException;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,7 @@ public class BeanConnect {
      * @return the typeBD
      */
     public String getTypeBD() {
-        return typeBD;
+        return typeBD.toUpperCase();
     }
 
     /**
@@ -74,35 +76,33 @@ public class BeanConnect {
         else
         {
             System.out.println("Essai de connexion JDBC");
-            try
-            {
-                if(getTypeBD().equalsIgnoreCase("Oracle"))
-                    leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
-                else
-                    leDriver = Class.forName("org.gjt.mm.mysql.Driver");
+            ReadProperties rP ;
+            try {
+                rP = new ReadProperties("/database/utilities/Config.properties");
+                String s;
+                s = new String(getTypeBD()+"_DRIVER");
+                leDriver = Class.forName(rP.getProp(s));
+                String address,user,pwd;
+                
+                s = new String(getTypeBD()+"_ADDRESS");
+                address = rP.getProp(s);
+                
+                s = new String(getTypeBD()+"_USER");
+                user = rP.getProp(s);
+                
+                s = new String(getTypeBD()+"_PASSWORD");
+                pwd = rP.getProp(s);
+                setCon(DriverManager.getConnection(address,user,pwd));
+                setInstruc(getCon().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE));
             }
             catch (ClassNotFoundException e)
             { 
                 System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
+            } catch (IOException ex) {
+                Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            try
-            {  
-                if(getTypeBD().equals("Oracle"))
-                {
-                    //setCon(DriverManager.getConnection("jdbc:oracle:thin:@192.168.190.132:1521:xe","thib","123"));
-                    setCon(DriverManager.getConnection("jdbc:oracle:thin:@192.168.81.132:1521:xe","thib","123"));
-                    System.out.println("Connexion avec BD Oracle");
-                }
-                else
-                {
-                    //setCon(DriverManager.getConnection("jdbc:mysql://192.168.190.132:3306/sys","thib","1234"));
-                    setCon(DriverManager.getConnection("jdbc:mysql://192.168.81.132:3306/sys","thib","1234"));
-                    System.out.println("Connexion avec mySQL");
-                }
-                setInstruc(getCon().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE));
-            }
-            catch (SQLException e) { System.out.println("Erreur SQL : " + e.getMessage()); }
             return 0;
         }
     }
