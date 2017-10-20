@@ -50,8 +50,11 @@ public class RequeteSUM implements Requete, Serializable
                 public void run()
                 {
                     traiterDeconnect(s, cs);
+
+
                 }
             };
+           
         }
         if (getType()==REQUEST_E_MAIL)
             return new Runnable()
@@ -89,8 +92,8 @@ public class RequeteSUM implements Requete, Serializable
         {
             System.out.println("Entre dans traiterDeconnect");
             oos = new ObjectOutputStream(sock.getOutputStream());
-            oos.close();
-            sock=null;
+            /*oos.close();
+            sock=null;*/
         }
         catch (IOException e)
         {
