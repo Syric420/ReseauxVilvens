@@ -121,7 +121,7 @@ public class Identify {
            String connect = (login + ";" + temps + ";" + alea);
            req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
            System.out.println(req.getType());
-           req.ByteArray=getMd();
+           req.setByteArray(getMd());
            return req;
     }
     public void answerLogin(DataInputStream dis)

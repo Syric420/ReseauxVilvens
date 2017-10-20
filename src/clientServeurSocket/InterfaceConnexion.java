@@ -5,9 +5,11 @@
  */
 package clientServeurSocket;
 
+import ProtocoleSUM.ReponseSUM;
 import ProtocoleSUM.RequeteSUM;
 import Utilities.*;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
@@ -29,14 +31,13 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  */
 public class InterfaceConnexion extends javax.swing.JDialog {
 
-    /**
-     * Creates new form InterfaceConnexion
-     */
-    Socket cliSock;
+    private Socket cliSock;
+    private boolean logged;
+    private ObjectInputStream ois;
     public InterfaceConnexion(java.awt.Frame parent, boolean modal,Socket cliS) {
         super(parent, modal);
         cliSock = cliS;
-        //login();
+        logged = false;
         initComponents();
     }
 
@@ -108,20 +109,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-       /* Hashtable myHash = new Hashtable();
-        myHash.put("Vince", "123");
-        System.out.println(myHash.values());
-        String user,mdp;
-        user = jTextField1.getText();mdp = jPasswordField1.getText();
-        
-        if(myHash.get(user).equals(mdp))
-        {
-            System.out.println("Réussi");
-            this.setVisible(false);
-        }
-        else
-            System.out.println("Raté");*/
+
         login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -154,6 +142,30 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         }
         System.out.println("Apres lancement message");
         }
+        
+        ReponseSUM rep = null;
+        ois = null;
+        try
+        {
+            ois = new ObjectInputStream(cliSock.getInputStream());
+            rep = (ReponseSUM)ois.readObject();
+            System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
+        }
+        catch (ClassNotFoundException e)
+        { 
+            System.out.println("--- erreur sur la classe = " + e.getMessage()); 
+        }
+        catch (IOException e)
+        { 
+            System.out.println("--- erreur IO = " + e.getMessage()); }
+        if(rep.getChargeUtile().equals("LOGIN OK"))
+        {
+            setLogged(true);
+            this.setVisible(false);
+        }          
+        else 
+            setLogged(false);
+        
     }
 
     public static void main(String args[]) {
@@ -202,4 +214,18 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the logged
+     */
+    public boolean isLogged() {
+        return logged;
+    }
+
+    /**
+     * @param logged the logged to set
+     */
+    public void setLogged(boolean logged) {
+        this.logged = logged;
+    }
 }
