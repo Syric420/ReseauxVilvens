@@ -120,7 +120,7 @@ public class InterfaceOracle extends javax.swing.JDialog {
         String Table;
         //selection de la BeanRequete.
         Table=jTextField1.getText();
-        BeanRequete.traiteRequete(Table);
+       // BeanRequete.traiteRequete(Table);
         DefaultTableModel jTableModel;    
         try {
                 if(BeanRequete.getRequete().equalsIgnoreCase("update"))

@@ -10,7 +10,7 @@ import java.util.*;
 import java.net.*;
 import Server.*;
 import Utilities.Identify;
-import database.utilities.BeanConnect;
+import database.utilities.*;
 import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -31,6 +31,7 @@ public class RequeteSUM implements Requete, Serializable
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
     private BeanConnect Bc;
+    private BeanRequete Br;
     private int type;
     private String chargeUtile;
     private Socket socketClient;
@@ -39,11 +40,12 @@ public class RequeteSUM implements Requete, Serializable
         type = t; setChargeUtile(chu);
         ByteArray = null;
     }
-    public RequeteSUM(int t, String chu, Socket s,BeanConnect B)
+    public RequeteSUM(int t, String chu, Socket s,BeanConnect B, BeanRequete R)
     {
         type = t; setChargeUtile(chu); socketClient =s;
         ByteArray = null;
         Bc=B;
+        Br=R;
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
@@ -87,6 +89,7 @@ public class RequeteSUM implements Requete, Serializable
     private void traiterVol(Socket sock, ConsoleServeur cs)
     {
         String s;
+        
         s = Bc.findVols();
         ReponseSUM rep = new ReponseSUM(ReponseSUM.VOL_OK,s);
         ObjectOutputStream oos;

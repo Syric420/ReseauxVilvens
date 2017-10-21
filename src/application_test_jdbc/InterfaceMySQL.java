@@ -118,7 +118,7 @@ public class InterfaceMySQL extends javax.swing.JDialog {
     else
         System.out.println("Erreur");*/
         DefaultTableModel jTableModel;
-        BeanRequete.traiteRequete(Table);
+        //BeanRequete.traiteRequete(Table);
         try
         {
             if(BeanRequete.getRequete().equalsIgnoreCase("update"))
