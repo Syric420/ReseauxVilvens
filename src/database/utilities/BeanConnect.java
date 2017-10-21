@@ -143,17 +143,13 @@ public class BeanConnect {
             int nbrCol = rsmd.getColumnCount();
             for(int i=0; i<nbrCol;i++)
             {
-                System.out.println("Nom de la colonne " + i + ": " + rsmd.getColumnName(i+1));
                 if(i+1 == nbrCol)
                     str= str + rsmd.getColumnName(i+1);
                 else
                     str= str + rsmd.getColumnName(i+1) + ";";
             }
             monVec = str.split(";");
-            str=str + "$";
-            System.out.println("String VOLS :"+str);
-            for(int i = 0; i <monVec.length; i++)
-                System.out.println("Vec i = " + monVec[i]);
+            str=str + "@";
             
             while(getRs().next())
             {
@@ -163,8 +159,7 @@ public class BeanConnect {
                 str=str + getRs().getDate(monVec[2]) + ";";
                 str=str + getRs().getDate(monVec[3]) + ";";
                 str=str + getRs().getInt(monVec[4]);
-                str=str+"$";
-                System.out.println("Test boucle pour voir si tt ok" + str);
+                str=str+"@";
             }
 
             
