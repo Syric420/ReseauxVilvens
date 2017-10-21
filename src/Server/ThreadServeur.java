@@ -17,11 +17,12 @@ public class ThreadServeur extends Thread {
     private int port;
     private ConsoleServeur guiApplication;
     private ServerSocket SSocket = null;
-    private ThreadClient thr;
+    private int nbThreads;
+    private ThreadClient []thr;
     
-    public ThreadServeur(int p, ConsoleServeur fs)
+    public ThreadServeur(int p, ConsoleServeur fs, int nb)
     {
-        port = p;  guiApplication = fs;
+        port = p;  guiApplication = fs; nbThreads = nb;
     }
     public void run()
     {
@@ -33,11 +34,12 @@ public class ThreadServeur extends Thread {
         {
             System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
         }
+         thr = new ThreadClient[nbThreads];
         // Démarrage du pool de threads
         for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
         {
-            thr = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
-            
+            thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
+            thr[i].start();
         }
 
         // Mise en attente du serveur
@@ -50,58 +52,28 @@ public class ThreadServeur extends Thread {
                 CSocket = SSocket.accept();
                 guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
                 //On assigne la socket à un thread Client
-                //assigneAThread(CSocket);
-                System.out.println("MySock = "+CSocket);
-                thr.setMySock(CSocket);
-                thr.start();
+                int i = ChercheThreadDispo();
+                System.out.println("Thread dispo = Thread n"+i);
+                thr[i].setMySock(CSocket);
             }
             catch (IOException e)
             {
                 System.err.println("Erreur d'accept ! ? [" + e.getMessage() + "]"); System.exit(1);
             }
             
-            /*
-            ObjectInputStream ois=null;
-            RequeteSUM req = null;
-            try
-            {
-                ois = new ObjectInputStream(CSocket.getInputStream());
-                req = (RequeteSUM)ois.readObject();
-                System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
-            }
-            catch (ClassNotFoundException e)
-            {
-                System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
-            }
-            catch (IOException e)
-            {
-                System.err.println("Erreur ? [" + e.getMessage() + "]");
-            }
-            Runnable travail = req.createRunnable(CSocket, guiApplication);
-            if (travail != null)
-            {
-                tachesAExecuter.recordTache(travail);
-                System.out.println("Travail mis dans la file");
-            }
-            else System.out.println("Pas de mise en file");*/
         }
     }
     
-    /*public void assigneAThread(Socket sock)
+     public int ChercheThreadDispo()
     {
         int i;
         for(i=0; i<thr.length;i++)
         {
             if(thr[i].getMySock() == null)
             {
-                thr[i].setMySock(sock);
-                thr[i].start();
+                return i;
             }    
-        }
-        if(i==thr.length)
-        {
-            System.out.println("Plus de thread disponible");
-            System.exit(0);
-        }       
-    }*/
+        } 
+        return -1;
+    }
 }
