@@ -6,6 +6,7 @@
 package Server;
 
 import ProtocoleSUM.RequeteSUM;
+import database.utilities.BeanConnect;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -20,6 +21,7 @@ public class ThreadClient extends Thread {
     private Runnable tacheEnCours;
     private Socket mySock;
     private ConsoleServeur guiApplication;
+    private BeanConnect Bc;
     public ThreadClient(SourceTaches st, String n, Socket s, ConsoleServeur fs )
     {
         tachesAExecuter = st;
@@ -30,10 +32,15 @@ public class ThreadClient extends Thread {
     
     public void run()
     {
+       System.out.println("MySock = "+mySock);
+        Bc = new BeanConnect();
+        Bc.setTypeBD("MySql");
+        Bc.connect();
         while (!isInterrupted())
         {
             if(mySock!=null)
-            {
+           {
+           
                 System.out.println("MySock = "+mySock);
                 ObjectInputStream ois=null;
                 RequeteSUM req = null;
@@ -41,6 +48,7 @@ public class ThreadClient extends Thread {
                 {
                     ois = new ObjectInputStream(mySock.getInputStream());
                     req = (RequeteSUM)ois.readObject();
+                    req.setBc(Bc);
                     System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
                 }
                 catch (ClassNotFoundException e)

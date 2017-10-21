@@ -5,6 +5,11 @@
  */
 package database.utilities;
 
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Vince
@@ -49,7 +54,24 @@ public class BeanRequete {
         }
            
     }
-
+    
+    
+    private String []IniNameTable(BeanConnect Bc)
+    {
+        String monVec[]={};
+        try {
+            ResultSetMetaData rsmd = Bc.getRs().getMetaData();
+            int nbrCol = rsmd.getColumnCount();
+            for(int i=0; i<nbrCol;i++)
+            {
+                 monVec[i]=rsmd.getColumnName(i);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanRequete.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return monVec;
+    }
     
     
     /**

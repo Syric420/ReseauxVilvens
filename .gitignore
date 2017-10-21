@@ -3,3 +3,4 @@
 /dist/
 /src/clientServeurSocket/Config.properties
 /src/Server/Config.properties
+/src/database/utilities/Config.properties

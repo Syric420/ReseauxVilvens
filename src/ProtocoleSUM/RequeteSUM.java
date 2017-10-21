@@ -28,6 +28,10 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_DECONNECT = 4;
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
+    public static int REQUEST_VOL = 5;
+    public static Hashtable tableMails = new Hashtable();
+    private byte [] ByteArray;
+    private BeanConnect Bc;
     private int type;
     private String chargeUtile;
     private Socket socketClient;
@@ -36,10 +40,11 @@ public class RequeteSUM implements Requete, Serializable
         type = t; setChargeUtile(chu);
         ByteArray = null;
     }
-    public RequeteSUM(int t, String chu, Socket s)
+    public RequeteSUM(int t, String chu, Socket s,BeanConnect B)
     {
         type = t; setChargeUtile(chu); socketClient =s;
         ByteArray = null;
+        Bc=B;
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
@@ -71,12 +76,21 @@ public class RequeteSUM implements Requete, Serializable
                 }
             };
         else if(getType() == REQUEST_CONNECT)
-        {
+        
             return new Runnable()
             {
                 public void run()
                 {
                     traiterConnect(s, cs);
+                }
+            };
+        else if(getType() == REQUEST_VOL)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiterVol(s, cs);
                 }
             };
         }
@@ -102,17 +116,29 @@ public class RequeteSUM implements Requete, Serializable
             {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
             }*/
+      }
         
-    }
+    private void traiterVol(Socket sock, ConsoleServeur cs)
+    {
+        String s;
+        s = Bc.findVols();
+        ReponseSUM rep = new ReponseSUM(ReponseSUM.VOL_OK,s);
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(rep); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
+   
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {
-        BeanConnect Bc;
-        Bc = new BeanConnect();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
         
         String chaine = getChargeUtile();
-        String tab []= null;
+        String tab []= {};
         System.out.println("Traiter Connect : " + chaine);
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
@@ -120,7 +146,7 @@ public class RequeteSUM implements Requete, Serializable
         
         
         System.out.println("Digest : " + getByteArray());
-        String s = Bc.findPassword(tab[0]);
+        String s = getBc().findPassword(tab[0]);
         Identify id = null;
         ReponseSUM rep;
         if(s != null)
@@ -217,6 +243,20 @@ public class RequeteSUM implements Requete, Serializable
      */
     public void setByteArray(byte[] ByteArray) {
         this.ByteArray = ByteArray;
+    }
+
+    /**
+     * @return the Bc
+     */
+    public BeanConnect getBc() {
+        return Bc;
+    }
+
+    /**
+     * @param Bc the Bc to set
+     */
+    public void setBc(BeanConnect Bc) {
+        this.Bc = Bc;
     }
 
     

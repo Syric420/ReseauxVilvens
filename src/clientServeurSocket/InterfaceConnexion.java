@@ -11,20 +11,7 @@ import Utilities.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.lang.Object;
-import java.security.MessageDigest;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  *
  * @author Vince
@@ -116,7 +103,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     void login()
     {
         Identify log = new Identify();
-        if(jTextField1.getText() != null && jTextField1.getText() != "" && jTextField1.getText() != null && jTextField1.getText() != "")
+        if(jTextField1.getText() != null && !"".equals(jTextField1.getText()) && jTextField1.getText() != null && !"".equals(jTextField1.getText()))
         {  log.setLogin(jTextField1.getText());
             log.setPassword(jPasswordField1.getText());
         log.setMd();
