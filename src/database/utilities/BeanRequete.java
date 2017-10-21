@@ -15,8 +15,9 @@ import java.util.logging.Logger;
  * @author Vince
  */
 public class BeanRequete {
-    private String buf,requete,table;
+    private String buf,requete,table, where, column;
     private boolean count;
+    private BeanConnect bc;
 
     public BeanRequete() {
         buf="";
@@ -25,42 +26,12 @@ public class BeanRequete {
         count = false;
     }
     
-    public void traiteRequete(String requ)
-    {
-        int i = 0;
-        //selection de la requete
-        if(requ.indexOf(" ",i) != 1)
-        {
-            requete=requ.substring(i, requ.indexOf(" ",i));
-            i = requ.indexOf(" ",i)+1;
-            do
-            {   
-                buf=requ.substring(i, requ.indexOf(" ",i));
-                i = requ.indexOf(" ",i)+1;
-                if(buf.equals("count(*)"))
-                    count = true;
-                if(buf.equals("from"))
-                    break;
-            }while(requ.indexOf(" ",i) != -1);
-            //selection table
-            if(requ.indexOf(" ",i) != -1)
-                setTable(requ.substring(i,requ.indexOf(" ",i)));
-            else
-                setTable(requ.substring(i));
-        }
-        else
-        {
-            System.out.println("Erreur");
-        }
-           
-    }
     
-    
-    private String []IniNameTable(BeanConnect Bc)
+    private String []IniNameTable()
     {
         String monVec[]={};
         try {
-            ResultSetMetaData rsmd = Bc.getRs().getMetaData();
+            ResultSetMetaData rsmd = bc.getRs().getMetaData();
             int nbrCol = rsmd.getColumnCount();
             for(int i=0; i<nbrCol;i++)
             {
@@ -71,6 +42,23 @@ public class BeanRequete {
             Logger.getLogger(BeanRequete.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return monVec;
+    }
+    
+    public int Set()
+    {
+        
+        return -1;
+    }
+    
+    public int Select()
+    {
+        
+        return -1;
+    }
+    
+    public int Count()
+    {
+        return -1;
     }
     
     
@@ -142,5 +130,33 @@ public class BeanRequete {
      */
     public void setTable(String table) {
         this.table = table;
+    }
+
+    /**
+     * @return the where
+     */
+    public String getWhere() {
+        return where;
+    }
+
+    /**
+     * @param where the where to set
+     */
+    public void setWhere(String where) {
+        this.where = where;
+    }
+
+    /**
+     * @return the bc
+     */
+    public BeanConnect getBc() {
+        return bc;
+    }
+
+    /**
+     * @param bc the bc to set
+     */
+    public void setBc(BeanConnect bc) {
+        this.bc = bc;
     }
 }
