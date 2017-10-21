@@ -35,6 +35,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     /**
      * Creates new form InterfaceClient
      */
+     
     public InterfaceClient() {
    
         initComponents();
