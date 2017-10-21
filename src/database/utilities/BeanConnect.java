@@ -68,7 +68,7 @@ public class BeanConnect {
         this.instruc = instruc;
     }
     
-    public synchronized int  connect()
+    public int connect()
     {
         Class leDriver;
         if(getTypeBD().equals(""))
