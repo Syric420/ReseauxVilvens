@@ -103,8 +103,8 @@ public class BeanConnect {
             } catch (SQLException ex) {
                 Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return 0;
-        }
+
+          return 0;
     }
 
     /**

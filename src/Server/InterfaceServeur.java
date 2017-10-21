@@ -25,7 +25,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
      * Creates new form InterfaceServeur
      */
     int PORT_CHECKIN;
-    int PORT_BAGAGES;
+    int PORT_BAGAGES, nbThreads;
     String IP_ADDRESS;
     ThreadServeur ts;
     public InterfaceServeur() {
@@ -41,9 +41,11 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
             //IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
             PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
+            nbThreads = Integer.parseInt(rP.getProp("NB_THREADS"));
             //System.out.println("Adresse ip = " + IP_ADDRESS);
-            System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
-            System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);
+           /* System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
+            System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);*/
+           System.out.println("nbThreads = " + nbThreads);
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,13 +145,14 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         TraceEvenements("serveur#acquisition du port#main");
-        ts = new ThreadServeur(PORT_CHECKIN, this);
+        ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
         ts.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         ts.interrupt();
+        System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
