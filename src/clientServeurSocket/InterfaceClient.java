@@ -14,6 +14,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  * 
@@ -252,7 +253,6 @@ public class InterfaceClient extends javax.swing.JFrame {
         {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
-        /*
         ReponseSUM rep = null;
         try
         {
@@ -267,8 +267,26 @@ public class InterfaceClient extends javax.swing.JFrame {
         catch (IOException e)
         { 
             System.out.println("--- erreur IO = " + e.getMessage()); }
-        LReponse.setText(rep.getChargeUtile());*/
+        iniTable(rep.getChargeUtile());
         
+    }
+    private void iniTable(String tab)
+    {
+        String nomTable[] ={},var[] = {},tuples[];
+        var=tab.split("@");
+        nomTable=var[0].split(";");
+        jTable1.setModel(new javax.swing.table.DefaultTableModel
+                    (
+                            new Object [][] {
+                            },
+                            nomTable
+                    ));
+        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
+        for(int i=1; i <var.length ; i++)
+        {
+            tuples= var[i].split(";");
+            dm.addRow(tuples);
+        }
     }
     /**
      * @param args the command line arguments

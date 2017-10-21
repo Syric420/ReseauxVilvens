@@ -112,13 +112,23 @@ public class RequeteSUM implements Requete, Serializable
     {
         String s;
         s = Bc.findVols();
-        System.out.println("Resultat des vols: " + s);
+        ReponseSUM rep = new ReponseSUM(ReponseSUM.VOL_OK,s);
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(rep); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
     }
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {
         
         String chaine = getChargeUtile();
-        String tab []= null;
+        String tab []= {};
         System.out.println("Traiter Connect : " + chaine);
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
