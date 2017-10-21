@@ -267,15 +267,12 @@ public class InterfaceClient extends javax.swing.JFrame {
         catch (IOException e)
         { 
             System.out.println("--- erreur IO = " + e.getMessage()); }
-        LReponse.setText(rep.getChargeUtile());
-
         iniTable(rep.getChargeUtile());
         
     }
     private void iniTable(String tab)
     {
         String nomTable[] ={},var[] = {},tuples[];
-        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
         var=tab.split("@");
         nomTable=var[0].split(";");
         jTable1.setModel(new javax.swing.table.DefaultTableModel
@@ -284,11 +281,11 @@ public class InterfaceClient extends javax.swing.JFrame {
                             },
                             nomTable
                     ));
-        
+        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
         for(int i=1; i <var.length ; i++)
         {
             tuples= var[i].split(";");
-            
+            dm.addRow(tuples);
         }
     }
     /**
