@@ -95,6 +95,10 @@ public class InterfaceClient extends javax.swing.JFrame {
         LReponse = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        JLabel_Etat = new javax.swing.JLabel();
+        JB_Connecter = new javax.swing.JButton();
+        JB_Deconnecter = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -136,6 +140,26 @@ public class InterfaceClient extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel1.setText("Etat du serveur:");
+
+        JLabel_Etat.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        JLabel_Etat.setText("CONNECTE");
+
+        JB_Connecter.setText("Se connecter");
+        JB_Connecter.setEnabled(false);
+        JB_Connecter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JB_ConnecterActionPerformed(evt);
+            }
+        });
+
+        JB_Deconnecter.setText("Se déconnecter");
+        JB_Deconnecter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JB_DeconnecterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,36 +168,55 @@ public class InterfaceClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(RBMail)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButton2))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 15, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(RBMail)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jRadioButton2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(TFRequete))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 416, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addGap(69, 69, 69))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LReponse))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(TFRequete)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(254, 254, 254)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(JLabel_Etat))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(198, 198, 198)
+                                .addComponent(JB_Connecter)
+                                .addGap(106, 106, 106)
+                                .addComponent(JB_Deconnecter)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 416, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(79, 79, 79))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(LReponse)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(JLabel_Etat))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(JB_Connecter)
+                    .addComponent(JB_Deconnecter))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButton2)
                     .addComponent(RBMail))
@@ -189,9 +232,9 @@ public class InterfaceClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(LReponse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
+                .addContainerGap())
         );
 
         pack();
@@ -199,7 +242,18 @@ public class InterfaceClient extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        System.exit(0);
+        String chargeUtile;
+        chargeUtile = "InterfaceClient avec socket ="+cliSock.toString()+" se déconnecte";
+        RequeteSUM req = new RequeteSUM(RequeteSUM.REQUEST_DECONNECT, chargeUtile);;
+        try
+        {
+            oos = new ObjectOutputStream(cliSock.getOutputStream());
+            oos.writeObject(req); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -238,6 +292,42 @@ public class InterfaceClient extends javax.swing.JFrame {
             System.out.println("--- erreur IO = " + e.getMessage()); }
         LReponse.setText(rep.getChargeUtile());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void JB_ConnecterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JB_ConnecterActionPerformed
+        // TODO add your handling code here:
+        ois=null; oos=null; cliSock = null;
+        try
+        {
+            cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+            System.out.println(cliSock.getInetAddress().toString());
+        }
+        catch (UnknownHostException e)
+        { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
+        catch (IOException e)
+        { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
+        
+        JB_Connecter.setEnabled(false);
+        JB_Deconnecter.setEnabled(true);
+        JLabel_Etat.setText("Connecté");
+    }//GEN-LAST:event_JB_ConnecterActionPerformed
+
+    private void JB_DeconnecterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JB_DeconnecterActionPerformed
+        // TODO add your handling code here:
+        String chargeUtile;
+        chargeUtile = "InterfaceClient avec socket ="+cliSock.toString()+" se déconnecte";
+        RequeteSUM req = new RequeteSUM(RequeteSUM.REQUEST_DECONNECT, chargeUtile);;
+        try
+        {
+            oos = new ObjectOutputStream(cliSock.getOutputStream());
+            oos.writeObject(req); oos.flush();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JB_Connecter.setEnabled(true);
+        JB_Deconnecter.setEnabled(false);
+        JLabel_Etat.setText("Déconnecté");
+    }//GEN-LAST:event_JB_DeconnecterActionPerformed
     private void LoadVols()
     {
         //requete pour avoir résultats + nom colonnes
@@ -247,7 +337,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         try
         {
             oos= new ObjectOutputStream(cliSock.getOutputStream());
-            System.out.println("ok connection");
+            //System.out.println("ok connection");
             oos.writeObject(req); oos.flush();
         }
         catch (IOException e)
@@ -325,12 +415,16 @@ public class InterfaceClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton JB_Connecter;
+    private javax.swing.JButton JB_Deconnecter;
+    private javax.swing.JLabel JLabel_Etat;
     private javax.swing.JTextField LReponse;
     private javax.swing.JRadioButton RBMail;
     private javax.swing.JTextField TFRequete;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JRadioButton jRadioButton2;

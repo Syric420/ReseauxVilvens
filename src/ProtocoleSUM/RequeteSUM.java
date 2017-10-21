@@ -27,24 +27,10 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_TEMPORARY_KEY = 2;
     public static int REQUEST_CONNECT = 3;
     public static int REQUEST_VOL = 4;
+    public static int REQUEST_DECONNECT = 5;
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
     private BeanConnect Bc;
-    static
-    {
-    tableMails.put("Vilvens", "claude.vilvens@prov-liege.be");
-    tableMails.put("Charlet", "christophe.charlet@prov-liege.be");
-    tableMails.put("Madani", "mounawar.madani@prov-liege.be");
-    tableMails.put("Wagner", "jean-marc.wagner@prov-liege.be");
-    }
-    public static Hashtable tablePwdNoms = new Hashtable();
-    static
-    {
-        tablePwdNoms.put("GrosZZ", "Vilvens");
-        tablePwdNoms.put("GrosRouteur", "Charlet");
-        tablePwdNoms.put("GrosseVoiture", "Madani");
-        tablePwdNoms.put("GrosCerveau", "Wagner");
-    }
     private int type;
     private String chargeUtile;
     private Socket socketClient;
@@ -61,16 +47,6 @@ public class RequeteSUM implements Requete, Serializable
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
-        /*if(type==REQUEST_CONNECT)
-        {
-            return new Runnable()
-            {
-                public void run()
-                {
-                    traiteClient(s, cs);
-                }
-            };
-        }*/
         if (getType()==REQUEST_E_MAIL)
             return new Runnable()
             {
