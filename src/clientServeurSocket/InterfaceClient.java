@@ -42,6 +42,8 @@ public class InterfaceClient extends javax.swing.JFrame {
         InterfaceCo.setVisible(true);
         if(!InterfaceCo.isLogged())
             exit(0);
+        LoadVols();
+        
     }
         private void Conf()
     {
@@ -83,18 +85,14 @@ public class InterfaceClient extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jButton1 = new javax.swing.JButton();
         TFRequete = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         RBMail = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        TFAdresseServeur = new javax.swing.JTextField();
-        TFPortServeur = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         LReponse = new javax.swing.JTextField();
-        JB_Connect = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -110,10 +108,6 @@ public class InterfaceClient extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Adresse du serveur:");
-
-        jLabel2.setText("Port du serveur:");
-
         buttonGroup1.add(RBMail);
         RBMail.setSelected(true);
         RBMail.setText("Demande d'un email");
@@ -127,12 +121,18 @@ public class InterfaceClient extends javax.swing.JFrame {
 
         jLabel4.setText("Réponse reçue:");
 
-        JB_Connect.setText("Se connecter");
-        JB_Connect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JB_ConnectActionPerformed(evt);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
             }
-        });
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,27 +149,12 @@ public class InterfaceClient extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(TFRequete))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(JB_Connect)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(TFAdresseServeur)
-                                    .addComponent(TFPortServeur)))
-                            .addComponent(jSeparator1))))
+                        .addComponent(TFRequete)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 416, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(79, 79, 79))
             .addGroup(layout.createSequentialGroup()
@@ -178,23 +163,15 @@ public class InterfaceClient extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LReponse)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(TFAdresseServeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(TFPortServeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(JB_Connect)
-                .addGap(8, 8, 8)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButton2)
                     .addComponent(RBMail))
@@ -210,7 +187,9 @@ public class InterfaceClient extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(LReponse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48))
         );
 
         pack();
@@ -257,12 +236,40 @@ public class InterfaceClient extends javax.swing.JFrame {
             System.out.println("--- erreur IO = " + e.getMessage()); }
         LReponse.setText(rep.getChargeUtile());
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void JB_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JB_ConnectActionPerformed
-        // TODO add your handling code here:
-    
-    }//GEN-LAST:event_JB_ConnectActionPerformed
-
+    private void LoadVols()
+    {
+        //requete pour avoir résultats + nom colonnes
+        ObjectOutputStream oos =null;
+        RequeteSUM req = null;
+        req = new RequeteSUM(RequeteSUM.REQUEST_VOL, null);
+        try
+        {
+            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            System.out.println("ok connection");
+            oos.writeObject(req); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+        }
+        /*
+        ReponseSUM rep = null;
+        try
+        {
+            ois = new ObjectInputStream(cliSock.getInputStream());
+            rep = (ReponseSUM)ois.readObject();
+            System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
+        }
+        catch (ClassNotFoundException e)
+        { 
+            System.out.println("--- erreur sur la classe = " + e.getMessage()); 
+        }
+        catch (IOException e)
+        { 
+            System.out.println("--- erreur IO = " + e.getMessage()); }
+        LReponse.setText(rep.getChargeUtile());*/
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -299,20 +306,16 @@ public class InterfaceClient extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton JB_Connect;
     private javax.swing.JTextField LReponse;
     private javax.swing.JRadioButton RBMail;
-    private javax.swing.JTextField TFAdresseServeur;
-    private javax.swing.JTextField TFPortServeur;
     private javax.swing.JTextField TFRequete;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

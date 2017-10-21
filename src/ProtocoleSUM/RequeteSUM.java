@@ -26,8 +26,10 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_E_MAIL = 1;
     public static int REQUEST_TEMPORARY_KEY = 2;
     public static int REQUEST_CONNECT = 3;
+    public static int REQUEST_VOL = 4;
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
+    private BeanConnect Bc;
     static
     {
     tableMails.put("Vilvens", "claude.vilvens@prov-liege.be");
@@ -51,10 +53,11 @@ public class RequeteSUM implements Requete, Serializable
         type = t; setChargeUtile(chu);
         ByteArray = null;
     }
-    public RequeteSUM(int t, String chu, Socket s)
+    public RequeteSUM(int t, String chu, Socket s,BeanConnect B)
     {
         type = t; setChargeUtile(chu); socketClient =s;
         ByteArray = null;
+        Bc=B;
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
@@ -85,7 +88,7 @@ public class RequeteSUM implements Requete, Serializable
                 }
             };
         else if(getType() == REQUEST_CONNECT)
-        {
+        
             return new Runnable()
             {
                 public void run()
@@ -93,15 +96,26 @@ public class RequeteSUM implements Requete, Serializable
                     traiterConnect(s, cs);
                 }
             };
+        else if(getType() == REQUEST_VOL)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiterVol(s, cs);
+                }
+            };
         }
         else return null;
     }
+    private void traiterVol(Socket sock, ConsoleServeur cs)
+    {
+        String s;
+        s = Bc.findVols();
+        System.out.println("Resultat des vols: " + s);
+    }
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {
-        BeanConnect Bc;
-        Bc = new BeanConnect();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
         
         String chaine = getChargeUtile();
         String tab []= null;
@@ -112,7 +126,7 @@ public class RequeteSUM implements Requete, Serializable
         
         
         System.out.println("Digest : " + getByteArray());
-        String s = Bc.findPassword(tab[0]);
+        String s = getBc().findPassword(tab[0]);
         Identify id = null;
         ReponseSUM rep;
         if(s != null)
@@ -209,6 +223,20 @@ public class RequeteSUM implements Requete, Serializable
      */
     public void setByteArray(byte[] ByteArray) {
         this.ByteArray = ByteArray;
+    }
+
+    /**
+     * @return the Bc
+     */
+    public BeanConnect getBc() {
+        return Bc;
+    }
+
+    /**
+     * @param Bc the Bc to set
+     */
+    public void setBc(BeanConnect Bc) {
+        this.Bc = Bc;
     }
 
     
