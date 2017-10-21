@@ -40,7 +40,7 @@ public class ThreadServeur extends Thread {
         {
             
             thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
-            
+            thr[i].start();
         }
 
         // Mise en attente du serveur
@@ -56,7 +56,6 @@ public class ThreadServeur extends Thread {
                 int i = ChercheThreadDispo();
                 System.out.println("Thread dispo = Thread n"+i);
                 thr[i].setMySock(CSocket);
-                thr[i].start();
             }
             catch (IOException e)
             {

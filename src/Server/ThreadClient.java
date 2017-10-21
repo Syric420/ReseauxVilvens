@@ -9,8 +9,6 @@ import ProtocoleSUM.RequeteSUM;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,10 +32,9 @@ public class ThreadClient extends Thread {
     {
         while (!isInterrupted())
         {
-            System.out.println("MySock = "+mySock);
-            while(mySock!=null)
+            if(mySock!=null)
             {
-                
+                System.out.println("MySock = "+mySock);
                 ObjectInputStream ois=null;
                 RequeteSUM req = null;
                 try
@@ -54,27 +51,37 @@ public class ThreadClient extends Thread {
                 {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
                 }
-                Runnable travail = req.createRunnable(mySock, guiApplication);
-                if (travail != null)
+                
+                if(req.getType()==RequeteSUM.REQUEST_DECONNECT)
                 {
-                    tachesAExecuter.recordTache(travail);
-                    System.out.println("Travail mis dans la file");
+                    System.out.println("Sock to null");
+                    
+                    this.setMySock(null);
                 }
-                else System.out.println("Pas de mise en file");
+                else
+                {
+                
+                    Runnable travail = req.createRunnable(mySock, guiApplication);
+                    if (travail != null)
+                    {
+                        tachesAExecuter.recordTache(travail);
+                        System.out.println("Travail mis dans la file");
+                    }
+                    else System.out.println("Pas de mise en file");
 
-                try
-                {
-                    System.out.println("Tread client avant get");
-                    tacheEnCours = tachesAExecuter.getTache();
+                    try
+                    {
+                        System.out.println("Tread client avant get");
+                        tacheEnCours = tachesAExecuter.getTache();
+                    }
+                    catch (InterruptedException e)
+                    {
+                        System.out.println("Interruption : " + e.getMessage());
+                    }
+                    System.out.println("run de tachesencours");
+                    tacheEnCours.run();
                 }
-                catch (InterruptedException e)
-                {
-                    System.out.println("Interruption : " + e.getMessage());
-                }
-                System.out.println("run de tachesencours");
-                tacheEnCours.run();
             }
-            
         }
     }
 

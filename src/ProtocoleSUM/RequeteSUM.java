@@ -50,8 +50,6 @@ public class RequeteSUM implements Requete, Serializable
                 public void run()
                 {
                     traiterDeconnect(s, cs);
-
-
                 }
             };
            
@@ -87,18 +85,24 @@ public class RequeteSUM implements Requete, Serializable
     
     private void traiterDeconnect(Socket sock, ConsoleServeur cs)
     {
-         ObjectOutputStream oos;
-        try
-        {
+            ReponseSUM rep;
+            
+            ObjectOutputStream oos;
+            System.out.println("Entre dans traiterDeconnect my sock = "+sock);
+            /*sock.close();
+            sock = null;
+            /*try
+            {
             System.out.println("Entre dans traiterDeconnect");
+            rep = new ReponseSUM(ReponseSUM.LOGOUT_OK);
             oos = new ObjectOutputStream(sock.getOutputStream());
-            //oos.close();
-            sock=null;
-        }
-        catch (IOException e)
-        {
+            oos.writeObject(oos);
+            }
+            catch (IOException e)
+            {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
-        }
+            }*/
+        
     }
     private void traiterConnect(Socket sock, ConsoleServeur cs)
     {

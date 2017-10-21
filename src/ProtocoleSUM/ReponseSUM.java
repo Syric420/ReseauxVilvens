@@ -19,6 +19,7 @@ public class ReponseSUM implements Reponse, Serializable
     public static int WRONG_PASSWORD = 401;
     public static int LOGIN_OK = 101;
     public static int LOGIN_FAIL = 102;
+    public static int LOGOUT_OK=103;
     private int codeRetour;
     private String chargeUtile;
     public ReponseSUM(int c, String chu)
