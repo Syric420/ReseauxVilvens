@@ -105,6 +105,7 @@ public class BeanConnect {
             }
 
           return 0;
+        }
     }
 
     /**
