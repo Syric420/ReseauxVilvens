@@ -5,8 +5,8 @@
  */
 package Server;
 
-import ProtocoleSUM.RequeteSUM;
-import database.utilities.BeanConnect;
+import ProtocoleLUGAP.RequeteLUGAP;
+import database.utilities.BeanBD;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -21,14 +21,14 @@ public class ThreadClient extends Thread {
     private Runnable tacheEnCours;
     private Socket mySock;
     private ConsoleServeur guiApplication;
-    private BeanConnect Bc;
+    private BeanBD Bc;
     public ThreadClient(SourceTaches st, String n, Socket s, ConsoleServeur fs )
     {
         tachesAExecuter = st;
         nom = n;
         mySock = s;
         guiApplication = fs;
-        Bc = new BeanConnect();
+        Bc = new BeanBD();
         Bc.setTypeBD("MySql");
         Bc.connect();
     }
@@ -41,11 +41,11 @@ public class ThreadClient extends Thread {
            {
                 
                 ObjectInputStream ois=null;
-                RequeteSUM req = null;
+                RequeteLUGAP req = null;
                 try
                 {
                     ois = new ObjectInputStream(mySock.getInputStream());
-                    req = (RequeteSUM)ois.readObject();
+                    req = (RequeteLUGAP)ois.readObject();
                     req.setBc(Bc);
                     System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
                 }
@@ -58,7 +58,7 @@ public class ThreadClient extends Thread {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
                 }
                 
-                if(req.getType()==RequeteSUM.REQUEST_DECONNECT)
+                if(req.getType()==RequeteLUGAP.REQUEST_DECONNECT)
                 {
                     System.out.println("Sock to null");
                     

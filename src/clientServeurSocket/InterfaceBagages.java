@@ -5,12 +5,13 @@
  */
 package clientServeurSocket;
 
-import ProtocoleSUM.ReponseSUM;
-import ProtocoleSUM.RequeteSUM;
+import ProtocoleLUGAP.ReponseLUGAP;
+import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -35,8 +36,8 @@ public class InterfaceBagages extends javax.swing.JDialog {
     private void RechercheBagages(String str)
     {       
         ObjectOutputStream oos =null;
-        RequeteSUM req = null;
-        req = new RequeteSUM(RequeteSUM.REQUEST_LUG, str);
+        RequeteLUGAP req = null;
+        req = new RequeteLUGAP(RequeteLUGAP.REQUEST_LUG, str);
         try
         {
             oos= new ObjectOutputStream(cliSock.getOutputStream());
@@ -47,11 +48,11 @@ public class InterfaceBagages extends javax.swing.JDialog {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
         ObjectInputStream ois;ois=null;
-        ReponseSUM rep = null;
+        ReponseLUGAP rep = null;
         try
         {
             ois = new ObjectInputStream(cliSock.getInputStream());
-            rep = (ReponseSUM)ois.readObject();
+            rep = (ReponseLUGAP)ois.readObject();
             System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
         }
         catch (ClassNotFoundException e)
@@ -105,6 +106,8 @@ public class InterfaceBagages extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Bagages");
+        setResizable(false);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -146,29 +149,44 @@ public class InterfaceBagages extends javax.swing.JDialog {
 
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
-        
        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
+       
        if(demarre)
        {
-            ObjectOutputStream oos =null;
-            String str ="";
-            RequeteSUM req = null;
-            int row = jTable1.getSelectedRow();
-            int col = jTable1.getSelectedColumn();
-            str = str + jTable1.getColumnName(0) + ";";
-            str = str + dm.getValueAt(row, 0) + ";";//id
-            str = str + jTable1.getColumnName(col) + ";";
-            str = str + dm.getValueAt(row,col);           
-            System.out.println("STR : "+ str);
-            req = new RequeteSUM(RequeteSUM.REQUEST_UPDATELUG, str);
-            try
-            {
-                oos= new ObjectOutputStream(cliSock.getOutputStream());
-                oos.writeObject(req); oos.flush();
-            }
-            catch (IOException e)
-            {
-                System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+           if(dm.getRowCount()>0)
+           {
+               
+               //Test si il met O à bagage en soute alors que le bagage est même pas réceptionné
+               String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 5);//Chargé en soute
+               String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Receptionné
+               System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
+               if(test.equalsIgnoreCase("O") && test2.equalsIgnoreCase("N"))
+               {
+                   JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                   dm.setValueAt("N", jTable1.getSelectedRow(), 4);
+               }
+                ObjectOutputStream oos =null;
+                 String str ="";
+                 RequeteLUGAP req = null;
+                 int row = jTable1.getSelectedRow();
+                 int col = jTable1.getSelectedColumn();
+                 str = str + jTable1.getColumnName(0) + ";";
+                 str = str + dm.getValueAt(row, 0) + ";";//id
+                 str = str + jTable1.getColumnName(col) + ";";
+                 str = str + dm.getValueAt(row,col);           
+                 System.out.println("STR : "+ str);
+                 req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
+                 try
+                 {
+                     oos= new ObjectOutputStream(cliSock.getOutputStream());
+                     oos.writeObject(req); oos.flush();
+                 }
+                 catch (IOException e)
+                 {
+                     System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+                 }
+                   
+                
             }
        }
     }//GEN-LAST:event_jTable1PropertyChange

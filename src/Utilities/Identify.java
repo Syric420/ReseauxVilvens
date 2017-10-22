@@ -1,6 +1,6 @@
 package Utilities;
 
-import ProtocoleSUM.*;
+import ProtocoleLUGAP.RequeteLUGAP;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,7 +23,7 @@ public class Identify {
    private String password;
    long temps;
    double alea;
-   RequeteSUM req;
+   RequeteLUGAP req;
    private MessageDigest md;
    private byte[] msgD;
     public Identify() {
@@ -110,12 +110,12 @@ public class Identify {
                 Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    public RequeteSUM sendLogin()
+    public RequeteLUGAP sendLogin()
     {
 
            System.out.println("Envoi du message digest");
            String connect = (login + ";" + temps + ";" + alea);
-           req= new RequeteSUM(RequeteSUM.REQUEST_CONNECT,connect);
+           req= new RequeteLUGAP(RequeteLUGAP.REQUEST_CONNECT,connect);
            System.out.println(req.getType());
            req.setByteArray(getMd());
            return req;

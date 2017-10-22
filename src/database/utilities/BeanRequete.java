@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class BeanRequete {
     private String buf,requete,table, where, column;
     private boolean count;
-    private BeanConnect bc;
+    private BeanBD bc;
 
     public BeanRequete() {
         buf="";
@@ -149,14 +149,14 @@ public class BeanRequete {
     /**
      * @return the bc
      */
-    public BeanConnect getBc() {
+    public BeanBD getBc() {
         return bc;
     }
 
     /**
      * @param bc the bc to set
      */
-    public void setBc(BeanConnect bc) {
+    public void setBc(BeanBD bc) {
         this.bc = bc;
     }
 }

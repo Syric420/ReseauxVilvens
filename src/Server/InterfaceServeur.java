@@ -32,6 +32,9 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         Conf();
         initComponents();
         TraceEvenements("serveur#initialisation#main");
+        TraceEvenements("serveur#acquisition du port#main");
+        ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
+        ts.start();
     }
     private void Conf()
     {
@@ -72,6 +75,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         jLabel1.setText("Serveur");
 
         jButton1.setText("Démarrer");
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -146,11 +150,24 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         TraceEvenements("serveur#acquisition du port#main");
         ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
         ts.start();
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        ts.interrupt();
+        if(ts.isAlive())
+        {
+            try {
+                ts.interrupt();
+                ts.getSSocket().close();
+                jButton1.setEnabled(true);
+                jButton2.setEnabled(false);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceServeur.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+            
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

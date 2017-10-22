@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ProtocoleSUM;
+package ProtocoleLUGAP;
 
 import java.io.*;
 import Server.Reponse;
@@ -11,7 +11,7 @@ import Server.Reponse;
  *
  * @author Vince
  */
-public class ReponseSUM implements Reponse, Serializable
+public class ReponseLUGAP implements Reponse, Serializable
 {
     public static int EMAIL_OK = 201;
     public static int EMAIL_NOT_FOUND = 501;
@@ -25,7 +25,7 @@ public class ReponseSUM implements Reponse, Serializable
     public static int LUG_FAIL = 602;
     private int codeRetour;
     private String chargeUtile;
-    public ReponseSUM(int c, String chu)
+    public ReponseLUGAP(int c, String chu)
     {
         codeRetour = c; 
         setChargeUtile(chu);

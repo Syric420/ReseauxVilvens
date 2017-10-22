@@ -19,12 +19,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InterfaceMySQL extends javax.swing.JDialog {
     
-    BeanConnect BeanConnect;
+    BeanBD BeanConnect;
 
     public InterfaceMySQL(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        BeanConnect = new BeanConnect();
+        BeanConnect = new BeanBD();
         BeanConnect.setTypeBD("MySql");
         BeanConnect.connect();
         //instruc=BeanConnect.getInstruc();      
