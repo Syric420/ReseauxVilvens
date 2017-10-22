@@ -9,20 +9,16 @@ import java.net.*;
 
 import ProtocoleSUM.*;
 import Utilities.ReadProperties;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import static java.lang.System.exit;
 import java.security.Security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-/**
- * 
- * fdfdf
- * 
- * 
- *gdsgfsggd
- * @author Vince
- */
 public class InterfaceClient extends javax.swing.JFrame {
 
     private ObjectInputStream ois;
@@ -43,6 +39,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         InterfaceCo.setVisible(true);
         if(!InterfaceCo.isLogged())
             exit(0);
+        System.out.println("Login ok");
         LoadVols();
         
     }
@@ -72,6 +69,17 @@ public class InterfaceClient extends javax.swing.JFrame {
         { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
         catch (IOException e)
         { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
+        jTable1.addMouseListener(new MouseAdapter() {
+        public void mousePressed(MouseEvent me) {
+        JTable table =(JTable) me.getSource();
+        Point p = me.getPoint();
+        int row = table.rowAtPoint(p);
+        if (me.getClickCount() == 2) {
+            System.out.println("double click jtable");
+            Bagages();
+        }
+    }
+});
         
     }
     /**
@@ -254,7 +262,17 @@ public class InterfaceClient extends javax.swing.JFrame {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
         }
     }//GEN-LAST:event_formWindowClosing
-
+    private void Bagages()
+    {
+        DefaultTableModel dm=(DefaultTableModel) jTable1.getModel();
+        int i = jTable1.getSelectedRow();
+        String str;
+        str = jTable1.getValueAt(i, 0).toString() + "-%-" + jTable1.getValueAt(i, 3).toString()+"%";
+        System.out.println("chaine future requete " +str);
+        InterfaceBagages IntBagages = new InterfaceBagages(this,true,str,cliSock);
+        IntBagages.setVisible(true);
+        
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         // Construction de la requête

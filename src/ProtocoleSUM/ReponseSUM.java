@@ -21,6 +21,8 @@ public class ReponseSUM implements Reponse, Serializable
     public static int LOGIN_FAIL = 102;
     public static int VOL_OK = 301;
     public static int VOL_FAIL = 302;
+    public static int LUG_OK = 601;
+    public static int LUG_FAIL = 602;
     private int codeRetour;
     private String chargeUtile;
     public ReponseSUM(int c, String chu)

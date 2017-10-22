@@ -107,27 +107,19 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         {  log.setLogin(jTextField1.getText());
             log.setPassword(jPasswordField1.getText());
         log.setMd();
-        /*byte [] byteArray = log.getMd();
-        byte[] encoded = Base64.getEncoder().encode(log.getMd());
-        String s =new String(encoded);*/
-        //System.out.println("1" + log.getLogin() + " " + log.getPassword());
         
         RequeteSUM req;
         req=log.sendLogin();
-       // System.out.println("Avant lancement message");
-       // System.out.println("Socket : " + cliSock.getInetAddress().toString());
         ObjectOutputStream oos =null;
         try
         {
             oos= new ObjectOutputStream(cliSock.getOutputStream());
-            System.out.println("ok connection");
             oos.writeObject(req); oos.flush();
         }
         catch (IOException e)
         {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
         }
-        //System.out.println("Apres lancement message");
         }
         
         ReponseSUM rep = null;
@@ -136,7 +128,6 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         {
             ois = new ObjectInputStream(cliSock.getInputStream());
             rep = (ReponseSUM)ois.readObject();
-            //System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
         }
         catch (ClassNotFoundException e)
         { 
