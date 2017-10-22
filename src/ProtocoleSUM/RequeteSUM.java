@@ -23,8 +23,7 @@ import java.util.logging.Logger;
 public class RequeteSUM implements Requete, Serializable
 {
     //public static int REQUEST_CONNECT = 3;
-    public static int REQUEST_E_MAIL = 1;
-    public static int REQUEST_TEMPORARY_KEY = 2;
+    public static int REQUEST_UPDATELUG = 1;
     public static int REQUEST_CONNECT = 3;
     public static int REQUEST_VOL = 4;
     public static int REQUEST_DECONNECT = 5;
@@ -50,23 +49,7 @@ public class RequeteSUM implements Requete, Serializable
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
-        if (getType()==REQUEST_E_MAIL)
-            return new Runnable()
-            {
-                public void run()
-                {
-                    traiteRequeteEMail(s, cs);
-                }
-            };
-        else if (getType()==REQUEST_TEMPORARY_KEY)
-            return new Runnable()
-            {
-                public void run()
-                {
-                    traiteRequeteKey(s, cs);
-                }
-            };
-        else if(getType() == REQUEST_CONNECT)
+        if(getType() == REQUEST_CONNECT)
         
             return new Runnable()
             {
@@ -95,7 +78,24 @@ public class RequeteSUM implements Requete, Serializable
                     traiterBagages(s, cs);
                 }
             };
-        }return null;
+        }else 
+            
+        if(getType() == REQUEST_UPDATELUG)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    updateBagages(s, cs);
+                }
+            };
+        }else return null;
+    }
+    private void updateBagages(Socket sock, ConsoleServeur cs)
+    {
+        System.out.println("UPDATE" + getChargeUtile());
+        Bc.updateLug(getChargeUtile());
+        
     }
     private void traiterBagages(Socket sock, ConsoleServeur cs)
     {
@@ -179,41 +179,7 @@ public class RequeteSUM implements Requete, Serializable
         }
 
     }
-    private void traiteRequeteEMail(Socket sock, ConsoleServeur cs)
-    {
-        // Affichage des informations
-        String adresseDistante = sock.getRemoteSocketAddress().toString();
-        System.out.println("Début de traiteRequete : adresse distante = " + adresseDistante);
-        // la charge utile est le nom du client
-        String eMail = (String)tableMails.get(getChargeUtile());
-        cs.TraceEvenements(adresseDistante+"#Mail de "+ getChargeUtile()+"#"+Thread.currentThread().getName());
-        if (eMail != null)
-            System.out.println("E-Mail trouvé pour " + getChargeUtile());
-        else
-        {
-            System.out.println("E-Mail non trouvé pour " + getChargeUtile() + " : " + eMail);
-            eMail="?@?";
-        }
-        // Construction d'une réponse
-        ReponseSUM rep = new ReponseSUM(ReponseSUM.EMAIL_OK, getChargeUtile() +" : " + eMail);
-        ObjectOutputStream oos;
-        try
-        {
-            oos = new ObjectOutputStream(sock.getOutputStream());
-            oos.writeObject(rep); oos.flush();
-            //oos.close();
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
-        }
-    }
-
-
-    private void traiteRequeteKey(Socket sock, ConsoleServeur cs)
-    {
-    // TO DO ;-) !
-    }
+    
     public String getChargeUtile() { return chargeUtile; }
     
     public void setChargeUtile(String chargeUtile)

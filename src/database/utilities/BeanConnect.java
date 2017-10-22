@@ -169,6 +169,16 @@ public class BeanConnect {
         }
         return null;
     }
+    public void updateLug(String str)
+    {
+        try {
+            String monVec[]={};
+            monVec = str.split(";");
+            getInstruc().executeUpdate("UPDATE bagages SET `" + monVec[2] + "`='" + monVec[3] +"' WHERE `" + monVec[0] + "`='" + monVec[1] + "';");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public String findVols()
     {
         
