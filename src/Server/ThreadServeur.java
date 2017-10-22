@@ -5,7 +5,6 @@
  */
 package Server;
 
-import ProtocoleSUM.*;
 import java.net.*;
 import java.io.*;
 import java.util.LinkedList;
@@ -49,7 +48,7 @@ public class ThreadServeur extends Thread {
             try
             {
                 System.out.println("************ Serveur en attente");
-                CSocket = SSocket.accept();
+                CSocket = getSSocket().accept();
                 guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
                 //On assigne la socket à un thread Client
                 int i = ChercheThreadDispo();
@@ -58,7 +57,7 @@ public class ThreadServeur extends Thread {
             }
             catch (IOException e)
             {
-                System.err.println("Erreur d'accept ! ? [" + e.getMessage() + "]"); System.exit(1);
+                System.out.println("Erreur d'accept ! ? [" + e.getMessage() + "]");
             }
             
         }
@@ -75,5 +74,12 @@ public class ThreadServeur extends Thread {
             }    
         } 
         return -1;
+    }
+
+    /**
+     * @return the SSocket
+     */
+    public ServerSocket getSSocket() {
+        return SSocket;
     }
 }

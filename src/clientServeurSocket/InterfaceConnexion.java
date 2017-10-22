@@ -5,8 +5,8 @@
  */
 package clientServeurSocket;
 
-import ProtocoleSUM.ReponseSUM;
-import ProtocoleSUM.RequeteSUM;
+import ProtocoleLUGAP.ReponseLUGAP;
+import ProtocoleLUGAP.RequeteLUGAP;
 import Utilities.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,6 +44,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Nom d'utilisateur:");
 
@@ -108,7 +109,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             log.setPassword(jPasswordField1.getText());
         log.setMd();
         
-        RequeteSUM req;
+        RequeteLUGAP req;
         req=log.sendLogin();
         ObjectOutputStream oos =null;
         try
@@ -122,12 +123,12 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         }
         }
         
-        ReponseSUM rep = null;
+        ReponseLUGAP rep = null;
         ois = null;
         try
         {
             ois = new ObjectInputStream(cliSock.getInputStream());
-            rep = (ReponseSUM)ois.readObject();
+            rep = (ReponseLUGAP)ois.readObject();
         }
         catch (ClassNotFoundException e)
         { 
