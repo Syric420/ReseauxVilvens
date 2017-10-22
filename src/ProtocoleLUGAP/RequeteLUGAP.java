@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ProtocoleSUM;
+package ProtocoleLUGAP;
 import Server.ConsoleServeur;
 import java.io.*;
 import java.util.*;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Vince
  */
-public class RequeteSUM implements Requete, Serializable
+public class RequeteLUGAP implements Requete, Serializable
 {
     //public static int REQUEST_CONNECT = 3;
     public static int REQUEST_UPDATELUG = 1;
@@ -30,17 +30,17 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_LUG=6;
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
-    private BeanConnect Bc;
+    private BeanBD Bc;
     private BeanRequete Br;
     private int type;
     private String chargeUtile;
     private Socket socketClient;
-    public RequeteSUM(int t, String chu)
+    public RequeteLUGAP(int t, String chu)
     {
         type = t; setChargeUtile(chu);
         ByteArray = null;
     }
-    public RequeteSUM(int t, String chu, Socket s,BeanConnect B, BeanRequete R)
+    public RequeteLUGAP(int t, String chu, Socket s,BeanBD B, BeanRequete R)
     {
         type = t; setChargeUtile(chu); socketClient =s;
         ByteArray = null;
@@ -101,7 +101,7 @@ public class RequeteSUM implements Requete, Serializable
     {
         String s;
         s = Bc.findBagages(getChargeUtile());
-        ReponseSUM rep = new ReponseSUM(ReponseSUM.LUG_OK,s);
+        ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.LUG_OK,s);
         
         ObjectOutputStream oos;
         try
@@ -119,7 +119,7 @@ public class RequeteSUM implements Requete, Serializable
         String s;
         
         s = Bc.findVols();
-        ReponseSUM rep = new ReponseSUM(ReponseSUM.VOL_OK,s);
+        ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.VOL_OK,s);
         ObjectOutputStream oos;
         try
         {
@@ -145,7 +145,7 @@ public class RequeteSUM implements Requete, Serializable
         System.out.println("Digest : " + getByteArray());
         String s = getBc().findPassword(tab[0]);
         Identify id = null;
-        ReponseSUM rep;
+        ReponseLUGAP rep;
         if(s != null)
         {
             id = new Identify();
@@ -157,14 +157,14 @@ public class RequeteSUM implements Requete, Serializable
             if (MessageDigest.isEqual(getByteArray(), id.getMd()) )
             {
                 System.out.println("Digest OK");
-                rep= new ReponseSUM(ReponseSUM.LOGIN_OK,"LOGIN OK");
+                rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_OK,"LOGIN OK");
             }
             else
-                rep= new ReponseSUM(ReponseSUM.LOGIN_FAIL,"LOGIN FAILED");
+                rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_FAIL,"LOGIN FAILED");
         }
         else
         {
-            rep= new ReponseSUM(ReponseSUM.LOGIN_FAIL,"LOGIN FAILED");
+            rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_FAIL,"LOGIN FAILED");
         }
         System.out.println("rep : " + rep.getChargeUtile());
         ObjectOutputStream oos;
@@ -211,14 +211,14 @@ public class RequeteSUM implements Requete, Serializable
     /**
      * @return the Bc
      */
-    public BeanConnect getBc() {
+    public BeanBD getBc() {
         return Bc;
     }
 
     /**
      * @param Bc the Bc to set
      */
-    public void setBc(BeanConnect Bc) {
+    public void setBc(BeanBD Bc) {
         this.Bc = Bc;
     }
 

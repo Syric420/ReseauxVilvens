@@ -13,13 +13,13 @@ import java.util.logging.Logger;
  *
  * @author Vince
  */
-public class BeanConnect {
+public class BeanBD {
     private String typeBD;
     private Connection con;
     private Statement instruc;
     private ResultSet rs;
     
-    public BeanConnect()
+    public BeanBD()
     {
         typeBD = "";
     }
@@ -99,9 +99,9 @@ public class BeanConnect {
             { 
                 System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
             } catch (IOException ex) {
-                Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
             }
             return 0;
         }
@@ -127,7 +127,7 @@ public class BeanConnect {
             String s =getRs().getString("password");
             return s;
         } catch (SQLException ex) {
-            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -165,18 +165,18 @@ public class BeanConnect {
             }
             return str;
         } catch (SQLException ex) {
-            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    public void updateLug(String str)
+    public synchronized void updateLug(String str)
     {
         try {
             String monVec[]={};
             monVec = str.split(";");
             getInstruc().executeUpdate("UPDATE bagages SET `" + monVec[2] + "`='" + monVec[3] +"' WHERE `" + monVec[0] + "`='" + monVec[1] + "';");
         } catch (SQLException ex) {
-            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     public String findVols()
@@ -213,7 +213,7 @@ public class BeanConnect {
             
             return str;
         } catch (SQLException ex) {
-            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

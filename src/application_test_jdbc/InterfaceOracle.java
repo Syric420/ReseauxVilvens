@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class InterfaceOracle extends javax.swing.JDialog {
 
     DefaultComboBoxModel CbModel = new DefaultComboBoxModel();
-    BeanConnect BeanConnect;
+    BeanBD BeanConnect;
     /**
      * Creates new form InterfaceOracle
      */
@@ -34,7 +34,7 @@ public class InterfaceOracle extends javax.swing.JDialog {
         initComponents();
         
         CbModel.addElement("Select");CbModel.addElement("Update");
-        BeanConnect = new BeanConnect();
+        BeanConnect = new BeanBD();
         BeanConnect.setTypeBD("Oracle");
         
         BeanConnect.connect();
