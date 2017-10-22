@@ -278,11 +278,6 @@ public class InterfaceClient extends javax.swing.JFrame {
         // Construction de la requête
         String chargeUtile = TFRequete.getText();
         RequeteSUM req = null;
-        if (RBMail.isSelected())
-            req = new RequeteSUM(RequeteSUM.REQUEST_E_MAIL, chargeUtile);
-        else 
-            req = new RequeteSUM(RequeteSUM.REQUEST_TEMPORARY_KEY,chargeUtile);
-        // Envoie de la requête
         try
         {
             oos = new ObjectOutputStream(cliSock.getOutputStream());
