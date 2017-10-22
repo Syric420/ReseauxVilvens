@@ -28,6 +28,7 @@ public class RequeteSUM implements Requete, Serializable
     public static int REQUEST_CONNECT = 3;
     public static int REQUEST_VOL = 4;
     public static int REQUEST_DECONNECT = 5;
+    public static int REQUEST_LUG=6;
     public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
     private BeanConnect Bc;
@@ -84,7 +85,34 @@ public class RequeteSUM implements Requete, Serializable
                 }
             };
         }
-        else return null;
+        else
+        if(getType() == REQUEST_LUG)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiterBagages(s, cs);
+                }
+            };
+        }return null;
+    }
+    private void traiterBagages(Socket sock, ConsoleServeur cs)
+    {
+        String s;
+        s = Bc.findBagages(getChargeUtile());
+        ReponseSUM rep = new ReponseSUM(ReponseSUM.LUG_OK,s);
+        
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(rep); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
     }
     private void traiterVol(Socket sock, ConsoleServeur cs)
     {

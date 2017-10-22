@@ -131,6 +131,44 @@ public class BeanConnect {
         }
         return null;
     }
+    public String findBagages(String Requete)
+    {
+        
+        String str = "";
+        String monVec[]={};
+        try {
+            setRs(getInstruc().executeQuery("select * from bagages where idBagages like '" + Requete +"';"));
+            //setRs(getInstruc().executeQuery("select * from bagages where idBagages like '123-%-2017-10-22%';"));
+            ResultSetMetaData rsmd = getRs().getMetaData();
+            int nbrCol = rsmd.getColumnCount();
+            for(int i=0; i<nbrCol;i++)
+            {
+                if(i+1 == nbrCol)
+                    str= str + rsmd.getColumnName(i+1);
+                else
+                    str= str + rsmd.getColumnName(i+1) + ";";
+            }
+            monVec = str.split(";");
+            str=str + "@";
+            
+            while(getRs().next())
+            {
+                
+                str=str + getRs().getString(monVec[0]) + ";";
+                str=str + getRs().getBoolean(monVec[1]) + ";";
+                str=str + getRs().getFloat(monVec[2]) + ";";
+                str=str + getRs().getString(monVec[3]) + ";";
+                str=str + getRs().getString(monVec[4]) + ";";
+                str=str + getRs().getString(monVec[5]) + ";";
+                str=str + getRs().getString(monVec[6]);
+                str=str+"@";
+            }
+            return str;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanConnect.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     public String findVols()
     {
         
