@@ -137,6 +137,11 @@ public class InterfaceClient extends javax.swing.JFrame {
 
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Etat du serveur:");
@@ -327,6 +332,16 @@ public class InterfaceClient extends javax.swing.JFrame {
         JB_Deconnecter.setEnabled(false);
         JLabel_Etat.setText("Déconnecté");
     }//GEN-LAST:event_JB_DeconnecterActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+        InterfaceBagages iB = new InterfaceBagages(this, true);
+    }
+        
+        
+        
+    }//GEN-LAST:event_jTable1MouseClicked
     private void LoadVols()
     {
         //requete pour avoir résultats + nom colonnes
