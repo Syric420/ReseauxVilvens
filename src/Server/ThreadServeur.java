@@ -49,7 +49,7 @@ public class ThreadServeur extends Thread {
             {
                 System.out.println("************ Serveur en attente");
                 CSocket = getSSocket().accept();
-                guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept#thread serveur");
+                guiApplication.TraceEvenements(CSocket.getRemoteSocketAddress().toString()+"#accept");
                 //On assigne la socket à un thread Client
                 int i = ChercheThreadDispo();
                 System.out.println("Thread dispo = Thread n"+i);

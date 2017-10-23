@@ -31,8 +31,8 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     public InterfaceServeur() {
         Conf();
         initComponents();
-        TraceEvenements("serveur#initialisation#main");
-        TraceEvenements("serveur#acquisition du port#main");
+        TraceEvenements("Serveur#initialisation");
+        TraceEvenements("Serveur#acquisition du port");
         ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
         ts.start();
     }
@@ -41,13 +41,13 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         ReadProperties rP ;
         try {
             rP = new ReadProperties("/Server/Config.properties");
-            //IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
             PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
             nbThreads = Integer.parseInt(rP.getProp("NB_THREADS"));
             //System.out.println("Adresse ip = " + IP_ADDRESS);
-            System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
-            System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);
+            //System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
+            //System.out.println("PORT_BAGAGES = " + PORT_BAGAGES);
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -94,7 +94,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
 
             },
             new String [] {
-
+                "Provient de", "Contenu"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -147,7 +147,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        TraceEvenements("serveur#acquisition du port#main");
+        TraceEvenements("Serveur#acquisition du port");
         ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
         ts.start();
         jButton1.setEnabled(true);
@@ -222,5 +222,6 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
             ligne.add(parser.nextToken());
         DefaultTableModel dtm = (DefaultTableModel)jTable1.getModel();
         dtm.insertRow(dtm.getRowCount(),ligne);
+        //jTable1.setModel(dtm);
     }
 }

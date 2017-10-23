@@ -61,7 +61,7 @@ public class Identify {
             md.update(password.getBytes());
             temps= (new Date()).getTime();
             alea = Math.random();
-            System.out.println("SetMD " + login +";" + password + ";" + temps + ";" + alea);
+            //System.out.println("SetMD " + login +";" + password + ";" + temps + ";" + alea);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
             bdos.writeLong(temps);
@@ -69,7 +69,7 @@ public class Identify {
 
             md.update(baos.toByteArray());
             msgD= md.digest();
-            System.out.println(login + " " + password + " " + msgD);
+            //System.out.println(login + " " + password + " " + msgD);
             
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,7 +86,7 @@ public class Identify {
         try {
             
             md = MessageDigest.getInstance("SHA-1", "BC");
-            System.out.println("SetMD " + U +";" + Pass + ";" + T + ";" + A);
+            //System.out.println("SetMD " + U +";" + Pass + ";" + T + ";" + A);
             md.update(U.getBytes());
             md.update(Pass.getBytes());
             temps= T;
@@ -98,7 +98,7 @@ public class Identify {
 
             md.update(baos.toByteArray());
             msgD= md.digest();
-            System.out.println(U + " " + Pass + " " + msgD);
+            //System.out.println(U + " " + Pass + " " + msgD);
             
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,10 +113,10 @@ public class Identify {
     public RequeteLUGAP sendLogin()
     {
 
-           System.out.println("Envoi du message digest");
+           //System.out.println("Envoi du message digest");
            String connect = (login + ";" + temps + ";" + alea);
            req= new RequeteLUGAP(RequeteLUGAP.REQUEST_CONNECT,connect);
-           System.out.println(req.getType());
+           //System.out.println(req.getType());
            req.setByteArray(getMd());
            return req;
     }

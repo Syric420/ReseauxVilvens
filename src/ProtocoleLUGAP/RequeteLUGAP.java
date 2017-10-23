@@ -93,16 +93,16 @@ public class RequeteLUGAP implements Requete, Serializable
     }
     private void updateBagages(Socket sock, ConsoleServeur cs)
     {
-        System.out.println("UPDATE" + getChargeUtile());
+        //System.out.println("UPDATE" + getChargeUtile());
         Bc.updateLug(getChargeUtile());
-        
+        cs.TraceEvenements("Serveur#Effectue un UPDATE");
     }
     private void traiterBagages(Socket sock, ConsoleServeur cs)
     {
         String s;
         s = Bc.findBagages(getChargeUtile());
         ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.LUG_OK,s);
-        
+        cs.TraceEvenements("Serveur#Recherche un bagage");
         ObjectOutputStream oos;
         try
         {
@@ -120,6 +120,7 @@ public class RequeteLUGAP implements Requete, Serializable
         
         s = Bc.findVols();
         ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.VOL_OK,s);
+        cs.TraceEvenements("Serveur#Recherche un vol#");
         ObjectOutputStream oos;
         try
         {
@@ -136,14 +137,15 @@ public class RequeteLUGAP implements Requete, Serializable
         
         String chaine = getChargeUtile();
         String tab []= {};
-        System.out.println("Traiter Connect : " + chaine);
+        //System.out.println("Traiter Connect : " + chaine);
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
             System.out.println(i + ": " + tab[i]);
         
         
-        System.out.println("Digest : " + getByteArray());
+        //System.out.println("Digest : " + getByteArray());
         String s = getBc().findPassword(tab[0]);
+        cs.TraceEvenements("Serveur#Login "+tab[0]);
         Identify id = null;
         ReponseLUGAP rep;
         if(s != null)
@@ -153,20 +155,24 @@ public class RequeteLUGAP implements Requete, Serializable
             double alea = Double.parseDouble(tab[2]);
             id.setMd(tab[0],s,temps,alea);
             //byte [] B=null;
-            System.out.println("Hash 1: " + getByteArray() + " Hash 2: " + id.getMd());
+            //System.out.println("Hash 1: " + getByteArray() + " Hash 2: " + id.getMd());
             if (MessageDigest.isEqual(getByteArray(), id.getMd()) )
             {
-                System.out.println("Digest OK");
+                //System.out.println("Digest OK");
                 rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_OK,"LOGIN OK");
+                cs.TraceEvenements("Serveur#Login OK pour "+tab[0]);
             }
             else
+            {
                 rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_FAIL,"LOGIN FAILED");
+                cs.TraceEvenements("Serveur#Login OK pour "+tab[0]);
+            }
         }
         else
         {
             rep= new ReponseLUGAP(ReponseLUGAP.LOGIN_FAIL,"LOGIN FAILED");
         }
-        System.out.println("rep : " + rep.getChargeUtile());
+        //System.out.println("rep : " + rep.getChargeUtile());
         ObjectOutputStream oos;
         try
         {
