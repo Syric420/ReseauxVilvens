@@ -47,7 +47,8 @@ public class ThreadClient extends Thread {
                     ois = new ObjectInputStream(mySock.getInputStream());
                     req = (RequeteLUGAP)ois.readObject();
                     req.setBc(Bc);
-                    System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                    //System.out.println("Requete lue par le serveur, instance de " +req.getClass().getName());
+                    guiApplication.TraceEvenements("Serveur#Requête reçue");
                 }
                 catch (ClassNotFoundException e)
                 {
@@ -60,8 +61,8 @@ public class ThreadClient extends Thread {
                 
                 if(req.getType()==RequeteLUGAP.REQUEST_DECONNECT)
                 {
-                    System.out.println("Sock to null");
-                    
+                    //System.out.println("Sock to null");
+                    guiApplication.TraceEvenements("Serveur#Requête deconnexion de "+req.getChargeUtile());
                     this.setMySock(null);
                 }
                 else
@@ -71,20 +72,20 @@ public class ThreadClient extends Thread {
                     if (travail != null)
                     {
                         tachesAExecuter.recordTache(travail);
-                        System.out.println("Travail mis dans la file");
+                       // System.out.println("Travail mis dans la file");
                     }
                     else System.out.println("Pas de mise en file");
 
                     try
                     {
-                        System.out.println("Tread client avant get");
+                        //System.out.println("Tread client avant get");
                         tacheEnCours = tachesAExecuter.getTache();
                     }
                     catch (InterruptedException e)
                     {
                         System.out.println("Interruption : " + e.getMessage());
                     }
-                    System.out.println("run de tachesencours");
+                    //System.out.println("run de tachesencours");
                     tacheEnCours.run();
                 }
            }

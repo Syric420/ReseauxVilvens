@@ -40,7 +40,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         InterfaceCo.setVisible(true);
         if(!InterfaceCo.isLogged())
             exit(0);
-        System.out.println("Login ok");
+        //System.out.println("Login ok");
         LoadVols();
         
     }
@@ -52,8 +52,8 @@ public class InterfaceClient extends javax.swing.JFrame {
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
 
-            System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
-            System.out.println("IP_ADDRESS = " + IP_ADDRESS);
+            //System.out.println("PORT_CHECKIN = " + PORT_CHECKIN);
+            //System.out.println("IP_ADDRESS = " + IP_ADDRESS);
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,17 +70,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         { System.err.println("Erreur ! Host non trouvé [" + e + "]"); }
         catch (IOException e)
         { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
-        jTable1.addMouseListener(new MouseAdapter() {
-        public void mousePressed(MouseEvent me) {
-        JTable table =(JTable) me.getSource();
-        Point p = me.getPoint();
-        int row = table.rowAtPoint(p);
-        if (me.getClickCount() == 2) {
-            System.out.println("double click jtable");
-            Bagages();
-        }
-    }
-});
+    
         
     }
     /**
@@ -119,6 +109,11 @@ public class InterfaceClient extends javax.swing.JFrame {
 
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Etat du serveur:");
@@ -146,21 +141,22 @@ public class InterfaceClient extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(194, 194, 194)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(JLabel_Etat))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(JB_Connecter)
-                        .addGap(106, 106, 106)
-                        .addComponent(JB_Deconnecter)))
+                        .addGap(194, 194, 194)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(56, 56, 56)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(JLabel_Etat))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(JB_Connecter)
+                                .addGap(106, 106, 106)
+                                .addComponent(JB_Deconnecter)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -237,13 +233,23 @@ public class InterfaceClient extends javax.swing.JFrame {
 
         LoadVols();
     }//GEN-LAST:event_JB_ConnecterActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        JTable table =(JTable) evt.getSource();
+        Point p = evt.getPoint();
+        int row = table.rowAtPoint(p);
+        if (evt.getClickCount() == 2) {
+            Bagages();
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
     private void Bagages()
     {
         DefaultTableModel dm=(DefaultTableModel) jTable1.getModel();
         int i = jTable1.getSelectedRow();
         String str;
         str = jTable1.getValueAt(i, 0).toString() + "-%-" + jTable1.getValueAt(i, 3).toString()+"%";
-        System.out.println("chaine future requete " +str);
+        //System.out.println("chaine future requete " +str);
         InterfaceBagages IntBagages = new InterfaceBagages(this,true,str,cliSock);
         IntBagages.setVisible(true);
         
@@ -268,7 +274,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         {
             ois = new ObjectInputStream(cliSock.getInputStream());
             rep = (ReponseLUGAP)ois.readObject();
-            System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
+            //System.out.println(" *** Reponse reçue : " + rep.getChargeUtile());
         }
         catch (ClassNotFoundException e)
         { 

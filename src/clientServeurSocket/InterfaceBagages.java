@@ -24,6 +24,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
     /**
      * Creates new form InterfaceBagages
      */
+    private boolean toutEnSoute;
     private Socket cliSock;
     private boolean demarre;
     public InterfaceBagages(java.awt.Frame parent, boolean modal,String str,Socket Sock) {
@@ -31,6 +32,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
         initComponents();
         cliSock=Sock;
         demarre=false;
+        toutEnSoute=false;
         RechercheBagages(str);
     }
     private void RechercheBagages(String str)
@@ -105,9 +107,16 @@ public class InterfaceBagages extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Bagages");
+        setIconImages(null);
+        setModal(true);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -157,10 +166,10 @@ public class InterfaceBagages extends javax.swing.JDialog {
            {
                
                //Test si il met O à bagage en soute alors que le bagage est même pas réceptionné
-               String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 5);//Chargé en soute
-               String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Receptionné
-               System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
-               if(test.equalsIgnoreCase("O") && test2.equalsIgnoreCase("N"))
+               String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Chargé en soute
+               String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 3);//Receptionné
+               //System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
+               if(test.equalsIgnoreCase("o") && test2.equalsIgnoreCase("n"))
                {
                    JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
                    dm.setValueAt("N", jTable1.getSelectedRow(), 4);
@@ -190,6 +199,26 @@ public class InterfaceBagages extends javax.swing.JDialog {
             }
        }
     }//GEN-LAST:event_jTable1PropertyChange
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
+        String test;
+        setToutEnSoute(true);
+        int i;
+        for(i = 0; i<jTable1.getRowCount();i++)
+        {
+             test = (String)dm.getValueAt(i, 4);//Chargé en soute
+             if(test.equalsIgnoreCase("n"))
+             {
+                 setToutEnSoute(false);
+                 i=jTable1.getRowCount();
+                 JOptionPane.showMessageDialog(this, "Tous les bagages doivent être chargés en soute avant de pouvoir fermer la fenêtre");
+             }
+        }
+        if(isToutEnSoute())
+            this.setVisible(false);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -223,10 +252,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
             public void run() {
                 InterfaceBagages dialog = new InterfaceBagages(new javax.swing.JFrame(), true,null,null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
+                    
                 });
                 dialog.setVisible(true);
             }
@@ -237,4 +263,18 @@ public class InterfaceBagages extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the toutEnSoute
+     */
+    public boolean isToutEnSoute() {
+        return toutEnSoute;
+    }
+
+    /**
+     * @param toutEnSoute the toutEnSoute to set
+     */
+    public void setToutEnSoute(boolean toutEnSoute) {
+        this.toutEnSoute = toutEnSoute;
+    }
 }
