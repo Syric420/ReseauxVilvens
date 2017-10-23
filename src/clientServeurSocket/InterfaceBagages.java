@@ -105,7 +105,6 @@ public class InterfaceBagages extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Bagages");
         setResizable(false);
 
@@ -157,12 +156,12 @@ public class InterfaceBagages extends javax.swing.JDialog {
            {
                
                //Test si il met O à bagage en soute alors que le bagage est même pas réceptionné
-               String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 5);//Chargé en soute
-               String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Receptionné
-               System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
-               if(test.equalsIgnoreCase("O") && test2.equalsIgnoreCase("N"))
+               String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Chargé en soute
+               String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 3);//Receptionné
+               //System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
+               if(test.equalsIgnoreCase("o") && test2.equalsIgnoreCase("n"))
                {
-                   JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                   JOptionPane.showMessageDialog(null, "Erreur - ne peut être chargé en soute sans être réceptionné");
                    dm.setValueAt("N", jTable1.getSelectedRow(), 4);
                }
                 ObjectOutputStream oos =null;
