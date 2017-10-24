@@ -168,9 +168,29 @@ public class InterfaceBagages extends javax.swing.JDialog {
                String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 3);//Receptionné
                if(test.equalsIgnoreCase("o") && test2.equalsIgnoreCase("n"))
                {
-                   JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
-                   dm.setValueAt("N", jTable1.getSelectedRow(), 4);
-               }
+                    JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                    dm.setValueAt("N", jTable1.getSelectedRow(), 4);
+                    ObjectOutputStream oos =null;
+                    String str ="";
+                    RequeteLUGAP req = null;
+                    int row = jTable1.getSelectedRow();
+                    int col = 4;
+                    str = str + jTable1.getColumnName(0) + ";";
+                    str = str + dm.getValueAt(row, 0) + ";";//id
+                    str = str + jTable1.getColumnName(col) + ";";
+                    str = str + dm.getValueAt(row,col);           
+                    System.out.println("STR : "+ str);
+                    req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
+                    try
+                    {
+                        oos= new ObjectOutputStream(cliSock.getOutputStream());
+                        oos.writeObject(req); oos.flush();
+                    }
+                    catch (IOException e)
+                    {
+                        System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+                    }
+                }
                 for(int i = 3 ; i<6 ; i++)
                 {
                     String str = (String)dm.getValueAt(jTable1.getSelectedRow(), i);
@@ -189,25 +209,25 @@ public class InterfaceBagages extends javax.swing.JDialog {
                     }
                 }
                 ObjectOutputStream oos =null;
-                 String str ="";
-                 RequeteLUGAP req = null;
-                 int row = jTable1.getSelectedRow();
-                 int col = jTable1.getSelectedColumn();
-                 str = str + jTable1.getColumnName(0) + ";";
-                 str = str + dm.getValueAt(row, 0) + ";";//id
-                 str = str + jTable1.getColumnName(col) + ";";
-                 str = str + dm.getValueAt(row,col);           
-                 System.out.println("STR : "+ str);
-                 req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
-                 try
-                 {
-                     oos= new ObjectOutputStream(cliSock.getOutputStream());
-                     oos.writeObject(req); oos.flush();
-                 }
-                 catch (IOException e)
-                 {
-                     System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
-                 }
+                String str ="";
+                RequeteLUGAP req = null;
+                int row = jTable1.getSelectedRow();
+                int col = jTable1.getSelectedColumn();
+                str = str + jTable1.getColumnName(0) + ";";
+                str = str + dm.getValueAt(row, 0) + ";";//id
+                str = str + jTable1.getColumnName(col) + ";";
+                str = str + dm.getValueAt(row,col);           
+                System.out.println("STR : "+ str);
+                req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
+                try
+                {
+                    oos= new ObjectOutputStream(cliSock.getOutputStream());
+                    oos.writeObject(req); oos.flush();
+                }
+                catch (IOException e)
+                {
+                    System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
+                }
                    
                 
             }
