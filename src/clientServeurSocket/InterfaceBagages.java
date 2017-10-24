@@ -65,12 +65,12 @@ public class InterfaceBagages extends javax.swing.JDialog {
         catch (IOException e)
         { 
             System.out.println("--- erreur IO = " + e.getMessage()); }
-        if(!demarre)
             iniTable(rep.getChargeUtile());
     }
         
     private void iniTable(String tab)
     {
+        System.out.println("INITABLE");
         String nomTable[] ={},var[] = {},tuples[];
         var=tab.split("@");
         nomTable=var[0].split(";");
@@ -229,6 +229,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
                 {
                     System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
                 }
+                //RechercheBagages(chaine);
             }
        }
     }//GEN-LAST:event_jTable1PropertyChange
