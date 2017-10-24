@@ -82,12 +82,12 @@ public class RequeteLUGAP implements Requete, Serializable
             {
                 public void run()
                 {
-                    updateBagages(s, cs);
+                    updateBagages(cs);
                 }
             };
         }else return null;
     }
-    private void updateBagages(Socket sock, ConsoleServeur cs)
+    private void updateBagages(ConsoleServeur cs)
     {
         //System.out.println("UPDATE" + getChargeUtile());
         Bc.updateLug(getChargeUtile());
