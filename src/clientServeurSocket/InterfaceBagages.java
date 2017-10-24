@@ -194,7 +194,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
                 for(int i = 3 ; i<6 ; i++)
                 {
                     String str = (String)dm.getValueAt(jTable1.getSelectedRow(), i);
-                    if(str.equalsIgnoreCase("o") && str.equalsIgnoreCase("n"))
+                    if(!str.equalsIgnoreCase("o") && !str.equalsIgnoreCase("n"))
                     {
                         if(i==4 && !str.equalsIgnoreCase("r"))
                         {
@@ -203,7 +203,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
                         }
                         else
                         {
-                            JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                            JOptionPane.showMessageDialog(this, "Erreur - Caractere invalide");
                             dm.setValueAt("N", jTable1.getSelectedRow(), i);
                         }
                     }
