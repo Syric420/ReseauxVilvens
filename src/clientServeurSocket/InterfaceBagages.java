@@ -164,15 +164,30 @@ public class InterfaceBagages extends javax.swing.JDialog {
            if(dm.getRowCount()>0)
            {
                
-               //Test si il met O à bagage en soute alors que le bagage est même pas réceptionné
                String test = (String)dm.getValueAt(jTable1.getSelectedRow(), 4);//Chargé en soute
                String test2 = (String)dm.getValueAt(jTable1.getSelectedRow(), 3);//Receptionné
-               //System.out.println(" Chargé en soute = "+test + "\nReceptionné = "+test2);
                if(test.equalsIgnoreCase("o") && test2.equalsIgnoreCase("n"))
                {
                    JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
                    dm.setValueAt("N", jTable1.getSelectedRow(), 4);
                }
+                for(int i = 3 ; i<6 ; i++)
+                {
+                    String str = (String)dm.getValueAt(jTable1.getSelectedRow(), i);
+                    if(str.equalsIgnoreCase("o") && str.equalsIgnoreCase("n"))
+                    {
+                        if(i==4 && !str.equalsIgnoreCase("r"))
+                        {
+                          JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                          dm.setValueAt("N", jTable1.getSelectedRow(), i);
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(this, "Erreur - ne peut être chargé en soute sans être réceptionné");
+                            dm.setValueAt("N", jTable1.getSelectedRow(), i);
+                        }
+                    }
+                }
                 ObjectOutputStream oos =null;
                  String str ="";
                  RequeteLUGAP req = null;
