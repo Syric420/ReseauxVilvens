@@ -26,6 +26,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     int PORT_CHECKIN;
     String IP_ADDRESS;
     InterfaceConnexion InterfaceCo;
+    InterfaceBagages IntBagages;
     /**
      * Creates new form InterfaceClient
      */
@@ -35,6 +36,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         initComponents();
         Conf();
         InterfaceCo = new InterfaceConnexion(this, true,cliSock);
+        
         InterfaceCo.setVisible(true);
         if(!InterfaceCo.isLogged())
             exit(0);
@@ -235,7 +237,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         int i = jTable1.getSelectedRow();
         String str;
         str = jTable1.getValueAt(i, 0).toString() + "-%-" + jTable1.getValueAt(i, 3).toString()+"%";
-        InterfaceBagages IntBagages = new InterfaceBagages(this,true,str,cliSock);
+        IntBagages = new InterfaceBagages(this,true,str,cliSock);
         IntBagages.setVisible(true);
         
     }    private void LoadVols()

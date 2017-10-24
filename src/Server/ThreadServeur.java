@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Server;
 
 import java.net.*;
 import java.io.*;
-import java.util.LinkedList;
 /**
  *
  * @author Vince
@@ -35,7 +29,7 @@ public class ThreadServeur extends Thread {
         }
          thr = new ThreadClient[nbThreads];
         // Démarrage du pool de threads
-        for (int i=0; i<3; i++) // 3 devrait être constante ou une propriété du fichier de config
+        for (int i=0; i<nbThreads; i++)
         {
             thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
             thr[i].start();
@@ -76,9 +70,6 @@ public class ThreadServeur extends Thread {
         return -1;
     }
 
-    /**
-     * @return the SSocket
-     */
     public ServerSocket getSSocket() {
         return SSocket;
     }

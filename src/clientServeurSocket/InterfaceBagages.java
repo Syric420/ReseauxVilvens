@@ -26,13 +26,15 @@ public class InterfaceBagages extends javax.swing.JDialog {
     private boolean toutEnSoute;
     private Socket cliSock;
     private boolean demarre;
+    private String chaine;
     public InterfaceBagages(java.awt.Frame parent, boolean modal,String str,Socket Sock) {
         super(parent, modal);
         initComponents();
         cliSock=Sock;
         demarre=false;
         toutEnSoute=false;
-        RechercheBagages(str);
+        chaine = str;
+        RechercheBagages(chaine);
     }
     private void RechercheBagages(String str)
     {       
@@ -63,11 +65,11 @@ public class InterfaceBagages extends javax.swing.JDialog {
         catch (IOException e)
         { 
             System.out.println("--- erreur IO = " + e.getMessage()); }
-        
-        iniTable(rep.getChargeUtile());
+        if(!demarre)
+            iniTable(rep.getChargeUtile());
     }
-
-        private void iniTable(String tab)
+        
+    private void iniTable(String tab)
     {
         String nomTable[] ={},var[] = {},tuples[];
         var=tab.split("@");
@@ -158,7 +160,6 @@ public class InterfaceBagages extends javax.swing.JDialog {
     private void jTable1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTable1PropertyChange
         // TODO add your handling code here:
        DefaultTableModel dm= (DefaultTableModel)jTable1.getModel();
-       
        if(demarre)
        {
            if(dm.getRowCount()>0)
@@ -228,8 +229,6 @@ public class InterfaceBagages extends javax.swing.JDialog {
                 {
                     System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
                 }
-                   
-                
             }
        }
     }//GEN-LAST:event_jTable1PropertyChange
