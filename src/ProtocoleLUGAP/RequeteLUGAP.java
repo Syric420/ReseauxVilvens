@@ -12,9 +12,6 @@ import Server.*;
 import Utilities.Identify;
 import database.utilities.*;
 import java.security.MessageDigest;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +25,6 @@ public class RequeteLUGAP implements Requete, Serializable
     public static int REQUEST_VOL = 4;
     public static int REQUEST_DECONNECT = 5;
     public static int REQUEST_LUG=6;
-    public static Hashtable tableMails = new Hashtable();
     private byte [] ByteArray;
     private BeanBD Bc;
     private BeanRequete Br;

@@ -13,10 +13,8 @@ import Server.Reponse;
  */
 public class ReponseLUGAP implements Reponse, Serializable
 {
-    public static int EMAIL_OK = 201;
-    public static int EMAIL_NOT_FOUND = 501;
-    public static int KEY_GENERATED = 202;
-    public static int WRONG_PASSWORD = 401;
+    /*public static int KEY_GENERATED = 202;
+    public static int WRONG_PASSWORD = 401;*/
     public static int LOGIN_OK = 101;
     public static int LOGIN_FAIL = 102;
     public static int VOL_OK = 301;
