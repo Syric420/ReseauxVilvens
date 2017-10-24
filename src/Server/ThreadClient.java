@@ -55,7 +55,7 @@ public class ThreadClient extends Thread {
                 
                 if(req.getType()==RequeteLUGAP.REQUEST_DECONNECT)
                 {
-                    guiApplication.TraceEvenements("Serveur#Requête deconnexion de "+req.getChargeUtile());
+                    guiApplication.TraceEvenements(req.getChargeUtile()+"#Requête deconnexion de ");
                     this.setMySock(null);
                 }
                 else
