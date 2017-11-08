@@ -12,6 +12,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h3>Bienvenue sur notre site très sérieux !</h3>
+        <% 
+            String user = request.getParameter("user");
+            String password = request.getParameter("password");
+        %>
+<p>Nous vous saluons :
+<%= user %> <%=password%>
     </body>
 </html>
