@@ -1,5 +1,5 @@
 <%@page contentType="text/html"%>
-<jsp:useBean id="membre" scope="session" class="JspServlets.MemberDataCenter" />
+<jsp:useBean id="membre" class= "JspServlets.MemberDataCenter" scope="session"/>
 <html>
 <head><title>Authentification sur le Data Center (2)</title></head>
 <body>
