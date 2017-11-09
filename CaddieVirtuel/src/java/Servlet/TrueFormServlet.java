@@ -5,8 +5,11 @@
  */
 package Servlet;
 
+import database.utilities.*;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.URLEncoder;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,30 +21,41 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TrueFormServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet TrueFormServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet TrueFormServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        ServletContext sc = getServletContext();
+        String action = request.getParameter("button");
+        
+
+        
+       if (action.equals("S'identifier"))
+       {
+           System.out.println(request.getParameterValues("user"));
+           String usr[] = request.getParameterValues("user");
+           String pwd[] = request.getParameterValues("password");
+           System.out.println(usr[0]);
+           System.out.println(pwd[0]);
+            
+           BeanBD db = new BeanBD();
+           db.setTypeBD("MySql");
+           db.connect();
+           if(pwd[0].equals(db.findPassword(usr[0])))
+           {
+                RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                rd.forward(request, response);
+           }
+           else
+           {
+                RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" +
+URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
+                sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                rd.forward(request, response);
+           }
+
+       }
+       else
+           System.out.println("Erreur");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
