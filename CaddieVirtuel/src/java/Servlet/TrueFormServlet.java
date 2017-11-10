@@ -30,6 +30,7 @@ public class TrueFormServlet extends HttpServlet {
         BeanBD db = new BeanBD();
         db.setTypeBD("MySql");
         db.connect();
+       if(NewUser != null)
        if(NewUser.equals("ON"))
        {
            System.out.println("Ajout d'un nouvel utilisateur dans bd");
