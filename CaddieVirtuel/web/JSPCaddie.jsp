@@ -15,6 +15,7 @@
     </head>
     <body>
         <h1>Vols disponibles</h1>
+<form action="index.jsp">
 <table width="59%" border="1" style="border-collapse: collapse; ">
     <%
         BeanBD o = new BeanBD();
@@ -71,7 +72,7 @@
         }
     %>
 </table>
-</table>
+</form>
     </body>
 </html>
 
