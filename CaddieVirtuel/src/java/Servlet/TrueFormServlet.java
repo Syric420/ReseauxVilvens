@@ -25,9 +25,16 @@ public class TrueFormServlet extends HttpServlet {
             throws ServletException, IOException {
         ServletContext sc = getServletContext();
         String action = request.getParameter("button");
-        
-
-        
+        String NewUser = request.getParameter("NewUser");
+        System.out.println(NewUser);
+        BeanBD db = new BeanBD();
+        db.setTypeBD("MySql");
+        db.connect();
+       if(NewUser.equals("ON"))
+       {
+           System.out.println("Ajout d'un nouvel utilisateur dans bd");
+           db.addUser(request.getParameterValues("user")[0], request.getParameterValues("password")[0]);
+       }
        if (action.equals("S'identifier"))
        {
            System.out.println(request.getParameterValues("user"));
@@ -36,9 +43,7 @@ public class TrueFormServlet extends HttpServlet {
            System.out.println(usr[0]);
            System.out.println(pwd[0]);
             
-           BeanBD db = new BeanBD();
-           db.setTypeBD("MySql");
-           db.connect();
+
            if(pwd[0].equals(db.findPassword(usr[0])))
            {
                 RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");

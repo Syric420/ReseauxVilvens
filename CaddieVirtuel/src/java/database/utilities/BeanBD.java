@@ -178,6 +178,17 @@ public class BeanBD {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void addUser(String login,String pwd)
+    {
+        try 
+        {
+            System.out.println("INSERT INTO `sys`.`login` (`User`, `Password`) VALUES ('"+ login + "', '" + pwd + "')");
+            System.out.println("FIN");
+            getInstruc().executeUpdate("INSERT INTO `sys`.`login` (`User`, `Password`) VALUES ('"+ login + "', '" + pwd + "');");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public String findVols()
     {
         
