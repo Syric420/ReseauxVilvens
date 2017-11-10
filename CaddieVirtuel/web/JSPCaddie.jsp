@@ -15,11 +15,12 @@
     </head>
     <body>
         <h1>Vols disponibles</h1>
-<form action="index.jsp">
+<form action="http://localhost:8084/CaddieVirtuel/TrueFormServlet" method="POST">
 <table width="59%" border="1" style="border-collapse: collapse; ">
     <%
         BeanBD o = new BeanBD();
         o.setTypeBD("MySql");
+        int j=0;
         o.connect();
         ResultSet r;
         String q = "select * from vols;";
@@ -56,12 +57,15 @@
                 <td>
                 <%= r.getString(i)%>
                 </td>
+                
            <% 
                     if(i==metaData.getColumnCount())
                     {
                     %>
                         <td>
-                            <input type="submit" name="<%="Reserve" + i %> " value="Reserve"</input> 
+                            <input type="submit" name="button" value="Reserve"</input> 
+                            <input type="hidden" name="hiddenValue" value=<%= j %>>
+                            <%=j++%>
                         </td>
                     <%
                     }
