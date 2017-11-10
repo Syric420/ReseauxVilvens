@@ -22,6 +22,7 @@ if (msg!=null) out.println("<H2>" + msg + "</H2><p>");
         <p> Mot de passe: <input type="password" name="password" value="" size="50" required/> </p>
         <p> Nouvel utilisateur: <input type="checkbox" name="NewUser" value="ON" /> </p>
         <input type="submit" value="S'identifier" name="button" />
+
     </form>
    </body>     
 </html>
