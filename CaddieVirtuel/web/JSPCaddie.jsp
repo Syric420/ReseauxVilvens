@@ -22,6 +22,7 @@
     <%
         BeanBD o = new BeanBD();
         o.setTypeBD("MySql");
+        int j=0;
         o.connect();
         ResultSet r;
         String q = "select * from vols;";
@@ -60,6 +61,7 @@
                 <%= r.getString(i)%>
  
                 </td>
+                
            <% 
                     if(i==metaData.getColumnCount())
                     {

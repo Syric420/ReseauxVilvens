@@ -61,8 +61,17 @@ URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrec
            }
 
        }
-       else*/
-           System.out.println("TEST : "+request.getParameter("table1"));
+        if(action.equals("Reserve"))
+        {
+            String num = request.getParameter("hiddenValue");
+            System.out.println("hid = "+num);
+            RequestDispatcher rd = sc.getRequestDispatcher("/JSPCaddie.jsp?msg=" +
+URLEncoder.encode("Salut"));
+                sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                rd.forward(request, response);
+        }
+       else
+           System.out.println("Erreur");
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
