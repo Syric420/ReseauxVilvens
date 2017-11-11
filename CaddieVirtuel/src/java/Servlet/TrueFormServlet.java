@@ -25,12 +25,13 @@ public class TrueFormServlet extends HttpServlet {
             throws ServletException, IOException {
         ServletContext sc = getServletContext();
         String action = request.getParameter("button");
+        //String test = request.getParameter("table1");
         String NewUser = request.getParameter("NewUser");
-        System.out.println(NewUser);
+        
         BeanBD db = new BeanBD();
         db.setTypeBD("MySql");
         db.connect();
-       if(NewUser != null)
+       /*if(NewUser != null)
        if(NewUser.equals("ON"))
        {
            System.out.println("Ajout d'un nouvel utilisateur dans bd");
@@ -72,7 +73,6 @@ URLEncoder.encode("Salut"));
        else
            System.out.println("Erreur");
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

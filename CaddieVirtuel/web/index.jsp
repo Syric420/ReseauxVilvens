@@ -10,7 +10,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Connexion</title>
         
-    <head>
+    <head>   
+    </head>
+        
         <body>
             <% String msg= request.getParameter("msg");
 if (msg!=null) out.println("<H2>" + msg + "</H2><p>");
