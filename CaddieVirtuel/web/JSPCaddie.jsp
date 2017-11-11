@@ -25,6 +25,7 @@
         int j=0;
         o.connect();
         ResultSet r;
+        String str = "";
         String q = "select * from vols;";
         r = o.getInstruc().executeQuery(q) ;
         ResultSetMetaData metaData = r.getMetaData();
@@ -56,7 +57,10 @@
         <tr>
             <%
             for(int i = 1; i<=metaData.getColumnCount();i++)
-               { %>
+               { 
+                    if(i==1)
+                        str=r.getString(i);
+            %>
                 <td>
                 <%= r.getString(i)%>
  
@@ -67,7 +71,7 @@
                     {
                     %>
                         <td>
-                            <input type="submit" name="<%="Reserve" + line%> " value="<%="Reserve"%>" onClick="document.getElementById('pushedbutton').value='<%= line%>';" </input> 
+                            <input type="submit" name="<%="Reserve" + line%> " value="<%="Reserve"%>" onClick="document.getElementById('pushedbutton').value='<%= str%>';" </input> 
                         </td>
                     <%
                     }
