@@ -15,8 +15,10 @@
     </head>
     <body>
         <h1>Vols disponibles</h1>
-<form action="index.jsp">
-<table width="59%" border="1" style="border-collapse: collapse; ">
+        
+<form action="http://localhost:8084/CaddieVirtuel/TrueFormServlet" method="POST">
+  <input type="hidden" id="pushedbutton" name="pushedbutton" value="0"/>
+<table name="table1" id ="table1" width="59%" border="1" style="border-collapse: collapse; ">
     <%
         BeanBD o = new BeanBD();
         o.setTypeBD("MySql");
@@ -46,6 +48,7 @@
         %>                   
         </tr>
         <% 
+            int line =1;
         while(r.next())
         {
         %>
@@ -55,17 +58,19 @@
                { %>
                 <td>
                 <%= r.getString(i)%>
+ 
                 </td>
            <% 
                     if(i==metaData.getColumnCount())
                     {
                     %>
                         <td>
-                            <input type="submit" name="<%="Reserve" + i %> " value="Reserve"</input> 
+                            <input type="submit" name="<%="Reserve" + line%> " value="<%="Reserve"%>" onClick="document.getElementById('pushedbutton').value='<%= line%>';" </input> 
                         </td>
                     <%
                     }
                }
+line ++;
         %>                   
         </tr>
         <% 
@@ -73,7 +78,9 @@
     %>
 </table>
 </form>
+
     </body>
 </html>
+
 
 
