@@ -5,10 +5,11 @@
  */
 package Servlet;
 
-import database.utilities.*;
+import database.utilities.BeanBD;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -21,10 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Vince
+ * @author tibha
  */
-@WebServlet(name = "ServletCaddie", urlPatterns = {"/ServletCaddie"})
-public class ServletCaddie extends HttpServlet {
+@WebServlet(name = "ReserveBillet", urlPatterns = {"/ReserveBillet"})
+public class ReserveBillet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,61 +39,37 @@ public class ServletCaddie extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServletContext sc = getServletContext();
-        response.setContentType("text/html;charset=UTF-8");
-           
+        try {
+            
+            System.out.println("Reserve Billet : " + request.getParameter("cbNbre"));
             BeanBD o = new BeanBD();
             o.setTypeBD("MySql");
             int j=0;
             o.connect();
             ResultSet r;
-            String str = request.getParameter("pushedbutton");
-            String q = "select * from vols where idVols = '" + str + "';" ;
-           
-           
-        try {
-            
+
+            String str = request.getParameter("idVols");
+            System.out.println("Reserve Billet : " + str);
+            String q = "select PlacesRestantes from vols where idVols = '" + str + "';" ;
             r = o.getInstruc().executeQuery(q) ;
-           ResultSetMetaData metaData = r.getMetaData();
-           
-           int col=metaData.getColumnCount();
-           int  line =0;
-           while(r.next())
+            r.next();
+            int nbreDemande = Integer.parseInt(request.getParameter("cbNbre"));
+            int NbreMax = Integer.parseInt(r.getString(1));
+            if(nbreDemande<NbreMax)
             {
-                line ++;
-            
-            }
-           r.beforeFirst();
-           String donnee[][]= new String[line+1][col];
-           
-            for(int i = 1; i<=metaData.getColumnCount();i++)
-            {
-                donnee[0][i-1]= metaData.getColumnName(i);
+                int tmp = NbreMax - nbreDemande;
+                String Login = request.getParameter("Login");
+                System.out.println("Places restantes : " + tmp);
+                String update="UPDATE vols SET `PlacesRestantes`='" + tmp + "' WHERE `idVols`='"+ str + "';";
+                String Insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Client`, `idVols`, `Nombre de places`) VALUES ('"+ Login + str + "', '" + Login + "', '"+ str + "', '" + nbreDemande + "');";
+                o.reserveVols(update,Insert);
                 
             }
-            
-            line =1;
-            
-            while(r.next())
-            {
-                for(int i = 1; i<=metaData.getColumnCount();i++)
-               {
-                   donnee[line][i-1]=r.getString(i);
-                   
-               }
-                line++;
-            
-            }
-                RequestDispatcher rd = sc.getRequestDispatcher("/JSPPay.jsp");
-                sc.log("-- Tentative de redirection sur JSPPay.jsp");
-                request.setAttribute("donnee", donnee);
-                request.setAttribute("line", line);
-                request.setAttribute("col", col);
-                rd.forward(request, response);
-            
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(ServletCaddie.class.getName()).log(Level.SEVERE, null, ex);
+            RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
+            sc.log("-- Tentative de redirection sur JSPInit.jsp");
+            rd.forward(request, response);
+        }   catch (SQLException ex) {
+            Logger.getLogger(ReserveBillet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

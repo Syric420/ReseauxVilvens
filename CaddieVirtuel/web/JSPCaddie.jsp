@@ -17,7 +17,10 @@
         <h1>Vols disponibles</h1>
         
 <form action="http://localhost:8084/CaddieVirtuel/ServletCaddie" method="POST">
+    <%String Login = request.getParameter("Login");%>
+    <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>
   <input type="hidden" id="pushedbutton" name="pushedbutton" value="0"/>
+  
 <table name="table1" id ="table1" width="59%" border="1" style="border-collapse: collapse; ">
     <%
         BeanBD o = new BeanBD();

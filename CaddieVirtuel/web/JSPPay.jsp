@@ -13,6 +13,10 @@
     </head>
     <body>
         <h1>Time to pay!</h1>
+        <form action="http://localhost:8084/CaddieVirtuel/ReserveBillet" method="POST">
+        <%String Login = request.getParameter("Login");%>
+        <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>   
+            
         <% 
             //String data = request.getParameter("donnee");
             String data [][]= (String [][]) request.getAttribute("donnee");
@@ -23,16 +27,26 @@
         
 <table name="table1" id ="table1" width="59%" border="1" style="border-collapse: collapse; ">
     <%
-        int j=0;
         %>
         <tr>
             <%
-            for(int i = 1; i<col;i++)
-               { %>
+            for(int i = 1; i<=col;i++)
+               { 
+                   
+   %>
                 <th>
-                <%= data[0][i]%>
+                <%= data[0][i-1]%>
                 </th>
+                
            <% 
+                    if(i==col)
+                    {
+                    %>
+                        <th>
+                            Réservations de places
+                        </th>
+                    <%
+                    }
                }
         %>                   
         </tr>
@@ -43,12 +57,40 @@
         %>
         <tr>
             <%
-            for(int i = 1; i<col;i++)
+            for(int i = 1; i<=col;i++)
                { 
+                   
+                   if(i==1)
+                   {
+                     %><input type="hidden" id="idVols" name="idVols" value="<%= data[l][i-1]%>"/>
+                      <% 
+                   }
+
+                   
+
             %>
                 <td>
-                <%= data[l][i]%>
- 
+                <%= data[l][i-1]%>
+                </td>
+                <%if(i==col)
+                {
+                    
+                    int var = Integer.parseInt(data[l][i-1]);
+%>
+
+                 <td>
+                    <select name="cbNbre" id="cbNbre" onChange="combo(this, 'theinput')">
+                        <%
+                        for(int j = 0; j <= var;j++)
+                        {
+                            %>
+                            <option><%=j%></option>
+                            <%
+                        }
+                            
+                        %>
+                    </select>  
+                <%}%>
                 </td>
                 
            <% 
@@ -61,5 +103,10 @@
         }
     %>
 </table>
+    
+        
+        <input type="submit" value="Reserver" name="Reserve" />
+
+    </form>
     </body>
 </html>
