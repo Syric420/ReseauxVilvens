@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,58 +37,63 @@ public class ServletCaddie extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ServletContext sc = getServletContext();
         response.setContentType("text/html;charset=UTF-8");
             BeanBD o = new BeanBD();
            o.setTypeBD("MySql");
            int j=0;
            o.connect();
            ResultSet r;
-           String q = "select * from vols;";
+           String str = request.getParameter("pushedbutton");
+           System.out.println("STR : " + str);
+           String q = "select * from vols where idVols = '" + str + "';" ;
            
            
         try {
+            
             r = o.getInstruc().executeQuery(q) ;
            ResultSetMetaData metaData = r.getMetaData();
-           String donnee[][]=null;
+           
+           int col=metaData.getColumnCount();
+           int  line =0;
+           while(r.next())
+            {
+                line ++;
             
-            
+            }
+           r.beforeFirst();
+           String donnee[][]= new String[line+1][col];
+           
             for(int i = 1; i<=metaData.getColumnCount();i++)
             {
-                donnee[0][i-1] = new String();
                 donnee[0][i-1]= metaData.getColumnName(i);
                 
             }
             
-            int line =1;
+            line =1;
             
             while(r.next())
             {
                 for(int i = 1; i<=metaData.getColumnCount();i++)
                {
-                   donnee[line][i-1] = new String();
                    donnee[line][i-1]=r.getString(i);
+                   System.out.println(donnee[line][i-1]);
+                   
                }
+                line++;
             
             }
+                RequestDispatcher rd = sc.getRequestDispatcher("/JSPPay.jsp");
+                sc.log("-- Tentative de redirection sur JSPPay.jsp");
+                request.setAttribute("donnee", donnee);
+                request.setAttribute("line", line);
+                request.setAttribute("col", col);
+                rd.forward(request, response);
             
-            System.out.println(donnee[0][0]);
             
             
         } catch (SQLException ex) {
             Logger.getLogger(ServletCaddie.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ServletCaddie</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ServletCaddie at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            
         }
     }
 
