@@ -24,7 +24,7 @@
         o.setTypeBD("MySql");
         int j=0;
         o.connect();
-        ResultSet r;
+        ResultSet r ;
         String str = "";
         String q = "select * from vols;";
         r = o.getInstruc().executeQuery(q) ;
@@ -50,7 +50,7 @@
         %>                   
         </tr>
         <% 
-            int line =1;
+        int line =1;
         while(r.next())
         {
         %>
