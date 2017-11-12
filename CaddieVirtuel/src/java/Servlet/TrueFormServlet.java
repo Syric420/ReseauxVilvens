@@ -25,7 +25,6 @@ public class TrueFormServlet extends HttpServlet {
             throws ServletException, IOException {
         ServletContext sc = getServletContext();
         String action = request.getParameter("button");
-        //String test = request.getParameter("table1");
         String NewUser = request.getParameter("NewUser");
         
         BeanBD db = new BeanBD();
@@ -63,15 +62,6 @@ URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrec
            }
 
        }
-        if(action.equals("Reserve"))
-        {
-            String num = request.getParameter("hiddenValue");
-            System.out.println("hid = "+num);
-            RequestDispatcher rd = sc.getRequestDispatcher("/JSPCaddie.jsp?msg=" +
-URLEncoder.encode("Salut"));
-                sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                rd.forward(request, response);
-        }
        else
            System.out.println("Erreur");
     }

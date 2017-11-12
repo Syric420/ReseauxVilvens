@@ -13,11 +13,17 @@
     </head>
     <body>
         <h3>Bienvenue sur notre site très sérieux !</h3>
+        <form action="http://localhost:8084/CaddieVirtuel/JSPCaddie.jsp" method="POST">
         <% 
+            //Il faudra ici rediriger vers une servlet adequate pour cahrger jsp cadie etc
             String user = request.getParameter("user");
             String password = request.getParameter("password");
+            
         %>
-<p>Nous vous saluons :
-<%= user %> <%=password%>
+                <input type="hidden" id="Login" name="Login" value="<%= user %>"/>
+                <input type="submit" value="Voir catalogue" name="button" />
+        <p>Nous vous saluons :
+        <%= user %> <%=password%>
+</form>
     </body>
 </html>

@@ -189,6 +189,16 @@ public class BeanBD {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public synchronized void reserveVols(String update,String insert)
+    {
+        try {
+            getInstruc().executeUpdate(update);
+            getInstruc().executeUpdate(insert);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public String findVols()
     {
         
