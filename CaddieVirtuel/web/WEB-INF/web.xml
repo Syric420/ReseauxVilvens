@@ -8,6 +8,10 @@
         <servlet-name>ServletIni</servlet-name>
         <servlet-class>Servlet.ServletIni</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FormCookieServlet</servlet-name>
+        <servlet-class>Servlet.FormCookieServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TrueFormServlet</servlet-name>
         <url-pattern>/TrueFormServlet</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>ServletIni</servlet-name>
         <url-pattern>/ServletIni</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FormCookieServlet</servlet-name>
+        <url-pattern>/FormCookieServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
