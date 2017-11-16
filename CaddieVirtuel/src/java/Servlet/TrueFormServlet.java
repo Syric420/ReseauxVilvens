@@ -8,6 +8,11 @@ package Servlet;
 import database.utilities.*;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -49,9 +54,62 @@ public class TrueFormServlet extends HttpServlet {
 
            if(pwd[0].equals(db.findPassword(usr[0])))
            {
-                RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                rd.forward(request, response);
+               
+                BeanBD o = new BeanBD();
+                o.setTypeBD("MySql");
+                int j=0;
+                o.connect();
+                ResultSet r;
+                String Login = usr[0];
+                String q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
+
+
+            try {
+
+               r = o.getInstruc().executeQuery(q) ;
+               ResultSetMetaData metaData = r.getMetaData();
+
+               int col=metaData.getColumnCount();
+               int  line =0;
+               while(r.next())
+                {
+                    line ++;
+
+                }
+               r.beforeFirst();
+               String donnee[][]= new String[line+1][col];
+
+                for(int i = 1; i<=metaData.getColumnCount();i++)
+                {
+                    donnee[0][i-1]= metaData.getColumnName(i);
+
+                }
+
+                line =1;
+
+                while(r.next())
+                {
+                    for(int i = 1; i<=metaData.getColumnCount();i++)
+                   {
+                       donnee[line][i-1]=r.getString(i);
+
+                   }
+                    line++;
+
+                }
+                    RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Login);
+                    request.setAttribute("line", line);
+                    request.setAttribute("col", col);
+                    rd.forward(request, response);
+
+
+
+            } catch (SQLException ex) {
+                Logger.getLogger(TrueFormServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
            }
            else
            {
