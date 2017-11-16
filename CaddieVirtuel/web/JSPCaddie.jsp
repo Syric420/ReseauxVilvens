@@ -20,28 +20,24 @@
     <%String Login = request.getParameter("Login");%>
     <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>
   <input type="hidden" id="pushedbutton" name="pushedbutton" value="0"/>
-  
-<table name="table1" id ="table1" width="59%" border="1" style="border-collapse: collapse; ">
-    <%
-        BeanBD o = new BeanBD();
-        o.setTypeBD("MySql");
-        int j=0;
-        o.connect();
-        ResultSet r ;
-        String str = "";
-        String q = "select * from vols;";
-        r = o.getInstruc().executeQuery(q) ;
-        ResultSetMetaData metaData = r.getMetaData();
+          <% 
+            //String data = request.getParameter("donnee");
+            String data [][]= (String [][]) request.getAttribute("donnee");
+            int line= (int) request.getAttribute("line");
+            int col= (int) request.getAttribute("col");
         %>
+
+<table name="table1" id ="table1" width="59%" border="1" style="border-collapse: collapse; ">
         <tr>
             <%
-            for(int i = 1; i<=metaData.getColumnCount();i++)
+            String str = "";
+            for(int i = 1; i<=col;i++)
                { %>
                 <th>
-                <%= metaData.getColumnName(i)%>
+                <%= data[0][i-1]%>
                 </th>
            <% 
-                    if(i==metaData.getColumnCount())
+                    if(i==col)
                     {
                     %>
                         <th>
@@ -53,24 +49,24 @@
         %>                   
         </tr>
         <% 
-        int line =1;
-        while(r.next())
+        int l =1;
+        while(l<line)
         {
         %>
         <tr>
             <%
-            for(int i = 1; i<=metaData.getColumnCount();i++)
+            for(int i = 1; i<=col;i++)
                { 
                     if(i==1)
-                        str=r.getString(i);
+                        str=data[l][i-1];
             %>
                 <td>
-                <%= r.getString(i)%>
+                <%= data[l][i-1]%>
  
                 </td>
                 
            <% 
-                    if(i==metaData.getColumnCount())
+                    if(i==col)
                     {
                     %>
                         <td>
@@ -79,7 +75,7 @@
                     <%
                     }
                }
-line ++;
+        l++;
         %>                   
         </tr>
         <% 
