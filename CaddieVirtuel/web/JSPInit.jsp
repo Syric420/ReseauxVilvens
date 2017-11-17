@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Initialisation du Caddie</title>
     </head>
     <body>
-        <form action="http://localhost:8084/CaddieVirtuel/ServletIni" method="POST">
+        <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
             
         <%String Login =(String) request.getAttribute("Login");
             if(Login == null)

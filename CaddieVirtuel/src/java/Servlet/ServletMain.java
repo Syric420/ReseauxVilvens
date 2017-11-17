@@ -8,6 +8,12 @@ package Servlet;
 import database.utilities.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,14 +54,83 @@ public class ServletMain extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ServletContext sc = getServletContext();
-        String action = request.getParameter("action");
+        String action = request.getParameter("button");
+        String NewUser;
         
-        switch(action)
-        {
+       if (action.equals("S'identifier"))
+       {
+            NewUser = request.getParameter("NewUser");
+            if(NewUser != null)
+            if(NewUser.equals("ON"))
+            {
+                BeanBD.addUser(request.getParameterValues("user")[0], request.getParameterValues("password")[0]);
+            }
+            String usr[] = request.getParameterValues("user");
+            String pwd[] = request.getParameterValues("password");
             
-        }
+            if(pwd[0].equals(BeanBD.findPassword(usr[0])))
+            {
+                System.out.println("OK");
+                int j=0;
+                ResultSet r;
+                String Login = usr[0];
+                String q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
+
+                try {
+
+                    r = BeanBD.getInstruc().executeQuery(q) ;
+                    ResultSetMetaData metaData = r.getMetaData();
+
+                    int col=metaData.getColumnCount();
+                    int  line =0;
+                    while(r.next())
+                    {
+                        line ++;
+
+                    }
+                    r.beforeFirst();
+                    String donnee[][]= new String[line+1][col];
+
+                    for(int i = 1; i<=metaData.getColumnCount();i++)
+                    {
+                        donnee[0][i-1]= metaData.getColumnName(i);
+
+                    }
+
+                    line =1;
+
+                    while(r.next())
+                    {
+                        for(int i = 1; i<=metaData.getColumnCount();i++)
+                       {
+                           donnee[line][i-1]=r.getString(i);
+
+                       }
+                        line++;
+
+                    }
+                        RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                        sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                        request.setAttribute("donnee", donnee);
+                        request.setAttribute("Login", Login);
+                        request.setAttribute("line", line);
+                        request.setAttribute("col", col);
+                        rd.forward(request, response);
+                        
+                    } catch (SQLException ex) {
+                    Logger.getLogger(TrueFormServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+            else
+            {
+                RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" +
+                URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
+                sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                rd.forward(request, response);
+            }
         
         }
+    }
     
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
