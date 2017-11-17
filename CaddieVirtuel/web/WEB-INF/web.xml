@@ -12,6 +12,14 @@
         <servlet-name>FormCookieServlet</servlet-name>
         <servlet-class>Servlet.FormCookieServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>Servlet.ServletMain</servlet-class>
+    </servlet>
+     <servlet-mapping>
+        <servlet-name>ServletMain</servlet-name>
+        <url-pattern>/ServletMain</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TrueFormServlet</servlet-name>
         <url-pattern>/TrueFormServlet</url-pattern>
