@@ -61,6 +61,9 @@ public class FormCookieServlet extends HttpServlet {
         if (!idExiste)sortie.println("Servlet en action !!! Vous recevez l'identifiant " +
             idNewDansCookie);
         else sortie.println("Servlet en action !!! Vous avez été reconnu pour " +idDansCookie);
+        
+        
+        
     }
 
         @Override

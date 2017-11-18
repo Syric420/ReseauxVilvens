@@ -126,9 +126,10 @@ public class BeanBD {
             String s =getRs().getString("password");
             return s;
         } catch (SQLException ex) {
-            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BeanBD.class.getName()).log(Level.FINE, null, ex);
+            return "NULL";
         }
-        return "NULL";
+        
     }
     public String findBagages(String Requete)
     {
