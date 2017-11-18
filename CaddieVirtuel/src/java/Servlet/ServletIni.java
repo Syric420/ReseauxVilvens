@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -40,6 +41,20 @@ public class ServletIni extends HttpServlet {
         ServletContext sc = getServletContext();
         response.setContentType("text/html;charset=UTF-8");
            
+        
+            HttpSession session = request.getSession(true);
+            Object existe = session.getValue("logon.isDone");
+            if (existe==null)
+            {
+                System.out.println("Login Nok dans servlet Ini");
+                return;
+            }
+            else
+                System.out.println("Login ok dans servlet Ini");
+            
+            
+            
+            
             BeanBD o = new BeanBD();
             o.setTypeBD("MySql");
             int j=0;

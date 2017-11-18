@@ -18,6 +18,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -109,6 +110,13 @@ public class ServletMain extends HttpServlet {
                         line++;
 
                     }
+                    
+                    
+                        HttpSession session = request.getSession(true);
+                        session.putValue("logon.isDone", usr[0]);
+                        //session.setMaxInactiveInterval(30);
+                        
+                        System.out.println("Session créee : " + session.getId());
                         RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
                         sc.log("-- Tentative de redirection sur JSPInit.jsp");
                         request.setAttribute("donnee", donnee);

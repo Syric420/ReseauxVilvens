@@ -12,7 +12,7 @@
         <title>Initialisation du Caddie</title>
     </head>
     <body>
-        <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+        <form action="http://localhost:8084/CaddieVirtuel/ServletIni" method="POST">
             
         <%String Login =(String) request.getAttribute("Login");
             if(Login == null)
