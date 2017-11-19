@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -40,7 +41,7 @@ public class TrueFormServlet extends HttpServlet {
        if(NewUser != null)
        if(NewUser.equals("ON"))
        {
-           System.out.println("Ajout d'un nouvel utilisateur dans bd");
+           
            db.addUser(request.getParameterValues("user")[0], request.getParameterValues("password")[0]);
        }
        if (action.equals("S'identifier"))
@@ -54,11 +55,8 @@ public class TrueFormServlet extends HttpServlet {
 
            if(pwd[0].equals(db.findPassword(usr[0])))
            {
-               
-                BeanBD o = new BeanBD();
-                o.setTypeBD("MySql");
+         
                 int j=0;
-                o.connect();
                 ResultSet r;
                 String Login = usr[0];
                 String q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
@@ -66,7 +64,7 @@ public class TrueFormServlet extends HttpServlet {
 
             try {
 
-               r = o.getInstruc().executeQuery(q) ;
+               r = db.getInstruc().executeQuery(q) ;
                ResultSetMetaData metaData = r.getMetaData();
 
                int col=metaData.getColumnCount();
@@ -113,15 +111,17 @@ public class TrueFormServlet extends HttpServlet {
            }
            else
            {
-                RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" +
-URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
-                sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" + URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
+                sc.log("-- Tentative de redirection sur Login.jsp");
+                HttpSession session = request.getSession(true);
+                session.invalidate();
+                Object obj = sc.getAttribute("membre");
+                if (obj != null) sc.removeAttribute("membre");
                 rd.forward(request, response);
            }
 
        }
-       else
-           System.out.println("Erreur");
+        
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
