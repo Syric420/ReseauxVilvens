@@ -56,6 +56,7 @@ public class ServletMain extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         ServletContext sc = getServletContext();
         String action = request.getParameter("button");
+        
         String NewUser;
         
        if (action.equals("S'identifier"))
@@ -134,10 +135,122 @@ public class ServletMain extends HttpServlet {
                 RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" +
                 URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
                 sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                 HttpSession session = request.getSession(true);
+                session.invalidate();
+                Object obj = sc.getAttribute("membre");
+                if (obj != null) sc.removeAttribute("membre");
                 rd.forward(request, response);
             }
         
         }
+       else if (action.equals("Acces au catalogue des vols"))
+        {
+            ResultSet r;
+            String str = request.getParameter("pushedbutton");
+            String q = "select * from vols;";
+           
+           
+            try {
+
+               r = BeanBD.getInstruc().executeQuery(q) ;
+               ResultSetMetaData metaData = r.getMetaData();
+
+               int col=metaData.getColumnCount();
+               int  line =0;
+               while(r.next())
+                {
+                    line ++;
+
+                }
+               r.beforeFirst();
+               String donnee[][]= new String[line+1][col];
+
+                for(int i = 1; i<=metaData.getColumnCount();i++)
+                {
+                    donnee[0][i-1]= metaData.getColumnName(i);
+
+                }
+
+                line =1;
+
+                while(r.next())
+                {
+                    for(int i = 1; i<=metaData.getColumnCount();i++)
+                   {
+                       donnee[line][i-1]=r.getString(i);
+                   }
+                    line++;
+
+                }
+                    RequestDispatcher rd = sc.getRequestDispatcher("/JSPCaddie.jsp");
+                    sc.log("-- Tentative de redirection sur JSPCaddie.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", line);
+                    request.setAttribute("col", col);
+                    rd.forward(request, response);
+
+
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ServletCaddie.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+       else if(action.equals("pushedbutton"))
+       {
+           int j=0;
+            ResultSet r;
+            String str = request.getParameter("pushedbutton");
+            String q = "select * from vols where idVols = '" + str + "';" ;
+           
+           
+            try {
+
+                r = BeanBD.getInstruc().executeQuery(q) ;
+               ResultSetMetaData metaData = r.getMetaData();
+
+               int col=metaData.getColumnCount();
+               int  line =0;
+               while(r.next())
+                {
+                    line ++;
+
+                }
+               r.beforeFirst();
+               String donnee[][]= new String[line+1][col];
+
+                for(int i = 1; i<=metaData.getColumnCount();i++)
+                {
+                    donnee[0][i-1]= metaData.getColumnName(i);
+
+                }
+
+                line =1;
+
+                while(r.next())
+                {
+                    for(int i = 1; i<=metaData.getColumnCount();i++)
+                   {
+                       donnee[line][i-1]=r.getString(i);
+
+                   }
+                    line++;
+
+                }
+                    RequestDispatcher rd = sc.getRequestDispatcher("/JSPPay.jsp");
+                    sc.log("-- Tentative de redirection sur JSPPay.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", line);
+                    request.setAttribute("col", col);
+                    rd.forward(request, response);
+
+
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ServletCaddie.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+       }
+         
     }
     
 
