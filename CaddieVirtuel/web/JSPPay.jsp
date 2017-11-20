@@ -12,8 +12,13 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%
+            int timeout = session.getMaxInactiveInterval();
+            response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
+        %>
         <h1>Time to pay!</h1>
-        <form action="http://localhost:8084/CaddieVirtuel/ReserveBillet" method="POST">
+        <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+            <input type="hidden" id="Jsp" name="Jsp" value="JSPPay"/> 
         <%String Login = request.getParameter("Login");%>
         <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>   
             
