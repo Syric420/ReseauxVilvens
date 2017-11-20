@@ -17,7 +17,8 @@ public class BeanBD {
     private Connection con;
     private Statement instruc;
     private ResultSet rs;
-    
+    private int line;
+    private int colonne;
     public BeanBD()
     {
         typeBD = "";
@@ -191,11 +192,29 @@ public class BeanBD {
         }
     }
     
-    public synchronized void reserveVols(String update,String insert)
+    public synchronized boolean reserveVols(String update,String insert)
     {
         try {
             getInstruc().executeUpdate(update);
             getInstruc().executeUpdate(insert);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+    public synchronized void Update(String update)
+    {
+        try {
+            getInstruc().executeUpdate(update);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public synchronized void payeVols(String update)
+    {
+        try {
+            getInstruc().executeUpdate(update);
         } catch (SQLException ex) {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -237,6 +256,60 @@ public class BeanBD {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public String [][] selectVols(String requete)
+    {
+        try {
+            setRs(getInstruc().executeQuery(requete));
+            ResultSetMetaData metaData = rs.getMetaData();
+            
+            int col=metaData.getColumnCount();
+            int  l =0;
+            while(rs.next())
+            {
+                l ++;
+                
+            }
+            rs.beforeFirst();
+            String donnee[][]= new String[l+1][col];
+            line=l+1;
+            colonne=col;
+            for(int i = 1; i<=metaData.getColumnCount();i++)
+            {
+                donnee[0][i-1]= metaData.getColumnName(i);
+                
+            }
+            
+            l=1;
+            
+            while(rs.next())
+            {
+                for(int i = 1; i<=metaData.getColumnCount();i++)
+                {
+                    donnee[l][i-1]=rs.getString(i);
+                }
+                l++; 
+            }
+            return donnee;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    /**
+     * @return the line
+     */
+    public int getLine() {
+        return line;
+    }
+
+    /**
+     * @return the colonne
+     */
+    public int getColonne() {
+        return colonne;
     }
     
     

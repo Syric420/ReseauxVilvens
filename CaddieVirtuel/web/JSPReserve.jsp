@@ -1,7 +1,7 @@
 <%-- 
-    Document   : JSPInit
-    Created on : 08-nov.-2017, 11:04:46
-    Author     : Vince
+    Document   : JSPReserve
+    Created on : 12 nov. 2017, 10:04:23
+    Author     : tibha
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -9,21 +9,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Initialisation du Caddie</title>
+        <title>JSP Page</title>
     </head>
     <body>
         <%
             int timeout = session.getMaxInactiveInterval();
             response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
         %>
-        
-        
+        <h1>Time to pay!</h1>
         <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-            <input type="hidden" id="Jsp" name="Jsp" value="JSPInit"/> 
-        <%String Login =(String) request.getAttribute("Login");
-            if(Login == null)
-                Login =request.getParameter("Login");
-        %>
+            <input type="hidden" id="Jsp" name="Jsp" value="JSPReserve"/> 
+        <%String Login = request.getParameter("Login");%>
         <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>   
             
         <% 
@@ -48,6 +44,14 @@
                 </th>
                 
            <% 
+                    if(i==col)
+                    {
+                    %>
+                        <th>
+                            Réservations de places
+                        </th>
+                    <%
+                    }
                }
         %>                   
         </tr>
@@ -59,32 +63,55 @@
         <tr>
             <%
             for(int i = 1; i<=col;i++)
-               {                  
+               { 
+                   
+                   if(i==1)
+                   {
+                     %><input type="hidden" id="idVols" name="idVols" value="<%= data[l][i-1]%>"/>
+                      <% 
+                   }
+
+                   
+
             %>
                 <td>
                 <%= data[l][i-1]%>
                 </td>
-                <%}
-        l++;
+                <%if(i==col)
+                {
+                    
+                    int var = Integer.parseInt(data[l][i-1]);
+%>
+
+                 <td>
+                    <select name="cbNbre" id="cbNbre" onChange="combo(this, 'theinput')">
+                        <%
+                        for(int j = 0; j <= var;j++)
+                        {
+                            %>
+                            <option><%=j%></option>
+                            <%
+                        }
+                            
+                        %>
+                    </select>  
+                <%}%>
+                </td>
+                
+           <% 
+
+               }
+        l ++;
         %>                   
         </tr>
         <% 
         }
     %>
 </table>
+    
+        
+        <input type="submit" value="Reserver" name="Reserve" />
 
-        <input type="submit" value="Acces au catalogue des vols" name="button" />
     </form>
-
-
-    <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-        <%String Log =(String) request.getAttribute("Login");
-            if(Login == null)
-                Login =request.getParameter("Login");
-        %>
-        <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>  
-        <input type="hidden" id="Jsp" name="Jsp" value="PAYE"/>
-        <input type="submit" value="Payer" name="button" />
-    </form> 
     </body>
 </html>
