@@ -12,8 +12,12 @@
         <title>Initialisation du Caddie</title>
     </head>
     <body>
+        <%
+            int timeout = session.getMaxInactiveInterval();
+            response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
+        %>
         <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-            
+            <input type="hidden" id="Jsp" name="Jsp" value="JSPInit"/> 
         <%String Login =(String) request.getAttribute("Login");
             if(Login == null)
                 Login =request.getParameter("Login");

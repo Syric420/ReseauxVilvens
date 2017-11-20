@@ -14,9 +14,14 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%
+            int timeout = session.getMaxInactiveInterval();
+            response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
+        %>
         <h1>Vols disponibles</h1>
         
-<form action="http://localhost:8084/CaddieVirtuel/ServletCaddie" method="POST">
+<form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+    <input type="hidden" id="Jsp" name="Jsp" value="JSPCaddie"/> 
     <%String Login = request.getParameter("Login");%>
     <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>
   <input type="hidden" id="pushedbutton" name="pushedbutton" value="0"/>
