@@ -119,9 +119,6 @@ public class ServletMain extends HttpServlet {
                             line++;
 
                         }
-
-
-                            
                             rd = sc.getRequestDispatcher("/JSPInit.jsp");
                             sc.log("-- Tentative de redirection sur JSPInit.jsp");
                             request.setAttribute("donnee", donnee);
@@ -136,7 +133,7 @@ public class ServletMain extends HttpServlet {
                 }
                 else
                 {
-                    rd = sc.getRequestDispatcher("/index.jsp?msg=" +
+                    rd = sc.getRequestDispatcher("/JSPLogin.jsp?msg=" +
                     URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
                     sc.log("-- Tentative de redirection sur JSPInit.jsp");
                     session = request.getSession(true);
@@ -150,7 +147,7 @@ public class ServletMain extends HttpServlet {
                     
                     str = request.getParameter("pushedbutton");
                     q = "select * from vols;";
-                    donnee=BeanBD.selectVols(q);
+                    donnee=BeanBD.selectVols(q);                   
                     rd = sc.getRequestDispatcher("/JSPCaddie.jsp");
                     sc.log("-- Tentative de redirection sur JSPCaddie.jsp");
                     request.setAttribute("donnee", donnee);

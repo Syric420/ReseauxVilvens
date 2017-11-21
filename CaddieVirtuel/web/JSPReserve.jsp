@@ -17,7 +17,13 @@
             response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
         %>
         <h1>Reservation!</h1>
-        <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+                <%
+            String ipServ =request.getParameter("IP");
+            System.out.println("IP INIT: " + ipServ);
+        %>
+        
+        <form action=<%=ipServ%> method="POST">
+            <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
             <input type="hidden" id="Jsp" name="Jsp" value="JSPReserve"/> 
         <%String Login = request.getParameter("Login");%>
         <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>   

@@ -16,16 +16,21 @@
             int timeout = session.getMaxInactiveInterval();
             response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
         %>
+        <%
+            String ipServ =request.getParameter("IP");
+            System.out.println("IP INIT: " + ipServ);
+        %>
         
         
-        <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-            <input type="hidden" id="Jsp" name="Jsp" value="JSPInit"/> 
+        <form action=<%=ipServ%> method="POST">
+        <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
+        <input type="hidden" id="Jsp" name="Jsp" value="JSPInit"/> 
         <%String Login =(String) request.getAttribute("Login");
             if(Login == null)
                 Login =request.getParameter("Login");
         %>
-        <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>   
-            
+        <input type="hidden" id="Login" name="Login" value="<%=Login %>"/>
+   
         <% 
             //String data = request.getParameter("donnee");
             String data [][]= (String [][]) request.getAttribute("donnee");
@@ -94,7 +99,8 @@
     </form>
 
 
-    <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+    <form action=<%=ipServ%> method="POST">
+        <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
         <%String Log =(String) request.getAttribute("Login");
             if(Log == null)
                 Log =request.getParameter("Login");
