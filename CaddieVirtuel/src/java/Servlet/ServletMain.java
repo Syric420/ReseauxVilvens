@@ -174,17 +174,12 @@ public class ServletMain extends HttpServlet {
                     break;
                     
                 case "JSPReserve":
-                    try {
                     System.out.println("Reserve Billet : " + request.getParameter("cbNbre"));
-
                     str = request.getParameter("idVols");
                     System.out.println("Reserve Billet : " + str);
                     q = "select PlacesRestantes from vols where idVols = '" + str + "';" ;
-                    
-                    r = BeanBD.getInstruc().executeQuery(q) ;
-                    r.next();
                     int nbreDemande = Integer.parseInt(request.getParameter("cbNbre"));
-                    int NbreMax = Integer.parseInt(r.getString(1));
+                    int NbreMax = BeanBD.selectInt(q);
                     int tmp = NbreMax - nbreDemande;
                     if(tmp>0 && nbreDemande != 0)
                     {
@@ -199,19 +194,15 @@ public class ServletMain extends HttpServlet {
                         }
 
                     }
-                        Login = request.getParameter("Login");
-                        q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
-                        donnee=BeanBD.selectVols(q);
-                        rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                        sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                        request.setAttribute("donnee", donnee);
-                        request.setAttribute("line", BeanBD.getLine());
-                        request.setAttribute("col", BeanBD.getColonne());
-                        rd.forward(request, response);
-
-                }   catch (SQLException ex) {
-                    Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    Login = request.getParameter("Login");
+                    q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
+                    donnee=BeanBD.selectVols(q);
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                     break;
                 case "PAYE":
                     
@@ -228,8 +219,7 @@ public class ServletMain extends HttpServlet {
                     request.setAttribute("col", BeanBD.getColonne());
                     rd.forward(request, response);
                     break;
-                
-                
+                               
                 case "JSPPay":
                     
                        
