@@ -59,12 +59,29 @@
         <tr>
             <%
             for(int i = 1; i<=col;i++)
-               {                  
-            %>
+               {      
+                    if(i == col)
+                    {
+                        if(data[l][i-1].equals("0"))
+                        {                %>      
+                        <td>
+                            Réservé
+                        </td>
+                        <%
+                        }
+                        else
+                        {%>      
+                        <td>
+                            Payé
+                        </td>
+                        <%}
+                    }
+                    else
+{%>      
                 <td>
                 <%= data[l][i-1]%>
                 </td>
-                <%}
+                <%}}
         l++;
         %>                   
         </tr>
@@ -79,8 +96,8 @@
 
     <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
         <%String Log =(String) request.getAttribute("Login");
-            if(Login == null)
-                Login =request.getParameter("Login");
+            if(Log == null)
+                Log =request.getParameter("Login");
         %>
         <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>  
         <input type="hidden" id="Jsp" name="Jsp" value="PAYE"/>

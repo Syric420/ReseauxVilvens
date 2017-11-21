@@ -90,12 +90,15 @@
     %>
 </table>
 </form>
+
+<p> Carte de crédit <input type="text" name="cb" value="" size="50" required/> </p>
+
 <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
     
     <%String Log = request.getParameter("Login");%>
     <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>
     <input type="hidden" id="Jsp" name="Jsp" value="JSPPayAll"/>
-    <input type="submit" name="<%="Payer l'ensemble du panier"%> " value="<%="Reserve"%>" </input> 
+    <input type="submit" name="<%="Payer l'ensemble du panier"%> " value="<%="Payer l'ensemble du panier"%>" </input> 
 </form>
     </body>
 </html>

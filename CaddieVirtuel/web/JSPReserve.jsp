@@ -16,7 +16,7 @@
             int timeout = session.getMaxInactiveInterval();
             response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
         %>
-        <h1>Time to pay!</h1>
+        <h1>Reservation!</h1>
         <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
             <input type="hidden" id="Jsp" name="Jsp" value="JSPReserve"/> 
         <%String Login = request.getParameter("Login");%>
