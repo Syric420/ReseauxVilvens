@@ -12,8 +12,14 @@
         <title>Initialisation du Caddie</title>
     </head>
     <body>
+        <%
+            int timeout = session.getMaxInactiveInterval();
+            response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
+        %>
+        
+        
         <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-            
+            <input type="hidden" id="Jsp" name="Jsp" value="JSPInit"/> 
         <%String Login =(String) request.getAttribute("Login");
             if(Login == null)
                 Login =request.getParameter("Login");
@@ -67,7 +73,18 @@
     %>
 </table>
 
-    <input type="submit" value="Acces au catalogue des vols" name="button" />
+        <input type="submit" value="Acces au catalogue des vols" name="button" />
     </form>
+
+
+    <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+        <%String Log =(String) request.getAttribute("Login");
+            if(Login == null)
+                Login =request.getParameter("Login");
+        %>
+        <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>  
+        <input type="hidden" id="Jsp" name="Jsp" value="PAYE"/>
+        <input type="submit" value="Payer" name="button" />
+    </form> 
     </body>
 </html>

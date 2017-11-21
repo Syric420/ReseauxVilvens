@@ -12,13 +12,17 @@
         
     <head>   
     </head>
-        
+          
         <body>
+            <%
+            int timeout = session.getMaxInactiveInterval();
+            response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
+        %>
             <% String msg= request.getParameter("msg");
 if (msg!=null) out.println("<H2>" + msg + "</H2><p>");
 %>
     <form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-        
+        <input type="hidden" id="Jsp" name="Jsp" value="JSPLogin"/> 
         <h1>Entrez vos identifiants</h1>
         <p> Identifiant: <input type="text" name="user" value="" size="50" autofocus required /> </p>
         <p> Mot de passe: <input type="password" name="password" value="" size="50" required/> </p>

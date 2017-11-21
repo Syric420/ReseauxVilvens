@@ -1,40 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
     <servlet>
-        <servlet-name>TrueFormServlet</servlet-name>
-        <servlet-class>Servlet.TrueFormServlet</servlet-class>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>Servlet.ServletMain</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletMain</servlet-name>
+        <url-pattern>/ServletMain</url-pattern>
+    </servlet-mapping>
     <servlet>
-        <servlet-name>ServletIni</servlet-name>
-        <servlet-class>Servlet.ServletIni</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>FormCookieServlet</servlet-name>
-        <servlet-class>Servlet.FormCookieServlet</servlet-class>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>Servlet.ServletMain</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ServletMain</servlet-name>
         <servlet-class>Servlet.ServletMain</servlet-class>
     </servlet>
-     <servlet-mapping>
+    <servlet>
         <servlet-name>ServletMain</servlet-name>
-        <url-pattern>/ServletMain</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TrueFormServlet</servlet-name>
-        <url-pattern>/TrueFormServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ServletIni</servlet-name>
-        <url-pattern>/ServletIni</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FormCookieServlet</servlet-name>
-        <url-pattern>/FormCookieServlet</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
+        <servlet-class>Servlet.ServletMain</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>Servlet.ServletMain</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletMain</servlet-name>
+        <servlet-class>Servlet.ServletMain</servlet-class>
+    </servlet>
 </web-app>
