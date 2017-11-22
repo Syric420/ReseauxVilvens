@@ -95,9 +95,8 @@
 </table>
 </form>
 
-<p> Carte de crédit <input type="text" name="cb" value="" size="50" required/> </p>
-
 <form action=<%=ipServ%> method="POST">
+    <p> Carte de crédit <input type="text" name="cb" value="" size="50" required/> </p>
     <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
     <%String Log = request.getParameter("Login");%>
     <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>

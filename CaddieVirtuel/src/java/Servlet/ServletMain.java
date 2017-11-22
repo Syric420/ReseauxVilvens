@@ -54,18 +54,25 @@ public class ServletMain extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(true);
+       
         ServletContext sc = getServletContext();
-        String Jsp[] = request.getParameterValues("Jsp");
-        System.out.println(Jsp[0]);  
+        String Jsp[] = request.getParameterValues("Jsp"); 
         ResultSet r;
         String str, q;
         
         String NewUser;
         
-        HttpSession session = request.getSession(true);
+        //HttpSession session = request.getSession(true);
         String Login;
         String donnee[][];
         RequestDispatcher rd;
+        if(Jsp == null)
+        {
+            response.sendRedirect("JSPLogin.jsp");
+            return;           
+        }
+
         switch(Jsp[0])
         {
             case "JSPLogin":
@@ -82,54 +89,17 @@ public class ServletMain extends HttpServlet {
                 {
                     System.out.println("OK");
                     int j=0;
-                    
+                    session.setAttribute("logon.isDone", "OK");
                     Login = usr[0];
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
-
-                    try {
-
-                        r = BeanBD.getInstruc().executeQuery(q) ;
-                        ResultSetMetaData metaData = r.getMetaData();
-
-                        int col=metaData.getColumnCount();
-                        int  line =0;
-                        while(r.next())
-                        {
-                            line ++;
-
-                        }
-                        r.beforeFirst();
-                        donnee= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                                donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-                            rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                            sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("Login", Login);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-                        } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    donnee=BeanBD.selectVols(q); 
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Login);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                 }
                 else
                 {
@@ -268,7 +238,13 @@ public class ServletMain extends HttpServlet {
                     request.setAttribute("col", BeanBD.getColonne());
                     rd.forward(request, response);
                     break;
-            
+                    default :
+                    Object existe = session.getAttribute("logon.isDone");
+                    if (existe==null)
+                    {
+                        response.sendRedirect("JSPLogin.jsp");
+                        return;
+                    }
         }
 
     }
