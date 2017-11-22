@@ -63,7 +63,6 @@ public class ServletMain extends HttpServlet {
         
         String NewUser;
         
-        //HttpSession session = request.getSession(true);
         String Login;
         String donnee[][];
         RequestDispatcher rd;
@@ -153,7 +152,7 @@ public class ServletMain extends HttpServlet {
                         Login = request.getParameter("Login");
                         System.out.println("Places restantes : " + tmp);
                         String update="UPDATE vols SET `PlacesRestantes`='" + tmp + "' WHERE `idVols`='"+ str + "';";
-                        String Insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Utilisateur`, `idVols`, `NombreDePlaces`,`Paye`) VALUES ('"+ Login + str + "', '" + Login + "', '"+ str + "', '" + nbreDemande + "', '0' );";
+                        String Insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Utilisateur`, `idVols`, `NombreDePlaces`,`Paye`) VALUES ('"+ Login + str + tmp + "', '" + Login + "', '"+ str + "', '" + nbreDemande + "', '0' );";
                         if(!BeanBD.reserveVols(update,Insert))
                         {
                             update="UPDATE vols SET `PlacesRestantes`='" + NbreMax + "' WHERE `idVols`='"+ str + "';";
@@ -194,12 +193,21 @@ public class ServletMain extends HttpServlet {
                     str = request.getParameter("pushedbutton");
                     System.out.println(str);
                     String temp [] = str.split(";");
-                    System.out.println(temp[0]+" Temp 2:" + temp [1]);
                     if(temp[0].equals("CANCEL"))
                     {
-                        String update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
+                        String requete ="select PlacesRestantes from vols where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                        tmp = BeanBD.selectInt(requete);
+                        requete ="select NombreDePlaces from volsreserves where idVOlsReserves = '" + temp[1] + "';";
+                        int tmp2 = BeanBD.selectInt(requete);
+                        System.out.println("Nombre de places du vols : " + tmp + "Nombre annulé :" + tmp2);
+                        int var= tmp+ tmp2;
+                        String update="update vols set PlacesRestantes = '"+ var + "' where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                        System.out.println(update);
+                        BeanBD.Update(update);
+                        update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
                         System.out.println(update);
                         BeanBD.payeVols(update);
+
                     }
                     else if(temp[0].equals("CONFIRM"))
                     {
