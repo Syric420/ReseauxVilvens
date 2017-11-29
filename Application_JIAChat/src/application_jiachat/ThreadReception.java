@@ -1,18 +1,31 @@
 package application_jiachat;
+import java.awt.Color;
 import java.net.*;
-import java.awt.*;
 import java.io.*;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 public class ThreadReception extends Thread
 {
     private String nom;
     private MulticastSocket socketGroupe;
     private JList<String> LMsgRecus;
+    private boolean client;
+    private javax.swing.JComboBox<String> jComboBoxQuestion;
     
-    public ThreadReception (String n, MulticastSocket ms, JList<String> l)
+    public ThreadReception (String n,boolean bool,MulticastSocket ms, JList<String> l,JComboBox<String> jComboBox)
     {
-        nom = n; socketGroupe = ms; LMsgRecus = l;
+        nom = n; 
+        socketGroupe = ms; 
+        LMsgRecus = l;
+        client = bool;
+        jComboBoxQuestion=jComboBox;
+        if(!bool)
+        {
+            DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
+            dcbm.addElement("Post Event");
+        }
     }
     
     public void run()
@@ -25,10 +38,47 @@ public class ThreadReception extends Thread
                 byte[] buf = new byte[1000];
                 DatagramPacket dtg = new DatagramPacket(buf, buf.length);
                 socketGroupe.receive(dtg);
-                DefaultListModel dlm = (DefaultListModel) LMsgRecus.getModel();
-                dlm = (DefaultListModel<String>) LMsgRecus.getModel();
-                dlm.addElement(new String (buf).trim());
-                //LMsgRecus.add(new String (buf).trim());
+                String str[] = (new String (buf).trim()).split(";");
+                DefaultListModel dlm;
+                switch (str[0]){
+                        case "1":
+                            if(!client)
+                            {
+                                //recoit question
+                                DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
+                                dcbm.addElement(str[1]);                               
+                            }
+                            dlm = (DefaultListModel) LMsgRecus.getModel();
+                            dlm = (DefaultListModel<String>) LMsgRecus.getModel();
+                            dlm.addElement(str[1]);
+                            break;
+                        case "2":
+                            if(client)
+                            {
+                                //recoit réponse
+                                
+                                
+                            }
+                            else
+                            {
+                                //supprime dans cb
+                                DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
+                                dcbm.removeElement(str[1]);
+                            }
+                            dlm = (DefaultListModel) LMsgRecus.getModel();
+                            dlm = (DefaultListModel<String>) LMsgRecus.getModel();
+                            System.out.println("str0 :" + str[0] + "str1 :" + str[1] + "str2 :" + str[2]);
+                            dlm.addElement("@"+ str[1] + "  " +str[2]);                            
+                            break;
+                        case "3":
+
+                            dlm = (DefaultListModel) LMsgRecus.getModel();
+                            dlm = (DefaultListModel<String>) LMsgRecus.getModel();
+                            dlm.addElement(str[1]);
+                            break;
+                            
+                }
+
             }
             catch (IOException e)
             {

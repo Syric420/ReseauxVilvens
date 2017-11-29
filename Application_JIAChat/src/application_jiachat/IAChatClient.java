@@ -6,36 +6,30 @@
 package application_jiachat;
 
 import IACOP.*;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
 import javax.swing.DefaultListModel;
 
 /**
  *
  * @author tibha
  */
-public class IAChat extends javax.swing.JFrame {
+public class IAChatClient extends javax.swing.JFrame {
 
     /**
-     * Creates new form IAChat
+     * Creates new form IAChatEmploye
      */
     private String nomCli;
-    private InetAddress adresseGroupe;
-    MulticastSocket socketGroupe;
     ThreadReception thr;
-    Employe em;
+    Client cli;
     
-    public IAChat() {
+    public IAChatClient() {
         initComponents(); 
         DefaultListModel dlm = new DefaultListModel();
         jList1.setModel(dlm);
-        em=new Employe("Thib");
-        thr = new ThreadReception (nomCli, em.getSocketGroupe(), jList1 );
+        cli=new Client("Vince");
+        thr = new ThreadReception (nomCli,true, cli.getSocketGroupe(), jList1,null );
         thr.start();
-        String msgDeb = em.getIdentifiant() + " rejoint le groupe";
-        em.post_Event(msgDeb);
+        String msgDeb = cli.getIdentifiant() + " rejoint le groupe";
+        cli.post_Event(msgDeb);
     }
 
 
@@ -112,9 +106,20 @@ public class IAChat extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    nomCli = TFName.getText();
-    String msg = nomCli + "> " + TFMessage.getText();
-    em.post_Event(msg);
+        
+        if(!checkBoxQuestion.isSelected())
+        {
+            nomCli = TFName.getText();
+            String msg = nomCli + "> " + TFMessage.getText();
+            cli.post_Event(msg);
+        }
+        else
+        {
+            nomCli = TFName.getText();
+            String msg = nomCli + "> " + TFMessage.getText();
+            cli.post_Question(msg);
+        }
+
    
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -139,20 +144,23 @@ public class IAChat extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IAChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IAChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IAChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IAChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IAChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IAChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IAChat.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IAChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IAChat().setVisible(true);
+                new IAChatClient().setVisible(true);
             }
         });
     }

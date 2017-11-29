@@ -23,11 +23,12 @@ public class Employe extends Personne{
     public void answer_Question(String Question)
     {
         //check digest
-        String str[];
-        str=Question.split(";");
+        /*String str[];
+        str=Question.split(";");*/
          try {
-             
-            String chaine = "2;" + str[1];
+            
+            //String chaine = "2;" + str[1];
+            String chaine = "2;" + Question;
             DatagramPacket dtg = new DatagramPacket(chaine.getBytes(), chaine.length(),adresseGroupe, 5001);
             socketGroupe.send(dtg);
         } catch (IOException ex) {
