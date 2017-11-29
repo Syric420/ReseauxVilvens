@@ -25,6 +25,7 @@ public class Personne {
 
     public Personne(String identifiant) {
         try {
+            
             this.identifiant = identifiant;
             adresseGroupe = InetAddress.getByName("234.5.5.9");
             socketGroupe = new MulticastSocket(5001);

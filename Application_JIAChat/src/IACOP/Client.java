@@ -28,6 +28,7 @@ public class Client extends Personne {
             String chaine = "1;" + Question;
             DatagramPacket dtg = new DatagramPacket(chaine.getBytes(), chaine.length(),adresseGroupe, 5001);
             socketGroupe.send(dtg);
+            
         } catch (IOException ex) {
             Logger.getLogger(Personne.class.getName()).log(Level.SEVERE, null, ex);
         }
