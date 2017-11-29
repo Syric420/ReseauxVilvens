@@ -25,16 +25,6 @@ import javax.servlet.http.HttpSession;
  * @author Vince
  */
 public class ServletMain extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     
     BeanBD BeanBD;
     
@@ -54,16 +44,24 @@ public class ServletMain extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(true);
+       
         ServletContext sc = getServletContext();
-        String Jsp[] = request.getParameterValues("Jsp");
-        System.out.println(Jsp[0]);  
+        String Jsp[] = request.getParameterValues("Jsp"); 
         ResultSet r;
         String str, q;
         
         String NewUser;
         
-        HttpSession session = request.getSession(true);
         String Login;
+        String donnee[][];
+        RequestDispatcher rd;
+        if(Jsp == null)
+        {
+            response.sendRedirect("JSPLogin.jsp");
+            return;           
+        }
+
         switch(Jsp[0])
         {
             case "JSPLogin":
@@ -80,69 +78,21 @@ public class ServletMain extends HttpServlet {
                 {
                     System.out.println("OK");
                     int j=0;
-                    
+                    session.setAttribute("logon.isDone", "OK");
                     Login = usr[0];
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
-
-                    try {
-
-                        r = BeanBD.getInstruc().executeQuery(q) ;
-                        ResultSetMetaData metaData = r.getMetaData();
-
-                        int col=metaData.getColumnCount();
-                        int  line =0;
-                        while(r.next())
-                        {
-                            line ++;
-
-                        }
-                        r.beforeFirst();
-                        String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                                if(i == metaData.getColumnCount())
-                                {
-                                    if(r.getString(i).equals("0"))
-                                        donnee[line][i-1]="Réservé";
-                                    else
-                                        donnee[line][i-1]="Payé";
-                                }
-                                else
-                                    donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-
-
-                            
-                            RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                            sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("Login", Login);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-                        } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                    donnee=BeanBD.selectVols(q); 
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Login);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                 }
                 else
                 {
-                    RequestDispatcher rd = sc.getRequestDispatcher("/index.jsp?msg=" +
+                    rd = sc.getRequestDispatcher("/JSPLogin.jsp?msg=" +
                     URLEncoder.encode("La combinaison de votre identifiant/mot de passe est incorrecte !"));
                     sc.log("-- Tentative de redirection sur JSPInit.jsp");
                     session = request.getSession(true);
@@ -156,127 +106,43 @@ public class ServletMain extends HttpServlet {
                     
                     str = request.getParameter("pushedbutton");
                     q = "select * from vols;";
-                    String data[][];
-
-                    data=BeanBD.selectVols(q);
-                   // try {
-
-                       /*r = BeanBD.getInstruc().executeQuery(q) ;
-                       ResultSetMetaData metaData = r.getMetaData();
-
-                       int col=metaData.getColumnCount();
-                       int  line =0;
-                       while(r.next())
-                        {
-                            line ++;
-
-                        }
-                       r.beforeFirst();
-                       String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                               donnee[line][i-1]=r.getString(i);
-                           }
-                            line++;
-
-                        }*/
-                            RequestDispatcher rda = sc.getRequestDispatcher("/JSPCaddie.jsp");
-                            sc.log("-- Tentative de redirection sur JSPCaddie.jsp");
-                            request.setAttribute("donnee", data);
-                            request.setAttribute("line", BeanBD.getLine());
-                            request.setAttribute("col", BeanBD.getColonne());
-                            rda.forward(request, response);
-
-
-
-                    /*} catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                    }*/
+                    donnee=BeanBD.selectVols(q);                   
+                    rd = sc.getRequestDispatcher("/JSPCaddie.jsp");
+                    sc.log("-- Tentative de redirection sur JSPCaddie.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                     break;
                 case "JSPCaddie":
  
                     BeanBD.connect();
                     str = request.getParameter("pushedbutton");
                     q = "select * from vols where idVols = '" + str + "';" ;
+                    donnee=BeanBD.selectVols(q);
+                    rd = sc.getRequestDispatcher("/JSPReserve.jsp");
+                    sc.log("-- Tentative de redirection sur JSPReserve.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
 
-
-                try {
-
-                    
-                   r = BeanBD.getInstruc().executeQuery(q) ;
-                   ResultSetMetaData metaData = r.getMetaData();
-
-                   int col=metaData.getColumnCount();
-                   int  line =0;
-                   while(r.next())
-                    {
-                        line ++;
-
-                    }
-                   r.beforeFirst();
-                   String donnee[][]= new String[line+1][col];
-
-                    for(int i = 1; i<=metaData.getColumnCount();i++)
-                    {
-                        donnee[0][i-1]= metaData.getColumnName(i);
-
-                    }
-
-                    line =1;
-
-                    while(r.next())
-                    {
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                       {
-                           donnee[line][i-1]=r.getString(i);
-
-                       }
-                        line++;
-
-                    }
-                        RequestDispatcher rd = sc.getRequestDispatcher("/JSPReserve.jsp");
-                        sc.log("-- Tentative de redirection sur JSPReserve.jsp");
-                        request.setAttribute("donnee", donnee);
-                        request.setAttribute("line", line);
-                        request.setAttribute("col", col);
-                        rd.forward(request, response);
-
-
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
                     break;
                     
                 case "JSPReserve":
-                    try {
                     System.out.println("Reserve Billet : " + request.getParameter("cbNbre"));
-
                     str = request.getParameter("idVols");
                     System.out.println("Reserve Billet : " + str);
                     q = "select PlacesRestantes from vols where idVols = '" + str + "';" ;
-                    r = BeanBD.getInstruc().executeQuery(q) ;
-                    r.next();
                     int nbreDemande = Integer.parseInt(request.getParameter("cbNbre"));
-                    int NbreMax = Integer.parseInt(r.getString(1));
+                    int NbreMax = BeanBD.selectInt(q);
                     int tmp = NbreMax - nbreDemande;
-                    if(tmp>0)
+                    if(tmp>0 && nbreDemande != 0)
                     {
                         Login = request.getParameter("Login");
                         System.out.println("Places restantes : " + tmp);
                         String update="UPDATE vols SET `PlacesRestantes`='" + tmp + "' WHERE `idVols`='"+ str + "';";
-                        String Insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Utilisateur`, `idVols`, `NombreDePlaces`,`Paye`) VALUES ('"+ Login + str + "', '" + Login + "', '"+ str + "', '" + nbreDemande + "', '0' );";
+                        String Insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Utilisateur`, `idVols`, `NombreDePlaces`,`Paye`) VALUES ('"+ Login + str + tmp + "', '" + Login + "', '"+ str + "', '" + nbreDemande + "', '0' );";
                         if(!BeanBD.reserveVols(update,Insert))
                         {
                             update="UPDATE vols SET `PlacesRestantes`='" + NbreMax + "' WHERE `idVols`='"+ str + "';";
@@ -284,130 +150,32 @@ public class ServletMain extends HttpServlet {
                         }
 
                     }
-                        Login = request.getParameter("Login");
-                        q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
-
-
-                    try {
-
-                       r = BeanBD.getInstruc().executeQuery(q) ;
-                       ResultSetMetaData metaData = r.getMetaData();
-
-                       int col=metaData.getColumnCount();
-                       int  line =0;
-                       while(r.next())
-                        {
-                            line ++;
-
-                        }
-                       r.beforeFirst();
-                       String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                                if(i == metaData.getColumnCount())
-                                {
-                                    if(r.getString(i).equals("0"))
-                                        donnee[line][i-1]="Réservé";
-                                    else
-                                        donnee[line][i-1]="Payé";
-                                }
-                                else
-                                    donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-                            RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                            sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-
-
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                }   catch (SQLException ex) {
-                    Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    Login = request.getParameter("Login");
+                    q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
+                    donnee=BeanBD.selectVols(q);
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                     break;
                 case "PAYE":
                     
                     
                     Login = request.getParameter("Login");
+                    System.out.println("Paye:" + Login);
                     q = "select idVolsReserves,Destination,NombreDePlaces,HeureArrivee,HeureDepart from volsreserves natural join (vols) where utilisateur ='" + Login + "' and paye ='false';" ;
-
-                    try {
-
-                        r = BeanBD.getInstruc().executeQuery(q) ;
-                        ResultSetMetaData metaData = r.getMetaData();
-
-                        int col=metaData.getColumnCount();
-                        int  line =0;
-                        while(r.next())
-                        {
-                            line ++;
-
-                        }
-                        r.beforeFirst();
-                        String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                                if(i == metaData.getColumnCount())
-                                {
-                                    if(r.getString(i).equals("0"))
-                                        donnee[line][i-1]="Réservé";
-                                    else
-                                        donnee[line][i-1]="Payé";
-                                }
-                                else
-                               donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-
-                            RequestDispatcher rd = sc.getRequestDispatcher("/JSPPay.jsp");
-                            sc.log("-- Tentative de redirection sur JSPPay.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("Login", Login);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-                        } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                break;
-                
-                
+                    donnee=BeanBD.selectVols(q); 
+                    rd = sc.getRequestDispatcher("/JSPPay.jsp");
+                    sc.log("-- Tentative de redirection sur JSPPay.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Login);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
+                    break;
+                               
                 case "JSPPay":
                     
                        
@@ -415,12 +183,21 @@ public class ServletMain extends HttpServlet {
                     str = request.getParameter("pushedbutton");
                     System.out.println(str);
                     String temp [] = str.split(";");
-                    System.out.println(temp[0]+" Temp 2:" + temp [1]);
                     if(temp[0].equals("CANCEL"))
                     {
-                        String update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
+                        String requete ="select PlacesRestantes from vols where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                        tmp = BeanBD.selectInt(requete);
+                        requete ="select NombreDePlaces from volsreserves where idVOlsReserves = '" + temp[1] + "';";
+                        int tmp2 = BeanBD.selectInt(requete);
+                        System.out.println("Nombre de places du vols : " + tmp + "Nombre annulé :" + tmp2);
+                        int var= tmp+ tmp2;
+                        String update="update vols set PlacesRestantes = '"+ var + "' where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                        System.out.println(update);
+                        BeanBD.Update(update);
+                        update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
                         System.out.println(update);
                         BeanBD.payeVols(update);
+
                     }
                     else if(temp[0].equals("CONFIRM"))
                     {
@@ -429,67 +206,15 @@ public class ServletMain extends HttpServlet {
                         BeanBD.payeVols(update);
                     }
 
-
-                    
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Log + "';" ;
-                    System.out.println(q);
-
-                    try {
-
-                       r = BeanBD.getInstruc().executeQuery(q) ;
-                       ResultSetMetaData metaData = r.getMetaData();
-
-                       int col=metaData.getColumnCount();
-                       int  line =0;
-                       while(r.next())
-                        {
-                            line ++;
-
-                        }
-                       r.beforeFirst();
-                       String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                                if(i == metaData.getColumnCount())
-                                {
-                                    if(r.getString(i).equals("0"))
-                                        donnee[line][i-1]="Réservé";
-                                    else
-                                        donnee[line][i-1]="Payé";
-                                }
-                                else
-                               donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-                        
-                            RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                            sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("Login", Log);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-               
+                    donnee=BeanBD.selectVols(q);
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Log);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                     break;
                     case "JSPPayAll":
                     
@@ -502,57 +227,22 @@ public class ServletMain extends HttpServlet {
                     BeanBD.payeVols(var);
                     
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye  from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
-
-                    try {
-
-                       r = BeanBD.getInstruc().executeQuery(q) ;
-                       ResultSetMetaData metaData = r.getMetaData();
-
-                       int col=metaData.getColumnCount();
-                       int  line =0;
-                       while(r.next())
-                        {
-                            line ++;
-
-                        }
-                       r.beforeFirst();
-                       String donnee[][]= new String[line+1][col];
-
-                        for(int i = 1; i<=metaData.getColumnCount();i++)
-                        {
-                            donnee[0][i-1]= metaData.getColumnName(i);
-
-                        }
-
-                        line =1;
-
-                        while(r.next())
-                        {
-                            for(int i = 1; i<=metaData.getColumnCount();i++)
-                           {
-                               donnee[line][i-1]=r.getString(i);
-
-                           }
-                            line++;
-
-                        }
-                        
-                            RequestDispatcher rd = sc.getRequestDispatcher("/JSPInit.jsp");
-                            sc.log("-- Tentative de redirection sur JSPInit.jsp");
-                            request.setAttribute("donnee", donnee);
-                            request.setAttribute("Login", Login);
-                            request.setAttribute("line", line);
-                            request.setAttribute("col", col);
-                            rd.forward(request, response);
-
-
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-               
+                    donnee=BeanBD.selectVols(q);
+                    rd = sc.getRequestDispatcher("/JSPInit.jsp");
+                    sc.log("-- Tentative de redirection sur JSPInit.jsp");
+                    request.setAttribute("donnee", donnee);
+                    request.setAttribute("Login", Login);
+                    request.setAttribute("line", BeanBD.getLine());
+                    request.setAttribute("col", BeanBD.getColonne());
+                    rd.forward(request, response);
                     break;
-            
+                    default :
+                    Object existe = session.getAttribute("logon.isDone");
+                    if (existe==null)
+                    {
+                        response.sendRedirect("JSPLogin.jsp");
+                        return;
+                    }
         }
 
     }

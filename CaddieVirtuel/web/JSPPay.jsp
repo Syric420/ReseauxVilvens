@@ -13,8 +13,12 @@
             response.setHeader("Refresh", timeout + "; URL = JSPLogin.jsp");
         %>
         <h1>Vols disponibles</h1>
-        
-<form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
+          <%
+            String ipServ =request.getParameter("IP");
+            System.out.println("IP INIT: " + ipServ);
+        %>    
+<form action=<%=ipServ%> method="POST">
+    <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
     <input type="hidden" id="Jsp" name="Jsp" value="JSPPay"/>
     
     <%String Login = request.getParameter("Login");%>
@@ -90,12 +94,14 @@
     %>
 </table>
 </form>
-<form action="http://localhost:8084/CaddieVirtuel/ServletMain" method="POST">
-    
+
+<form action=<%=ipServ%> method="POST">
+    <p> Carte de crédit <input type="text" name="cb" value="" size="50" required/> </p>
+    <input type="hidden" id="IP" name="IP" value=<%=ipServ%>> 
     <%String Log = request.getParameter("Login");%>
     <input type="hidden" id="Login" name="Login" value="<%=Log %>"/>
     <input type="hidden" id="Jsp" name="Jsp" value="JSPPayAll"/>
-    <input type="submit" name="<%="Payer l'ensemble du panier"%> " value="<%="Reserve"%>" </input> 
+    <input type="submit" name="<%="Payer l'ensemble du panier"%> " value="<%="Payer l'ensemble du panier"%>" </input> 
 </form>
     </body>
 </html>

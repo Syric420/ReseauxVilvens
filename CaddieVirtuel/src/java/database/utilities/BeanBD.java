@@ -257,8 +257,19 @@ public class BeanBD {
         }
         return null;
     }
-    
-    public String [][] selectVols(String requete)
+    public synchronized int selectInt(String requete)
+    {
+        int var=0;
+        try {
+            setRs(getInstruc().executeQuery(requete));
+            rs.next();
+            var = rs.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return var;
+    }
+    public synchronized String [][] selectVols(String requete)
     {
         try {
             setRs(getInstruc().executeQuery(requete));
