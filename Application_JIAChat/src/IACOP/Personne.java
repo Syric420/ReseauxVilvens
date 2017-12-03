@@ -54,7 +54,7 @@ public class Personne {
     {
         try {
             
-            event=("3;" + event);
+            event=("3@" + event);
             DatagramPacket dtg = new DatagramPacket(event.getBytes(), event.length(),adresseGroupe, 5001);
             socketGroupe.send(dtg);
         } catch (IOException ex) {

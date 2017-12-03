@@ -8,6 +8,7 @@ package application_jiachat;
 import IACOP.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *

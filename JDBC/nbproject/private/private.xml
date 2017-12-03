@@ -3,13 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/clientServeurSocket/InterfaceBagages.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/clientServeurSocket/InterfaceClient.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/application_test_jdbc/APPLICATION_TEST_JDBC.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/Utilities/Identify.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/Utilities/ReadProperties.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/clientServeurSocket/InterfaceConnexion.java</file>
-            <file>file:/C:/Users/vhoog/Documents/Projets%20école/ReseauxVilvens/JDBC/src/application_test_jdbc/InterfaceApplication.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/clientServeurSocket/InterfaceConnexion.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Utilities/Identify.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/ListeTaches.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/Reponse.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/InterfaceServeur.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/ThreadServeur.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/ProtocoleLUGAP/ReponseLUGAP.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/ThreadClient.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/ProtocoleLUGAP/RequeteLUGAP.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/SourceTaches.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/clientServeurSocket/InterfaceClient.java</file>
+            <file>file:/C:/Users/tibha/Desktop/Programmation%20Réseau%20et%20tech%20internet/ReseauxVilvens/JDBC/src/Server/Requete.java</file>
         </group>
     </open-files>
 </project-private>

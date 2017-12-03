@@ -1,7 +1,8 @@
 package application_jiachat;
-import java.awt.Color;
+import IACOP.Verify;
 import java.net.*;
 import java.io.*;
+import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
@@ -38,15 +39,26 @@ public class ThreadReception extends Thread
                 byte[] buf = new byte[1000];
                 DatagramPacket dtg = new DatagramPacket(buf, buf.length);
                 socketGroupe.receive(dtg);
-                String str[] = (new String (buf).trim()).split(";");
+                System.out.println("reception"+new String (buf));
+                String str[] = (new String (buf)).trim().split("@");
                 DefaultListModel dlm;
                 switch (str[0]){
                         case "1":
                             if(!client)
                             {
                                 //recoit question
+                                Verify ver = new Verify();
+                                ver.setMD(str[1]);
+
+                                if(ver.checkDigest(str[2].getBytes()))
+                                {
+                                    System.out.println("OK");
+                                }
+                                else 
+                                    System.out.println("Not OK");
+                                
                                 DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
-                                dcbm.addElement(str[1]);                               
+                                dcbm.addElement(str[1]);
                             }
                             dlm = (DefaultListModel) LMsgRecus.getModel();
                             dlm = (DefaultListModel<String>) LMsgRecus.getModel();
@@ -56,8 +68,7 @@ public class ThreadReception extends Thread
                             if(client)
                             {
                                 //recoit réponse
-                                
-                                
+                               
                             }
                             else
                             {

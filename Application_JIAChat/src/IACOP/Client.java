@@ -5,6 +5,7 @@
  */
 package IACOP;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.logging.Level;
@@ -25,8 +26,17 @@ public class Client extends Personne {
         //check digest
          try {
              
-            String chaine = "1;" + Question;
-            DatagramPacket dtg = new DatagramPacket(chaine.getBytes(), chaine.length(),adresseGroupe, 5001);
+            String chaine = "1@" + Question +"@";
+            Verify ver = new Verify();
+            ver.setMD(Question);
+            
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+            outputStream.write( chaine.getBytes() );
+            outputStream.write( ver.getMd());
+            
+            byte[] var =  outputStream.toByteArray();
+            System.out.println("Client"+new String (var));
+            DatagramPacket dtg = new DatagramPacket(var , var.length,adresseGroupe, 5001);
             socketGroupe.send(dtg);
             
         } catch (IOException ex) {
