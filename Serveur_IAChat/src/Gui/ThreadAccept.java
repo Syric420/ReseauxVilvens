@@ -5,6 +5,7 @@
  */
 package Gui;
 
+import IACOP.MessageLogin;
 import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
@@ -47,6 +48,15 @@ public class ThreadAccept extends Thread {
             {
                 CSocket = SSocket.accept();
                 log("Nouveau client détecté : " +CSocket.getLocalSocketAddress());
+                DataInputStream dis = new DataInputStream(CSocket.getInputStream());
+                DataOutputStream dos = new DataOutputStream(CSocket.getOutputStream());
+                ObjectOutputStream oos = new ObjectOutputStream(dos);
+                ObjectInputStream ois = new ObjectInputStream(dis);
+                
+                MessageLogin message = (MessageLogin)ois.readObject();
+                System.out.println(message.getUser());
+                message.setUser("Ok");
+                oos.writeObject(message);
             }
             catch (SocketException e)
             {
@@ -56,6 +66,8 @@ public class ThreadAccept extends Thread {
             {
                 System.err.println("Erreur d'accept ! ? [" + e + "]");
                 System.exit(1);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ThreadAccept.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -129,6 +129,7 @@ public class ServIAChat extends javax.swing.JFrame {
         jLabel2.setText("Eteint");
         jB_On.setEnabled(true);
         jB_Off.setEnabled(false);
+        dlm.removeAllElements();
     }//GEN-LAST:event_jB_OffActionPerformed
 
     
