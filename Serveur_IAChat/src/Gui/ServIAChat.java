@@ -6,6 +6,7 @@
 package Gui;
 
 import java.io.*;
+import IACOP.*;
 import java.net.*;
 import javax.swing.DefaultListModel;import javax.swing.ListModel;
 ;
@@ -20,9 +21,9 @@ public class ServIAChat extends javax.swing.JFrame {
      */
     
     private int port;
-    private ServerSocket SSocket;
-    private Socket CSocket;
     DefaultListModel<String> dlm = new DefaultListModel<>();
+    private ThreadAccept ThreadAccept;
+    
     
     public ServIAChat() {
         initComponents();
@@ -42,6 +43,7 @@ public class ServIAChat extends javax.swing.JFrame {
         jB_On = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jB_Off = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +62,14 @@ public class ServIAChat extends javax.swing.JFrame {
         jList1.setModel(dlm);
         jScrollPane1.setViewportView(jList1);
 
+        jB_Off.setText("OFF");
+        jB_Off.setEnabled(false);
+        jB_Off.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_OffActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -69,14 +79,18 @@ public class ServIAChat extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(94, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(41, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jB_On, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)))
-                .addGap(88, 88, 88))
+                        .addComponent(jLabel2)
+                        .addGap(88, 88, 88))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jB_Off, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -86,7 +100,9 @@ public class ServIAChat extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jB_On, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jB_On, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jB_Off, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addContainerGap())
@@ -97,51 +113,26 @@ public class ServIAChat extends javax.swing.JFrame {
 
     private void jB_OnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_OnActionPerformed
         // Connexion
-         port = 5020;
-        SSocket = null; CSocket = null;
-        try
-        {
-            SSocket = new ServerSocket(port);
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur de port d'écoute ! ? [" + e + "]");
-            System.exit(1);
-        }
-      
-        
         jB_On.setEnabled(false);
+        jB_Off.setEnabled(true);
+        jLabel2.setText("Allumé");
+        port = 26085;
+        ThreadAccept = new ThreadAccept(port, this);
         
-        //ReceiveMessage();
+        ThreadAccept.start();
     }//GEN-LAST:event_jB_OnActionPerformed
 
-    private void ReceiveMessage() {
-       
-        log("Serveur en attente de connexion");
-        while(true)
-        {
-            
-            try
-            {
-                CSocket = SSocket.accept();
-            }
-            catch (SocketException e)
-            {
-                System.err.println("Accept interrompu ! ? [" + e + "]");
-            }
-            catch (IOException e)
-            {
-                System.err.println("Erreur d'accept ! ? [" + e + "]");
-                System.exit(1);
-            }
-        }
-    }
+    private void jB_OffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_OffActionPerformed
+        // TODO add your handling code here:
+        ThreadAccept.interrupt();
+        ThreadAccept.finConnexion();
+        jLabel2.setText("Eteint");
+        jB_On.setEnabled(true);
+        jB_Off.setEnabled(false);
+    }//GEN-LAST:event_jB_OffActionPerformed
+
     
-    private void log(String t)
-    {
-        
-        dlm.addElement(new String(t));
-    }
+    
     /**
      * @param args the command line arguments
      */
@@ -178,6 +169,7 @@ public class ServIAChat extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jB_Off;
     private javax.swing.JButton jB_On;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
