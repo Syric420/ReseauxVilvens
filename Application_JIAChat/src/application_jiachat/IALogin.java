@@ -5,8 +5,11 @@
  */
 package application_jiachat;
 
+import IACOP.*;
 import java.io.*;
 import java.net.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Vince
@@ -16,6 +19,8 @@ public class IALogin extends javax.swing.JFrame {
     private Socket cliSock;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
+    private ObjectOutputStream oos = null;
+    private ObjectInputStream ois = null;
     /**
      * Creates new form IALogin
      */
@@ -42,9 +47,9 @@ public class IALogin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTF_user = new javax.swing.JTextField();
+        jTF_mdp = new javax.swing.JTextField();
+        jTF_numTicket = new javax.swing.JTextField();
         jB_Connect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -52,11 +57,21 @@ public class IALogin extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setSelected(true);
         jRadioButton1.setText("Client");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Vous êtes :");
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("Employé");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Nom d'utilisateur:");
 
@@ -64,7 +79,16 @@ public class IALogin extends javax.swing.JFrame {
 
         jLabel4.setText("Numéro du ticket:");
 
+        jTF_user.setEnabled(false);
+
+        jTF_mdp.setEnabled(false);
+
         jB_Connect.setText("Se connecter");
+        jB_Connect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jB_ConnectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,12 +109,12 @@ public class IALogin extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                            .addComponent(jTextField1)))
+                            .addComponent(jTF_mdp, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(jTF_user)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTF_numTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -108,15 +132,15 @@ public class IALogin extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTF_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTF_mdp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTF_numTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jB_Connect)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -124,6 +148,42 @@ public class IALogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+        jTF_user.setEnabled(false);
+        jTF_mdp.setEnabled(false);
+        jTF_numTicket.setEnabled(true);
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        jTF_user.setEnabled(true);
+        jTF_mdp.setEnabled(true);
+        jTF_numTicket.setEnabled(false);
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jB_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ConnectActionPerformed
+        MessageLogin message = new MessageLogin();
+        if(jRadioButton1.isSelected())
+        {
+            message.setUser(jTF_numTicket.getText());
+        }
+        else if(jRadioButton2.isSelected())
+        {
+            message.setUser(jTF_user.getText());
+            message.setMdp(jTF_mdp.getText());
+        }
+        
+        try {
+            oos.writeObject(message);
+            MessageLogin ok = (MessageLogin)ois.readObject();
+            System.out.println(ok.getUser());
+        } catch (IOException ex) {
+            Logger.getLogger(IALogin.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(IALogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jB_ConnectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,12 +238,17 @@ public class IALogin extends javax.swing.JFrame {
         {
             dis = new DataInputStream(cliSock.getInputStream());
             dos = new DataOutputStream(cliSock.getOutputStream());
+            oos = new ObjectOutputStream(dos);
+            ois = new ObjectInputStream(dis);
             System.out.println("Flux créés");
         }
         catch (IOException e)
         { 
-            System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
+            System.err.println("Erreur ! Pas de connexion ? [" + e + "]");
+            System.exit(0); 
         }
+            
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -194,8 +259,8 @@ public class IALogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTF_mdp;
+    private javax.swing.JTextField jTF_numTicket;
+    private javax.swing.JTextField jTF_user;
     // End of variables declaration//GEN-END:variables
 }
