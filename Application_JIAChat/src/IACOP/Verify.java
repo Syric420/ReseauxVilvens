@@ -39,8 +39,6 @@ private byte[] msgD;
     
     public boolean checkDigest(byte[] b)
     {
-        System.out.println(new String(msgD));
-        System.out.println(new String(b));
         return MessageDigest.isEqual(msgD, b);
     }
 

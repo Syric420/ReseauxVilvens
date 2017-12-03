@@ -49,8 +49,28 @@ public class ThreadReception extends Thread
                                 //recoit question
                                 Verify ver = new Verify();
                                 ver.setMD(str[1]);
-
-                                if(ver.checkDigest(str[2].getBytes()))
+                                
+                                byte[]tmp;
+                                int cpt=0;
+                                int debut=0,fin=0;
+                                for(int i = 0; i<buf.length;i++)
+                                {
+                                    if(buf[i]==64)
+                                        cpt++;
+                                    else
+                                        if(cpt>1 && debut ==0)
+                                            debut=i;
+                                    if(buf[i] ==0)
+                                    {
+                                        fin=i;
+                                        break;
+                                    }
+                                        
+                                }
+                                
+                                tmp = Arrays.copyOfRange(buf, debut, fin);
+                                
+                                if(ver.checkDigest(tmp))
                                 {
                                     System.out.println("OK");
                                 }
