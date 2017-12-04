@@ -23,11 +23,12 @@ public class IAChatEmploye extends javax.swing.JFrame {
     ThreadReception thr;
     Employe em;
     
-    public IAChatEmploye() {
+    public IAChatEmploye(String user,String addresse_chat,int port) {
         initComponents(); 
         DefaultListModel dlm = new DefaultListModel();
         jList1.setModel(dlm);
-        em=new Employe("Thib");
+        em=new Employe(user,addresse_chat,port);
+        TFName.setText(user);
         thr = new ThreadReception (nomCli,false, em.getSocketGroupe(), jList1,jComboBoxQuestion );
         thr.start();
         String msgDeb = em.getIdentifiant() + " rejoint le groupe";
@@ -55,6 +56,8 @@ public class IAChatEmploye extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        TFName.setFocusable(false);
 
         jScrollPane2.setViewportView(jList1);
 
@@ -110,7 +113,7 @@ public class IAChatEmploye extends javax.swing.JFrame {
         {
             nomCli = TFName.getText();
             
-            String msg = jComboBoxQuestion.getSelectedItem()+ ";" + nomCli + "> "+TFMessage.getText();
+            String msg = jComboBoxQuestion.getSelectedItem()+ "@" + nomCli + "> "+TFMessage.getText();
             em.answer_Question(msg);      
         }
    
@@ -147,7 +150,7 @@ public class IAChatEmploye extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IAChatEmploye().setVisible(true);
+                new IAChatEmploye("Vince","234.5.5.9",26086).setVisible(true);
             }
         });
     }

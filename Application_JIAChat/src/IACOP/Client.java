@@ -17,8 +17,8 @@ import java.util.logging.Logger;
  */
 public class Client extends Personne {
 
-    public Client(String identifiant) {
-        super(identifiant);
+    public Client(String identifiant,String addresse_chat,int port) {
+        super(identifiant,addresse_chat,port);
     }
     
     public void post_Question(String Question)
@@ -36,7 +36,7 @@ public class Client extends Personne {
             
             byte[] var =  outputStream.toByteArray();
             System.out.println("Client"+new String (var));
-            DatagramPacket dtg = new DatagramPacket(var , var.length,adresseGroupe, 5001);
+            DatagramPacket dtg = new DatagramPacket(var , var.length,adresseGroupe, port_chat);
             socketGroupe.send(dtg);
             
         } catch (IOException ex) {

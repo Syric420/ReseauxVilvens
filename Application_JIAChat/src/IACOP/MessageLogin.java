@@ -18,19 +18,21 @@ public class MessageLogin implements Serializable{
     
     private int typeMessage;
     private String user;
-    private String mdp;
-    private MessageDigest digest;
+    //private String mdp;
+    private Identify msgD;
+    private int port_chat;
+    private String addresse_chat;
 
     public MessageLogin() {
         this.user = null;
-        this.mdp = null;
-        this.digest = null;
+        //this.mdp = null;
+        this.msgD = null;
     }
 
-    public MessageLogin(String user, String mdp, MessageDigest digest) {
+    public MessageLogin(String user, String mdp, Identify digest) {
         this.user = user;
-        this.mdp = mdp;
-        this.digest = digest;
+        //this.mdp = mdp;
+        this.msgD = digest;
     }
 
     /**
@@ -48,34 +50,6 @@ public class MessageLogin implements Serializable{
     }
 
     /**
-     * @return the mdp
-     */
-    public String getMdp() {
-        return mdp;
-    }
-
-    /**
-     * @param mdp the mdp to set
-     */
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
-    }
-
-    /**
-     * @return the digest
-     */
-    public MessageDigest getDigest() {
-        return digest;
-    }
-
-    /**
-     * @param digest the digest to set
-     */
-    public void setDigest(MessageDigest digest) {
-        this.digest = digest;
-    }
-
-    /**
      * @return the typeMessage
      */
     public int getTypeMessage() {
@@ -87,6 +61,48 @@ public class MessageLogin implements Serializable{
      */
     public void setTypeMessage(int typeMessage) {
         this.typeMessage = typeMessage;
+    }
+
+    /**
+     * @return the port_chat
+     */
+    public int getPort_chat() {
+        return port_chat;
+    }
+
+    /**
+     * @param port_chat the port_chat to set
+     */
+    public void setPort_chat(int port_chat) {
+        this.port_chat = port_chat;
+    }
+
+    /**
+     * @return the addresse_chat
+     */
+    public String getAddresse_chat() {
+        return addresse_chat;
+    }
+
+    /**
+     * @param addresse_chat the addresse_chat to set
+     */
+    public void setAddresse_chat(String addresse_chat) {
+        this.addresse_chat = addresse_chat;
+    }
+
+    /**
+     * @return the msgD
+     */
+    public Identify getMsgD() {
+        return msgD;
+    }
+
+    /**
+     * @param msgD the msgD to set
+     */
+    public void setMsgD(Identify msgD) {
+        this.msgD = msgD;
     }
     
     

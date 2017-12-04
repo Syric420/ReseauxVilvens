@@ -16,8 +16,8 @@ import java.util.logging.Logger;
  */
 public class Employe extends Personne{
 
-    public Employe(String identifiant) {
-        super(identifiant);
+    public Employe(String identifiant,String addresse_chat,int port) {
+        super(identifiant,addresse_chat,port);
     }
     
     public void answer_Question(String Question)
@@ -29,7 +29,7 @@ public class Employe extends Personne{
             
             //String chaine = "2;" + str[1];
             String chaine = "2@" + Question;
-            DatagramPacket dtg = new DatagramPacket(chaine.getBytes(), chaine.length(),adresseGroupe, 5001);
+            DatagramPacket dtg = new DatagramPacket(chaine.getBytes(), chaine.length(),adresseGroupe, port_chat);
             socketGroupe.send(dtg);
         } catch (IOException ex) {
             Logger.getLogger(Personne.class.getName()).log(Level.SEVERE, null, ex);
