@@ -73,16 +73,16 @@ public class ThreadReception extends Thread
                                 if(ver.checkDigest(tmp))
                                 {
                                     System.out.println("OK");
+                                    DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
+                                    dcbm.addElement(str[1]);
+                                    dlm = (DefaultListModel) LMsgRecus.getModel();
+                                    dlm = (DefaultListModel<String>) LMsgRecus.getModel();
+                                    dlm.addElement(str[1]);
                                 }
                                 else 
                                     System.out.println("Not OK");
-                                
-                                DefaultComboBoxModel dcbm = (DefaultComboBoxModel) jComboBoxQuestion.getModel();
-                                dcbm.addElement(str[1]);
                             }
-                            dlm = (DefaultListModel) LMsgRecus.getModel();
-                            dlm = (DefaultListModel<String>) LMsgRecus.getModel();
-                            dlm.addElement(str[1]);
+
                             break;
                         case "2":
                             if(client)
