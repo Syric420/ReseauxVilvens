@@ -27,7 +27,7 @@ reseau */
 #include <netinet/tcp.h> /* pour la conversion adresse reseau->format dot */
 #include <arpa/inet.h>
 /* pour la conversion adresse reseau->format dot */
-#define PORT_MULTI 5001 /* Port de la socket serveur */
+#define PORT_MULTI 26086 /* Port de la socket serveur */
 #define MAXSTRING 100 /* Longueur des messages */
 #define IP_MULTICAST "234.5.5.9"
 
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
     int cpt=0;
     struct ip_mreq mreq;
     int flagReuse = 1;
-    unsigned char ttl = 2;
+    unsigned char ttl = 5;
     
     
     
@@ -102,7 +102,10 @@ int main(int argc, char** argv) {
     adresseSocketEnvoi.sin_addr.s_addr = inet_addr(IP_MULTICAST);
     
 
-    
+    memcpy(&mreq.imr_multiaddr, &adresseSocketReception.sin_addr,tailleSockaddr_in);
+    mreq.imr_interface.s_addr = htonl(INADDR_ANY);
+    setsockopt (hSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq,sizeof(mreq));
+    setsockopt(hSocket, SOL_SOCKET, SO_REUSEADDR, &mreq, sizeof(mreq));
     setsockopt (hSocket, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(ttl));
     
     /* 4. Le systeme prend connaissance de l'adresse et du port de la socket */
@@ -115,9 +118,6 @@ int main(int argc, char** argv) {
     
     
     /* 5. Parametrage de la socket */
-    memcpy(&mreq.imr_multiaddr, &adresseSocketReception.sin_addr,tailleSockaddr_in);
-    mreq.imr_interface.s_addr = htonl(INADDR_ANY);
-    setsockopt (hSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq,sizeof(mreq));
     
     do
     {
@@ -142,18 +142,40 @@ int main(int argc, char** argv) {
     do
     {
         
-        strcpy(msgAEnvoyer, "3@");
-        
-        fgets(buff, sizeof(buff), stdin);
-        
-        strcat(msgAEnvoyer, buff);
-         if (sendto(sSocket,msgAEnvoyer,strlen(msgAEnvoyer),0,(struct sockaddr *) &adresseSocketEnvoi,
+        fgets(&buff, sizeof(buff), stdin);
+        rep = atoi(buff);
+        switch(rep)
+        {
+            case 1:
+                printf("Entrez votre réponse ?\n");
+                strcpy(msgAEnvoyer, "2@");
+                fgets(buff, sizeof(buff), stdin);
+                strcat(msgAEnvoyer, buff);
+                break;
+            case 2:
+                printf("Entrez votre événement ?\n");
+                strcpy(msgAEnvoyer, "3@");
+                fgets(buff, sizeof(buff), stdin);
+                strcat(msgAEnvoyer, buff);
+                break;
+                
+        }
+        if(strlen(buff)>1)
+        {
+            if (sendto(sSocket,msgAEnvoyer,strlen(msgAEnvoyer),0,(struct sockaddr *) &adresseSocketEnvoi,
 		     sizeof(adresseSocketEnvoi)) < 0) {
 	       perror("sendto");
 	       exit(1);
 	  }
+            fflush(stdout);
+            fflush(stdin);
+        }
+         
         
     }while(rep!=3);
+    /* 9. Fermeture de la socket */
+    close(hSocket); /* Fermeture de la socket */
+    printf("Socket client fermee\n");
     return 0;
 }
 
@@ -186,9 +208,7 @@ void *fct_threadReception(void *p)
         
     }
     while (strcmp(msg, "#FINDUCHAT#"));
-    /* 9. Fermeture de la socket */
-    close(hSocket); /* Fermeture de la socket */
-    printf("Socket client fermee\n");
+    
 }
 
 void afficheMessage(char *message)
