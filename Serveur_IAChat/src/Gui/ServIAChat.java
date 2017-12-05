@@ -27,6 +27,8 @@ public class ServIAChat extends javax.swing.JFrame {
     
     public ServIAChat() {
         initComponents();
+        
+        
     }
 
     /**
@@ -117,8 +119,7 @@ public class ServIAChat extends javax.swing.JFrame {
         jB_Off.setEnabled(true);
         jLabel2.setText("Allumé");
         port = 26085;
-        ThreadAccept = new ThreadAccept(port, this);
-        
+        ThreadAccept = new ThreadAccept(port, this);        
         ThreadAccept.start();
     }//GEN-LAST:event_jB_OnActionPerformed
 

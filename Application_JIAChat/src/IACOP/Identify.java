@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -17,12 +18,11 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  *
  * @author tibha
  */
-public class Identify {
+public class Identify implements Serializable{
    private String login;
    private String password;
-   long temps;
-   double alea;
-   private MessageDigest md;
+   private long temps;
+   private double alea;
    private byte[] msgD;
     public Identify() {
         Security.addProvider(new BouncyCastleProvider());
@@ -51,9 +51,9 @@ public class Identify {
         return msgD;
     }
 
-    public void makeDigest() { 
+    public void setMd() { 
         try {
-            
+            MessageDigest md;
             md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(login.getBytes());
             md.update(password.getBytes());
@@ -62,8 +62,8 @@ public class Identify {
             //System.out.println("SetMD " + login +";" + password + ";" + temps + ";" + alea);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
-            bdos.writeLong(temps);
-            bdos.writeDouble(alea);
+            bdos.writeLong(getTemps());
+            bdos.writeDouble(getAlea());
 
             md.update(baos.toByteArray());
             msgD= md.digest();
@@ -80,9 +80,9 @@ public class Identify {
             }
     }
         
-    public void verifDigest(String U,String Pass, long T, double A) { 
+    public void setMd(String U,String Pass, long T, double A) { 
         try {
-            
+            MessageDigest md;
             md = MessageDigest.getInstance("SHA-1", "BC");
             //System.out.println("SetMD " + U +";" + Pass + ";" + T + ";" + A);
             md.update(U.getBytes());
@@ -91,8 +91,8 @@ public class Identify {
             alea = A;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
-            bdos.writeLong(temps);
-            bdos.writeDouble(alea);
+            bdos.writeLong(getTemps());
+            bdos.writeDouble(getAlea());
 
             md.update(baos.toByteArray());
             msgD= md.digest();
@@ -107,6 +107,20 @@ public class Identify {
         catch (IOException ex) {
                 Logger.getLogger(Identify.class.getName()).log(Level.SEVERE, null, ex);
             }
+    }
+
+    /**
+     * @return the temps
+     */
+    public long getTemps() {
+        return temps;
+    }
+
+    /**
+     * @return the alea
+     */
+    public double getAlea() {
+        return alea;
     }
     
   

@@ -164,20 +164,44 @@ public class IALogin extends javax.swing.JFrame {
 
     private void jB_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jB_ConnectActionPerformed
         MessageLogin message = new MessageLogin();
+        Identify log = new Identify();
+        
         if(jRadioButton1.isSelected())
         {
             message.setUser(jTF_numTicket.getText());
+            message.setTypeMessage(1);
+            //message.setMdp("");
+            
         }
         else if(jRadioButton2.isSelected())
         {
             message.setUser(jTF_user.getText());
-            message.setMdp(jTF_mdp.getText());
+            message.setTypeMessage(2);
+            //message.setMdp(jTF_mdp.getText());
+            log.setLogin(jTF_user.getText());
+            log.setPassword(jTF_mdp.getText());
+            log.setMd();
+            message.setMsgD(log);
         }
         
         try {
             oos.writeObject(message);
-            MessageLogin ok = (MessageLogin)ois.readObject();
-            System.out.println(ok.getUser());
+            MessageLogin response = (MessageLogin)ois.readObject();
+            if(!response.getUser().contains("NOT"))
+            {
+                if(response.getUser().contains("TICKET"))
+                {
+                    
+                    System.out.println(jTF_numTicket.getText()+response.getAddresse_chat()+response.getPort_chat());
+                    new IAChatClient(jTF_numTicket.getText(),response.getAddresse_chat(),response.getPort_chat()).setVisible(true);
+                    this.setVisible(false);
+                }
+                else
+                {   
+                    new IAChatEmploye(jTF_user.getText(),response.getAddresse_chat(),response.getPort_chat()).setVisible(true);
+                    this.setVisible(false);
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(IALogin.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

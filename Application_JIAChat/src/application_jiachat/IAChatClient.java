@@ -21,11 +21,12 @@ public class IAChatClient extends javax.swing.JFrame {
     ThreadReception thr;
     Client cli;
     
-    public IAChatClient() {
+    public IAChatClient(String user,String addresse_chat,int port) {
         initComponents(); 
         DefaultListModel dlm = new DefaultListModel();
         jList1.setModel(dlm);
-        cli=new Client("Vince");
+        cli=new Client(user,addresse_chat,port);
+        TFName.setText(user);
         thr = new ThreadReception (nomCli,true, cli.getSocketGroupe(), jList1,null );
         thr.start();
         String msgDeb = cli.getIdentifiant() + " rejoint le groupe";
@@ -53,6 +54,8 @@ public class IAChatClient extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        TFName.setFocusable(false);
 
         jScrollPane2.setViewportView(jList1);
 
@@ -160,7 +163,7 @@ public class IAChatClient extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IAChatClient().setVisible(true);
+                new IAChatClient("Thib","234.5.5.9",26086).setVisible(true);
             }
         });
     }
