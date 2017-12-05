@@ -125,6 +125,8 @@ int main(int argc, char** argv) {
         fgets(identifiant, sizeof(identifiant), stdin);
     }while(strcmp("\n", identifiant)==0);//Tant qu'il a mis juste enter on reste dans la boucle
     
+    identifiant[strlen(identifiant)-1]=0;
+    
     
     system("clear");
     printf("Bienvenue %s",identifiant);
@@ -142,19 +144,23 @@ int main(int argc, char** argv) {
     do
     {
         
-        fgets(&buff, sizeof(buff), stdin);
+        fgets(buff, sizeof(buff), stdin);
         rep = atoi(buff);
         switch(rep)
         {
             case 1:
                 printf("Entrez votre réponse ?\n");
                 strcpy(msgAEnvoyer, "2@");
+                strcat(msgAEnvoyer, identifiant);
+                strcat(msgAEnvoyer, "> ");
                 fgets(buff, sizeof(buff), stdin);
                 strcat(msgAEnvoyer, buff);
                 break;
             case 2:
                 printf("Entrez votre événement ?\n");
                 strcpy(msgAEnvoyer, "3@");
+                strcat(msgAEnvoyer, identifiant);
+                strcat(msgAEnvoyer, "> ");
                 fgets(buff, sizeof(buff), stdin);
                 strcat(msgAEnvoyer, buff);
                 break;
