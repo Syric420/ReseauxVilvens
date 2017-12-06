@@ -6,7 +6,6 @@
 package ProtocoleLUGAP;
 import Server.ConsoleServeur;
 import java.io.*;
-import java.util.*;
 import java.net.*;
 import Server.*;
 import Utilities.Identify;
