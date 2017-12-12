@@ -64,8 +64,7 @@ public class ThreadReception extends Thread
                                     {
                                         fin=i;
                                         break;
-                                    }
-                                        
+                                    }      
                                 }
                                 
                                 tmp = Arrays.copyOfRange(buf, debut, fin);
