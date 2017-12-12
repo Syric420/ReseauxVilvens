@@ -32,8 +32,7 @@ public class Personne {
             socketGroupe = new MulticastSocket(port);
             port_chat=port;
             socketGroupe.joinGroup(adresseGroupe);
-            socketGroupe.setTimeToLive(15);
-            socketGroupe.setInterface(InetAddress.getLocalHost());
+            //socketGroupe.setInterface(InetAddress.getLocalHost());
         } catch (UnknownHostException ex) {
             Logger.getLogger(Personne.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -250,7 +250,7 @@ public class IALogin extends javax.swing.JFrame {
     public void connectTcp() {
         try
         {
-            cliSock = new Socket("10.59.22.107", 26085);
+            cliSock = new Socket("10.59.22.29", 26085);
             System.out.println("Client connecté : " + cliSock.getInetAddress().toString());
         }
         catch (UnknownHostException e)
