@@ -181,7 +181,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
                     str = str + jTable1.getColumnName(col) + ";";
                     str = str + dm.getValueAt(row,col);           
                     System.out.println("STR : "+ str);
-                    req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
+                    req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATEONELUG, str);
                     try
                     {
                         oos= new ObjectOutputStream(cliSock.getOutputStream());
@@ -219,7 +219,7 @@ public class InterfaceBagages extends javax.swing.JDialog {
                 str = str + jTable1.getColumnName(col) + ";";
                 str = str + dm.getValueAt(row,col);           
                 System.out.println("STR : "+ str);
-                req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUG, str);
+                req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATEONELUG, str);
                 try
                 {
                     oos= new ObjectOutputStream(cliSock.getOutputStream());

@@ -26,6 +26,7 @@ public class ThreadClient extends Thread {
         Bc = new BeanBD();
         Bc.setTypeBD("MySql");
         Bc.connect();
+       
     }
     
     public void run()

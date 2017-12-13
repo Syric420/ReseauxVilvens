@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package database.utilities;
+import ProtocoleLUGAPM.Bagage;
 import Utilities.ReadProperties;
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -171,6 +174,7 @@ public class BeanBD {
     }
     public synchronized void updateLug(String str)
     {
+        
         try {
             String monVec[]={};
             monVec = str.split(";");
@@ -178,6 +182,44 @@ public class BeanBD {
         } catch (SQLException ex) {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public Vector<Bagage> getLugage()
+    {
+        String str = "";
+        String monString[]={};
+        Vector<Bagage> monVec = new Vector<Bagage>();
+        try {
+            setRs(getInstruc().executeQuery("SELECT * FROM sys.bagages where `Charge en soute` = 'N';"));
+            ResultSetMetaData rsmd = getRs().getMetaData();
+            int nbrCol = rsmd.getColumnCount();
+            for(int i=0; i<nbrCol;i++)
+            {
+                if(i+1 == nbrCol)
+                    str= str + rsmd.getColumnName(i+1);
+                else
+                    str= str + rsmd.getColumnName(i+1) + ";";
+            }
+            
+            monString = str.split(";");
+            
+            
+            while(getRs().next())
+            {
+                Bagage monBagage = new Bagage(getRs().getString(monString[0]),
+                        getRs().getInt(monString[1]),
+                        getRs().getFloat(monString[2]),
+                        getRs().getString(monString[3]),
+                        getRs().getString(monString[5])
+                );
+                System.out.println(monBagage);
+                monVec.add(monBagage);
+            }
+            return monVec;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     public String findVols()
     {

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package ProtocoleLUGAP;
+import ProtocoleLUGAPM.Bagage;
 import Server.ConsoleServeur;
 import java.io.*;
 import java.net.*;
@@ -11,6 +12,7 @@ import Server.*;
 import Utilities.Identify;
 import database.utilities.*;
 import java.security.MessageDigest;
+import java.util.Vector;
 
 /**
  *
@@ -19,11 +21,13 @@ import java.security.MessageDigest;
 public class RequeteLUGAP implements Requete, Serializable
 {
     //public static int REQUEST_CONNECT = 3;
-    public static int REQUEST_UPDATELUG = 1;
+    public static int REQUEST_UPDATEONELUG = 1;
     public static int REQUEST_CONNECT = 3;
     public static int REQUEST_VOL = 4;
     public static int REQUEST_DECONNECT = 5;
     public static int REQUEST_LUG=6;
+    public static int REQUEST_SHOWLUGAGE=7;
+    public static int REQUEST_UPDATELUGAGE=8;
     private byte [] ByteArray;
     private BeanBD Bc;
     private BeanRequete Br;
@@ -41,6 +45,7 @@ public class RequeteLUGAP implements Requete, Serializable
         ByteArray = null;
         Bc=B;
         Br=R;
+      
     }
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
@@ -75,7 +80,29 @@ public class RequeteLUGAP implements Requete, Serializable
             };
         }else 
             
-        if(getType() == REQUEST_UPDATELUG)
+        if(getType() == REQUEST_UPDATELUGAGE)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    updateAllBagages(cs);
+                }
+            };
+        }
+            
+        if(getType() == REQUEST_SHOWLUGAGE)
+        {
+            return new Runnable()
+            {
+                public void run()
+                {
+                    showBagages(s, cs);
+                }
+            };
+        }
+            
+        if(getType() == REQUEST_UPDATEONELUG)
         {
             return new Runnable()
             {
@@ -86,6 +113,31 @@ public class RequeteLUGAP implements Requete, Serializable
             };
         }else return null;
     }
+    private void showBagages(Socket sock, ConsoleServeur cs)
+    {
+        //System.out.println("UPDATE" + getChargeUtile());
+        cs.TraceEvenements("Serveur#Effectue un show lugage");
+        ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.LUG_SHOW, "Show Lugage", Bc.getLugage());
+        System.out.println(rep.getVecBagage());
+        ObjectOutputStream oos;
+        try
+        {
+            oos = new ObjectOutputStream(sock.getOutputStream());
+            oos.writeObject(rep); oos.flush();
+        }
+        catch (IOException e)
+        {
+            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+        }
+    }
+    
+    private void updateAllBagages(ConsoleServeur cs)
+    {
+        //System.out.println("UPDATE" + getChargeUtile());
+        Bc.updateLug(getChargeUtile());
+        cs.TraceEvenements("Serveur#Effectue un UPDATE");
+    }
+    
     private void updateBagages(ConsoleServeur cs)
     {
         //System.out.println("UPDATE" + getChargeUtile());
