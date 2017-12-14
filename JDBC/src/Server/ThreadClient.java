@@ -54,13 +54,13 @@ public class ThreadClient extends Thread {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
                 }
                 
-                if(req.getType()==RequeteLUGAP.REQUEST_DECONNECT)
+               /* if(req.getType()==RequeteLUGAP.REQUEST_DECONNECT)
                 {
                     guiApplication.TraceEvenements(req.getChargeUtile()+"#Requête deconnexion de ");
                     this.setMySock(null);
                 }
                 else
-                {
+                {*/
                 
                     Runnable travail = req.createRunnable(mySock, guiApplication);
                     if (travail != null)
@@ -79,7 +79,7 @@ public class ThreadClient extends Thread {
                     }
                     tacheEnCours.run();
                 }
-           }
+           //}
         }
     }
 

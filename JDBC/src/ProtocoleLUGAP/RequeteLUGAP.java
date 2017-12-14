@@ -41,6 +41,12 @@ public class RequeteLUGAP implements Requete, Serializable
         ByteArray = null;
         vecBagage=null;
     }
+    public RequeteLUGAP(int t, String chu, Vector<Bagage> vec)
+    {
+        type = t; setChargeUtile(chu);
+        ByteArray = null;
+        vecBagage=vec;
+    }
     public RequeteLUGAP(int t, String chu, Socket s,BeanBD B, BeanRequete R)
     {
         type = t; setChargeUtile(chu); socketClient =s;
