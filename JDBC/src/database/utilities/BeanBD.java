@@ -221,6 +221,21 @@ public class BeanBD {
         }
         return null;
     }
+    
+    public synchronized void updateAllLug(Vector<Bagage> vec)
+    {
+        
+        try {
+            for(int i=0; i<vec.size();i++)
+            {
+                System.out.println("UPDATE bagages SET `Charge en soute`='"+vec.get(i).isChargeEnSoute()+"' WHERE `idBagages'='"+vec.get(i).getIdBagage()+"';");
+                getInstruc().executeUpdate("UPDATE bagages SET `Charge en soute`='"+vec.get(i).isChargeEnSoute()+"' WHERE `idBagages'='"+vec.get(i).getIdBagage()+"';");
+            }
+            //getInstruc().executeUpdate("UPDATE bagages SET `" + monVec[2] + "`='" + monVec[3] +"' WHERE `" + monVec[0] + "`='" + monVec[1] + "';");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public String findVols()
     {
         
