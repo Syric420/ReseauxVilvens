@@ -8,10 +8,25 @@ package clientServeurSocket;
 import TICKMAP.ReponseTICKMAP;
 import TICKMAP.RequeteTICKMAP;
 import Utilities.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.SecretKey;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 /**
  *
  * @author Vince
@@ -21,8 +36,10 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     private Socket cliSock;
     private boolean logged;
     private ObjectInputStream ois;
+    private InterfaceClient guiParent;
     public InterfaceConnexion(java.awt.Frame parent, boolean modal,Socket cliS) {
         super(parent, modal);
+        guiParent=((InterfaceClient)parent);
         cliSock = cliS;
         logged = false;
         initComponents();
@@ -139,14 +156,72 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             System.out.println("--- erreur IO = " + e.getMessage()); }
         if(rep.getChargeUtile().equals("LOGIN OK"))
         {
-            setLogged(true);
-            this.setVisible(false);
+            try {
+                setLogged(true);
+                this.setVisible(false);
+                System.out.println("*** Cle publique recuperee = "+((PublicKey)Encryption.convertFromBytes(rep.getByteArray())).toString());
+                PublicKey pK=(PublicKey)Encryption.convertFromBytes(rep.getByteArray());
+                guiParent.setCléPublique(pK);
+                //negocier cles sym
+                handshake(log.getLogin(),pK);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }          
         else 
             setLogged(false);
         
     }
+    public void handshake(String log,PublicKey pK)
+    {
+        try {
+            InputStream input = this.getClass().getResourceAsStream("/Cles/ClesLabo.jceks");
+            Security.addProvider(new BouncyCastleProvider());
+            KeyStore keystore = KeyStore.getInstance("JCEKS");
+            keystore.load(input, "123".toCharArray());
+            
+            guiParent.setKeyCipher((SecretKey)keystore.getKey(log, "123".toCharArray()));
+            guiParent.setKeyHmac((SecretKey)keystore.getKey(log + "auth", "123".toCharArray()));
+            SecretKey key = (SecretKey)keystore.getKey(log, "123".toCharArray());
+            System.out.println(key.toString());
+            //envoi des cles sym
+            ObjectOutputStream oos =null;
+            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            //String str ="SALUT LES AMIS";
+            //byte[]req=Encryption.convertToBytes(str);
+            /*byte[]reqCrypt = Encryption.encryptRSA(pK, str);
+            Encryption crypt = new Encryption();
+            crypt.setMessage(reqCrypt);
+            oos.writeObject(crypt); oos.flush();*/
+            
+            //byte[]req=Encryption.convertToBytes(guiParent.getKeyCipher());
+            byte[]reqCrypt = Encryption.encryptRSA(pK, guiParent.getKeyCipher());
+            Encryption crypt = new Encryption();
+            crypt.setMessage(reqCrypt);
+            oos.writeObject(crypt); oos.flush();
+            //req=Encryption.convertToBytes(guiParent.getKeyHmac());
+            reqCrypt = Encryption.encryptRSA(pK, guiParent.getKeyHmac());
+            oos.writeObject(reqCrypt); oos.flush();
 
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnrecoverableKeyException ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(InterfaceConnexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -207,4 +282,10 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     public void setLogged(boolean logged) {
         this.logged = logged;
     }
+     /*private Object convertFromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
+    try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+         ObjectInput in = new ObjectInputStream(bis)) {
+        return in.readObject();
+    }
+    }*/
 }

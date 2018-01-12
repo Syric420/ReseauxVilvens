@@ -26,7 +26,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  *
  * @author tibha
  */
-public class AES {
+public class HMAC {
 
     /**
      * @param args the command line arguments
@@ -38,11 +38,11 @@ public class AES {
             KeyStore keystore = KeyStore.getInstance("JCEKS");
             keystore.load(keystoreStream, "123".toCharArray());
             //X509Certificate certif = (X509Certificate)keystore.getCertificate("thibvince");
-            if (!keystore.containsAlias("Thib")) {
+            if (!keystore.containsAlias("sym3")) {
                 throw new RuntimeException("Alias for key not found");
             }
             
-            SecretKey key = (SecretKey)keystore.getKey("Thib", "123".toCharArray());
+            SecretKey key = (SecretKey)keystore.getKey("sym3", "123".toCharArray());
             System.out.println("Nom du propriétaire du certificat :" + key.toString());
             /*System.out.println("Nom du propriétaire du certificat : " +
             certif.getSubjectDN().getName());
@@ -59,25 +59,26 @@ public class AES {
             System.out.println(str);
             System.out.println(new String(tmp));
             byte [] temp = decrypt(key,tmp,vecteurInit);
+            System.out.println("");
             System.out.println(new String(temp));
             
             
             
         } catch (IOException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CertificateException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (KeyStoreException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnrecoverableKeyException ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HMAC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public static byte[] encrypt( SecretKey key, String message,byte[] vecteurInit) throws Exception {
+     public static byte[] encrypt( SecretKey key, String message,byte[] vecteurInit) throws Exception {
         Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding","BC");  
         cipher.init(Cipher.ENCRYPT_MODE, key/*,new IvParameterSpec(vecteurInit)*/);  
         return cipher.doFinal(message.getBytes());  
@@ -89,7 +90,7 @@ public class AES {
         return cipher.doFinal(encrypted);
     }
         private static byte[] convertToBytes(Object object) throws IOException {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
          ObjectOutput out = new ObjectOutputStream(bos)) {
         out.writeObject(object);
         return bos.toByteArray();

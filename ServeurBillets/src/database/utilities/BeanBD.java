@@ -123,7 +123,10 @@ public class BeanBD {
     }
     public String findPassword(String user){
         try {
-            setRs(getInstruc().executeQuery("Select password from login where user = '" + user + "'"));
+            
+            
+            setRs(getInstruc().executeQuery("Select password from login where user = 'Thib';"));
+            //setRs(getInstruc().executeQuery("Select password from sys.login where user = '" + user + "';"));
             getRs().next();
             String s =getRs().getString("password");
             return s;
@@ -138,7 +141,7 @@ public class BeanBD {
         String str = "";
         String monVec[]={};
         try {
-            setRs(getInstruc().executeQuery("select * from bagages where idBagages like '" + Requete +"';"));
+            setRs(getInstruc().executeQuery("select * from sys.bagages where idBagages like '" + Requete +"';"));
             //setRs(getInstruc().executeQuery("select * from bagages where idBagages like '123-%-2017-10-22%';"));
             ResultSetMetaData rsmd = getRs().getMetaData();
             int nbrCol = rsmd.getColumnCount();
@@ -189,7 +192,7 @@ public class BeanBD {
         String str = "";
         String monVec[]={};
         try {
-            setRs(getInstruc().executeQuery("select * from vols where HeureDepart = curdate();"));
+            setRs(getInstruc().executeQuery("select * from sys.vols where HeureDepart = curdate();"));
             
             ResultSetMetaData rsmd = getRs().getMetaData();
             int nbrCol = rsmd.getColumnCount();

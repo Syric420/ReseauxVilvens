@@ -5,17 +5,17 @@
  */
 package clientServeurSocket;
 import TICKMAP.RequeteTICKMAP;
-import TICKMAP.ReponseTICKMAP;
 import java.io.*;
 import java.net.*;
-
 import Utilities.ReadProperties;
-import java.awt.Point;
 import static java.lang.System.exit;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Security;
+import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTable;
+import javax.crypto.SecretKey;
 import javax.swing.table.DefaultTableModel;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 public class InterfaceClient extends javax.swing.JFrame {
@@ -23,13 +23,14 @@ public class InterfaceClient extends javax.swing.JFrame {
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
     private Socket cliSock;
+    private PublicKey cléPublique;
+    private PrivateKey cléPrivée;
+    private SecretKey keyHmac;
+    private SecretKey keyCipher;
     int PORT_CHECKIN;
     String IP_ADDRESS;
     InterfaceConnexion InterfaceCo;
-    InterfaceBagages IntBagages;
-    /**
-     * Creates new form InterfaceClient
-     */
+
      
     public InterfaceClient() {
    
@@ -40,7 +41,10 @@ public class InterfaceClient extends javax.swing.JFrame {
         InterfaceCo.setVisible(true);
         if(!InterfaceCo.isLogged())
             exit(0);
-        LoadVols();
+        else
+        {
+        
+        }
         
     }
         private void Conf()
@@ -101,11 +105,6 @@ public class InterfaceClient extends javax.swing.JFrame {
 
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Etat du serveur:");
@@ -219,57 +218,9 @@ public class InterfaceClient extends javax.swing.JFrame {
         JB_Connecter.setEnabled(false);
         JB_Deconnecter.setEnabled(true);
         JLabel_Etat.setText("Connecté");
-
-        LoadVols();
+        
     }//GEN-LAST:event_JB_ConnecterActionPerformed
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        JTable table =(JTable) evt.getSource();
-        Point p = evt.getPoint();
-        int row = table.rowAtPoint(p);
-        if (evt.getClickCount() == 2) {
-            Bagages();
-        }
-    }//GEN-LAST:event_jTable1MouseClicked
-    private void Bagages()
-    {
-        DefaultTableModel dm=(DefaultTableModel) jTable1.getModel();
-        int i = jTable1.getSelectedRow();
-        String str;
-        str = jTable1.getValueAt(i, 0).toString() + "-%-" + jTable1.getValueAt(i, 3).toString()+"%";
-        IntBagages = new InterfaceBagages(this,true,str,cliSock);
-        IntBagages.setVisible(true);
-        
-    }    private void LoadVols()
-    {
-        ObjectOutputStream oos =null;
-        RequeteTICKMAP req = null;
-        req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_VOL, null);
-        try
-        {
-            oos= new ObjectOutputStream(cliSock.getOutputStream());
-            oos.writeObject(req); oos.flush();
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur réseau ? [" + e.getMessage() + "]"); 
-        }
-        ReponseTICKMAP rep = null;
-        try
-        {
-            ois = new ObjectInputStream(cliSock.getInputStream());
-            rep = (ReponseTICKMAP)ois.readObject();
-        }
-        catch (ClassNotFoundException e)
-        { 
-            System.out.println("--- erreur sur la classe = " + e.getMessage()); 
-        }
-        catch (IOException e)
-        { 
-            System.out.println("--- erreur IO = " + e.getMessage()); }
-        iniTable(rep.getChargeUtile());
-        
-    }
+    
     private void iniTable(String tab)
     {
         String nomTable[] ={},var[] = {},tuples[];
@@ -344,4 +295,46 @@ public class InterfaceClient extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the cléPublique
+     */
+    public PublicKey getCléPublique() {
+        return cléPublique;
+    }
+
+    /**
+     * @param cléPublique the cléPublique to set
+     */
+    public void setCléPublique(PublicKey cléPublique) {
+        this.cléPublique = cléPublique;
+    }
+
+    /**
+     * @return the keyHmac
+     */
+    public SecretKey getKeyHmac() {
+        return keyHmac;
+    }
+
+    /**
+     * @param keyHmac the keyHmac to set
+     */
+    public void setKeyHmac(SecretKey keyHmac) {
+        this.keyHmac = keyHmac;
+    }
+
+    /**
+     * @return the keyCipher
+     */
+    public SecretKey getKeyCipher() {
+        return keyCipher;
+    }
+
+    /**
+     * @param keyCipher the keyCipher to set
+     */
+    public void setKeyCipher(SecretKey keyCipher) {
+        this.keyCipher = keyCipher;
+    }
 }

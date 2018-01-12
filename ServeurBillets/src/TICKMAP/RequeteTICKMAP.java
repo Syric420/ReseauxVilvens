@@ -8,31 +8,27 @@ import Server.ConsoleServeur;
 import java.io.*;
 import java.net.*;
 import Server.*;
+import Utilities.Encryption;
 import Utilities.Identify;
 import database.utilities.*;
 import java.security.MessageDigest;
-import java.util.Vector;
+import java.security.PublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 
-/**
- *
- * @author Vince
- */
 public class RequeteTICKMAP implements Requete, Serializable
 {
-    //public static int REQUEST_CONNECT = 3;
-    public static int REQUEST_UPDATEONELUG = 1;
-    public static int REQUEST_CONNECT = 3;
-    public static int REQUEST_VOL = 4;
-    public static int REQUEST_DECONNECT = 5;
-    public static int REQUEST_LUG=6;
-    public static int REQUEST_SHOWLUGAGE=7;
-    public static int REQUEST_UPDATELUGAGE=8;
+    public static int REQUEST_CONNECT = 1;
+    public static int REQUEST_DECONNECT = 2;   
     private byte [] ByteArray;
     private BeanBD Bc;
     private BeanRequete Br;
     private int type;
     private String chargeUtile;
     private Socket socketClient;
+
+    private PublicKey cléPublique = null;
     public RequeteTICKMAP(int t, String chu)
     {
         type = t; setChargeUtile(chu);
@@ -46,7 +42,7 @@ public class RequeteTICKMAP implements Requete, Serializable
         Br=R;
     }
     
-    public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
+    public Runnable createRunnable (final Socket s, final ConsoleServeur cs,PublicKey cléPublique)
     {
         if(getType() == REQUEST_CONNECT)
         
@@ -54,98 +50,37 @@ public class RequeteTICKMAP implements Requete, Serializable
             {
                 public void run()
                 {
-                    traiterConnect(s, cs);
+                    traiterConnect(s, cs,cléPublique);
                 }
             };
-        else if(getType() == REQUEST_VOL)
-        {
-            return new Runnable()
-            {
-                public void run()
-                {
-                    traiterVol(s, cs);
-                }
-            };
-        }
-        else
-        if(getType() == REQUEST_LUG)
-        {
-            return new Runnable()
-            {
-                public void run()
-                {
-                    traiterBagages(s, cs);
-                }
-            };
-        }else 
-            
-            
-        if(getType() == REQUEST_UPDATEONELUG)
-        {
-            return new Runnable()
-            {
-                public void run()
-                {
-                    updateBagages(cs);
-                }
-            };
-        }else return null;
+        else return null;
     }
-   
-    
-    private void updateBagages(ConsoleServeur cs)
+        public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
-        //System.out.println("UPDATE" + getChargeUtile());
-        Bc.updateLug(getChargeUtile());
-        cs.TraceEvenements("Serveur#Effectue un UPDATE");
-    }
-    private void traiterBagages(Socket sock, ConsoleServeur cs)
-    {
-        String s;
-        s = Bc.findBagages(getChargeUtile());
-        ReponseTICKMAP rep = new ReponseTICKMAP(ReponseTICKMAP.LUG_OK,s);
-        cs.TraceEvenements("Serveur#Recherche un bagage");
-        ObjectOutputStream oos;
-        try
-        {
-            oos = new ObjectOutputStream(sock.getOutputStream());
-            oos.writeObject(rep); oos.flush();
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
-        }
-    }
-    private void traiterVol(Socket sock, ConsoleServeur cs)
-    {
-        String s;
+        if(getType() == REQUEST_CONNECT)
         
-        s = Bc.findVols();
-        ReponseTICKMAP rep = new ReponseTICKMAP(ReponseTICKMAP.VOL_OK,s);
-        cs.TraceEvenements("Serveur#Recherche un vol#");
-        ObjectOutputStream oos;
-        try
-        {
-            oos = new ObjectOutputStream(sock.getOutputStream());
-            oos.writeObject(rep); oos.flush();
-        }
-        catch (IOException e)
-        {
-            System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
-        }
+            return new Runnable()
+            {
+                public void run()
+                {
+                    traiterConnect(s, cs,cléPublique);
+                }
+            };
+        else return null;
     }
-    private void traiterConnect(Socket sock, ConsoleServeur cs)
+
+    private void traiterConnect(Socket sock, ConsoleServeur cs,PublicKey cléPublique)
     {
+        //permet d'interagir avec le thread parent
+       
+        
         
         String chaine = getChargeUtile();
         String tab []= {};
-        //System.out.println("Traiter Connect : " + chaine);
         tab = chaine.split(";");
         for(int i = 0 ; i < tab.length ; i++)
             System.out.println(i + ": " + tab[i]);
         
-        
-        //System.out.println("Digest : " + getByteArray());
         String s = getBc().findPassword(tab[0]);
         cs.TraceEvenements("Serveur#Login "+tab[0]);
         Identify id = null;
@@ -156,25 +91,28 @@ public class RequeteTICKMAP implements Requete, Serializable
             long temps = Long.parseLong(tab[1]);
             double alea = Double.parseDouble(tab[2]);
             id.setMd(tab[0],s,temps,alea);
-            //byte [] B=null;
-            //System.out.println("Hash 1: " + getByteArray() + " Hash 2: " + id.getMd());
             if (MessageDigest.isEqual(getByteArray(), id.getMd()) )
             {
-                //System.out.println("Digest OK");
-                rep= new ReponseTICKMAP(ReponseTICKMAP.LOGIN_OK,"LOGIN OK");
-                cs.TraceEvenements("Serveur#Login OK pour "+tab[0]);
+                rep= new ReponseTICKMAP(ReponseTICKMAP.LOGIN_OK,"LOGIN OK"); 
+                try {                                      
+                    rep.setByteArray(convertToBytes(cléPublique));
+                    cs.TraceEvenements("Serveur#Login OK pour "+tab[0]);
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(RequeteTICKMAP.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             else
             {
                 rep= new ReponseTICKMAP(ReponseTICKMAP.LOGIN_FAIL,"LOGIN FAILED");
-                cs.TraceEvenements("Serveur#Login OK pour "+tab[0]);
+                cs.TraceEvenements("Serveur#Login NOT OK pour "+tab[0]);
             }
         }
         else
         {
             rep= new ReponseTICKMAP(ReponseTICKMAP.LOGIN_FAIL,"LOGIN FAILED");
         }
-        //System.out.println("rep : " + rep.getChargeUtile());
+        
         ObjectOutputStream oos;
         try
         {
@@ -185,9 +123,41 @@ public class RequeteTICKMAP implements Requete, Serializable
         {
             System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
         }
+        
+        if(rep.getChargeUtile().equals("LOGIN OK"))
+            handshake(sock);
 
     }
-    
+    private void handshake(Socket sock)
+    {
+        ThreadClient thread = (ThreadClient) Thread.currentThread();
+        ObjectInputStream ois = null;
+        try
+        {
+            ois = new ObjectInputStream(sock.getInputStream());
+            /*byte[]tmp = ((Encryption)ois.readObject()).getMessage();
+            byte[]messageClair=Encryption.decryptRSA(thread.getCléPrivée(), tmp); 
+            String var1 =(String)Encryption.convertFromBytes(messageClair);
+            System.out.println(var100);*/
+            
+            byte[] tmp = ((Encryption)ois.readObject()).getMessage();
+            byte[] messageClair=Encryption.decryptRSA(thread.getCléPrivée(), tmp); 
+            SecretKey var =(SecretKey)Encryption.convertFromBytes(messageClair);
+            thread.setKeyCipher(var); 
+            
+            tmp = (byte[])ois.readObject();
+            messageClair=Encryption.decryptRSA(thread.getCléPrivée(), tmp);
+            thread.setKeyHmac((SecretKey)Encryption.convertFromBytes(messageClair));
+            
+        } catch (IOException ex) {
+            Logger.getLogger(RequeteTICKMAP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(RequeteTICKMAP.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(RequeteTICKMAP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
     public String getChargeUtile() { return chargeUtile; }
     
     public void setChargeUtile(String chargeUtile)
@@ -195,16 +165,10 @@ public class RequeteTICKMAP implements Requete, Serializable
         this.chargeUtile = chargeUtile;
     }
 
-    /**
-     * @return the type
-     */
     public int getType() {
         return type;
     }
 
-    /**
-     * @return the ByteArray
-     */
     public byte[] getByteArray() {
         return ByteArray;
     }
@@ -228,6 +192,13 @@ public class RequeteTICKMAP implements Requete, Serializable
      */
     public void setBc(BeanBD Bc) {
         this.Bc = Bc;
+    }
+    private byte[] convertToBytes(Object object) throws IOException {
+    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+         ObjectOutput out = new ObjectOutputStream(bos)) {
+        out.writeObject(object);
+        return bos.toByteArray();
+    } 
     }
 
     
