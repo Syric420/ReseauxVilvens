@@ -40,7 +40,29 @@ public class BeanBD {
         else
             javax.swing.JOptionPane.showMessageDialog(null, "Erreur - deux choix possible : \"Oracle\" ou \"MySQL\"");
     }
-
+    public synchronized int selectInt(String requete)
+    {
+        int var=0;
+        try {
+            setRs(getInstruc().executeQuery(requete));
+            rs.next();
+            var = rs.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return var;
+    }
+    public synchronized boolean reserveVols(String update,String insert)
+    {
+        try {
+            getInstruc().executeUpdate(update);
+            getInstruc().executeUpdate(insert);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
     /**
      * @return the con
      */
@@ -213,7 +235,8 @@ public class BeanBD {
                 str=str + getRs().getString(monVec[1]) + ";";
                 str=str + getRs().getDate(monVec[2]) + ";";
                 str=str + getRs().getDate(monVec[3]) + ";";
-                str=str + getRs().getInt(monVec[4]);
+                str=str + getRs().getInt(monVec[4]) + ";";
+                str=str + getRs().getInt(monVec[5]);
                 str=str+"@";
             }
 

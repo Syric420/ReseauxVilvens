@@ -6,11 +6,12 @@
 package Server;
 
 import java.net.*;
+import java.security.PublicKey;
 
 /**
  *
  * @author Vince
  */
 public interface Requete {
-    public Runnable createRunnable (Socket s, ConsoleServeur cs);
+    public Runnable createRunnable (Socket s, ConsoleServeur cs,PublicKey cléPublique);
 }

@@ -122,7 +122,7 @@ public class InterfaceConnexion extends javax.swing.JDialog {
         {  log.setLogin(jTextField1.getText());
             log.setPassword(jPasswordField1.getText());
         log.setMd();
-        
+        guiParent.Login = jTextField1.getText();
         RequeteTICKMAP req;
         req=log.sendLogin();
         ObjectOutputStream oos =null;

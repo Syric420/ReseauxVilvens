@@ -22,7 +22,8 @@ public class InterfaceClient extends javax.swing.JFrame {
 
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    private Socket cliSock;
+    public Socket cliSock;
+    public String Login;
     private PublicKey cléPublique;
     private PrivateKey cléPrivée;
     private SecretKey keyHmac;

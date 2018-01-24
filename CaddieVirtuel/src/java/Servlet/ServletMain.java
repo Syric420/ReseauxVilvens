@@ -148,7 +148,6 @@ public class ServletMain extends HttpServlet {
                             update="UPDATE vols SET `PlacesRestantes`='" + NbreMax + "' WHERE `idVols`='"+ str + "';";
                             BeanBD.Update(update);
                         }
-
                     }
                     Login = request.getParameter("Login");
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Login + "';" ;
