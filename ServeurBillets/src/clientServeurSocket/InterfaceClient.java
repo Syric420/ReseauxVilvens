@@ -4,15 +4,22 @@
  * and open the template in the editor.
  */
 package clientServeurSocket;
+import ServerPayment.ThreadClientPay;
 import TICKMAP.ReponseTICKMAP;
 import TICKMAP.RequeteTICKMAP;
 import java.io.*;
 import java.net.*;
 import Utilities.ReadProperties;
 import static java.lang.System.exit;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
@@ -24,11 +31,16 @@ public class InterfaceClient extends javax.swing.JFrame {
     private ObjectOutputStream oos;
     public Socket cliSock;
     public String Login;
-    private PublicKey cléPublique;
-    private PrivateKey cléPrivée;
+    private PublicKey cléPubliqueServer;
+    private X509Certificate certifPay;
+    private PublicKey cléPubliquePayment;
+    private X509Certificate certifOperator;
+    private PublicKey cléPubliqueOperator;
+    private PrivateKey cléPrivéeOperator;
     private SecretKey keyHmac;
     private SecretKey keyCipher;
     int PORT_CHECKIN;
+    int PORT_PAYMENT;
     String IP_ADDRESS;
     InterfaceConnexion InterfaceCo;
 
@@ -69,6 +81,7 @@ public class InterfaceClient extends javax.swing.JFrame {
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            PORT_PAYMENT = Integer.parseInt(rP.getProp("PORT_PAYMENT"));
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -86,6 +99,35 @@ public class InterfaceClient extends javax.swing.JFrame {
         catch (IOException e)
         { System.err.println("Erreur ! Pas de connexion ? [" + e + "]"); }
     
+        
+        KeyStore ks;
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+            InputStream input = null;
+            ks = KeyStore.getInstance("JCEKS");
+            input = this.getClass().getResourceAsStream("/Cles/ClesLabo.jceks");
+            ks.load(input,"123".toCharArray());
+            certifPay = (X509Certificate)ks.getCertificate("serveur_payment");
+            cléPubliquePayment = getCertifPay().getPublicKey(); 
+            
+            
+            certifOperator = (X509Certificate)ks.getCertificate("tour_operator");
+            cléPubliqueOperator = certifOperator.getPublicKey();
+            cléPrivéeOperator = (PrivateKey) ks.getKey("serveur_payment", "123".toCharArray());
+            /*System.out.println("*** Cle publique recuperee = "+cléPublique.toString());
+            System.out.println(" *** Cle privee recuperee = " + cléPrivée.toString());*/
+
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
@@ -336,14 +378,14 @@ public class InterfaceClient extends javax.swing.JFrame {
      * @return the cléPublique
      */
     public PublicKey getCléPublique() {
-        return cléPublique;
+        return getCléPubliqueServer();
     }
 
     /**
-     * @param cléPublique the cléPublique to set
+     * @param cléPubliqueServer the cléPubliqueServer to set
      */
-    public void setCléPublique(PublicKey cléPublique) {
-        this.cléPublique = cléPublique;
+    public void setCléPublique(PublicKey cléPubliqueServer) {
+        this.cléPubliqueServer = cléPubliqueServer;
     }
 
     /**
@@ -372,5 +414,40 @@ public class InterfaceClient extends javax.swing.JFrame {
      */
     public void setKeyCipher(SecretKey keyCipher) {
         this.keyCipher = keyCipher;
+    }
+
+    /**
+     * @return the cléPubliquePayment
+     */
+    public PublicKey getCléPubliquePayment() {
+        return cléPubliquePayment;
+    }
+
+    /**
+     * @return the cléPubliqueServer
+     */
+    public PublicKey getCléPubliqueServer() {
+        return cléPubliqueServer;
+    }
+
+    /**
+     * @return the certifPay
+     */
+    public X509Certificate getCertifPay() {
+        return certifPay;
+    }
+
+    /**
+     * @return the cléPubliqueOperator
+     */
+    public PublicKey getCléPubliqueOperator() {
+        return cléPubliqueOperator;
+    }
+
+    /**
+     * @return the cléPrivéeOperator
+     */
+    public PrivateKey getCléPrivéeOperator() {
+        return cléPrivéeOperator;
     }
 }

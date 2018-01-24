@@ -5,17 +5,22 @@
  */
 package clientServeurSocket;
 
+import PAYP.RequetePAYP;
 import TICKMAP.RequeteTICKMAP;
 import Utilities.Encryption;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Mac;
+import javax.crypto.*;
+import java.security.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -29,6 +34,7 @@ public class ReservationVols extends javax.swing.JDialog {
     private String idVols;
     private java.awt.Frame Parent;
     private String message;
+    private int prix;
     public ReservationVols(java.awt.Frame parent, boolean modal,String str) {
         super(parent, modal);
         initComponents();
@@ -86,7 +92,7 @@ public class ReservationVols extends javax.swing.JDialog {
         jTextAreaReponse.setRows(5);
         jScrollPane1.setViewportView(jTextAreaReponse);
 
-        jButtonAccept.setText("Confirmation de la commande");
+        jButtonAccept.setText("Payer");
         jButtonAccept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAcceptActionPerformed(evt);
@@ -128,9 +134,11 @@ public class ReservationVols extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonAccept))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonAccept)
+                        .addGap(196, 196, 196)))
+                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -138,10 +146,7 @@ public class ReservationVols extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonAccept))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -168,7 +173,9 @@ public class ReservationVols extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBoxAcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonAccept)
+                .addContainerGap(49, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonReservation)
@@ -209,7 +216,7 @@ public class ReservationVols extends javax.swing.JDialog {
             }
         ObjectInputStream ois = null;
         int [] placesReservees;
-        int prix;
+        
         try
         {
             ois = new ObjectInputStream(((InterfaceClient)Parent).cliSock.getInputStream());
@@ -250,6 +257,7 @@ public class ReservationVols extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonReservationActionPerformed
 
     private void jButtonAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAcceptActionPerformed
+        Socket cliSockPay = null;
         try {
             Mac hmac = Mac.getInstance("HMAC-MD5", "BC");
             hmac.init(((InterfaceClient)Parent).getKeyHmac());
@@ -279,6 +287,34 @@ public class ReservationVols extends javax.swing.JDialog {
             Logger.getLogger(ReservationVols.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+            cliSockPay = new Socket(((InterfaceClient)Parent).IP_ADDRESS, ((InterfaceClient)Parent).PORT_PAYMENT);
+            System.out.println(((InterfaceClient)Parent).IP_ADDRESS + " " + ((InterfaceClient)Parent).PORT_PAYMENT);
+            ObjectOutputStream oos =null;
+            String message = jTextFieldCB.getText() + "@" + ((InterfaceClient)Parent).Login + "@" + prix + "@" + idVols;
+            byte[] str = Encryption.convertToBytes(message);
+            byte[]reqCrypt = Encryption.encryptRSA(((InterfaceClient)Parent).getCléPubliquePayment(), message);
+            RequetePAYP pay = new RequetePAYP(RequetePAYP.REQUEST_PAY,reqCrypt);
+            
+            Signature s = Signature. getInstance("SHA1withRSA","BC");
+            System.out.println("Initialisation de la signature");
+            s.initSign(((InterfaceClient)Parent).getCléPrivéeOperator());
+            System.out.println("Hachage du message");
+            s.update(str);
+            System.out.println("Generation des bytes");
+            byte[] signature = s.sign();            
+            pay.setSignature(signature);
+            
+            oos= new ObjectOutputStream(cliSockPay.getOutputStream());
+            oos.writeObject(pay); oos.flush();
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ReservationVols.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ReservationVols.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
         
