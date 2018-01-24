@@ -69,8 +69,7 @@ public class ThreadClientPay extends Thread {
             
             certifOperator = (X509Certificate)ks.getCertificate("tour_operator");
             cléPubliqueOperator = certifOperator.getPublicKey();
-            /*System.out.println("*** Cle publique recuperee = "+cléPublique.toString());
-            System.out.println(" *** Cle privee recuperee = " + cléPrivée.toString());*/
+
 
         } catch (KeyStoreException ex) {
             Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);

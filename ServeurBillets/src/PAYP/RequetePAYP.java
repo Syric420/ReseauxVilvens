@@ -97,7 +97,10 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             System.out.println("Verification de la signature construite");
             boolean ok = sign.verify(signature);
             if(ok)
+            {
+                //envoit num cb
                 System.out.println("OK");
+            }
             else
                 System.out.println("fk");
             
