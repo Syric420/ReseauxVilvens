@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package clientServeurSocket;
+import TICKMAP.ReponseTICKMAP;
 import TICKMAP.RequeteTICKMAP;
 import java.io.*;
 import java.net.*;
@@ -12,7 +13,6 @@ import static java.lang.System.exit;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
-import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
@@ -43,10 +43,24 @@ public class InterfaceClient extends javax.swing.JFrame {
             exit(0);
         else
         {
-        
+            System.out.println("Test");
+            ReponseTICKMAP rep = null;
+            try
+            {
+                ois = new ObjectInputStream(cliSock.getInputStream());
+                rep = (ReponseTICKMAP)ois.readObject();
+            }
+            catch (ClassNotFoundException e)
+            { 
+                System.out.println("--- erreur sur la classe = " + e.getMessage()); 
+            } catch (IOException ex) {
+                Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            iniTable(rep.getChargeUtile());
         }
         
     }
+    
         private void Conf()
     {
         ReadProperties rP ;
@@ -85,6 +99,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         JLabel_Etat = new javax.swing.JLabel();
         JB_Connecter = new javax.swing.JButton();
         JB_Deconnecter = new javax.swing.JButton();
+        jButtonReserve = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -127,6 +142,13 @@ public class InterfaceClient extends javax.swing.JFrame {
             }
         });
 
+        jButtonReserve.setText("Reserver");
+        jButtonReserve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReserveActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,7 +169,10 @@ public class InterfaceClient extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(JB_Connecter)
                                 .addGap(106, 106, 106)
-                                .addComponent(JB_Deconnecter)))))
+                                .addComponent(JB_Deconnecter))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(308, 308, 308)
+                        .addComponent(jButtonReserve)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -163,7 +188,9 @@ public class InterfaceClient extends javax.swing.JFrame {
                     .addComponent(JB_Deconnecter))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonReserve)
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -220,6 +247,13 @@ public class InterfaceClient extends javax.swing.JFrame {
         JLabel_Etat.setText("Connecté");
         
     }//GEN-LAST:event_JB_ConnecterActionPerformed
+
+    private void jButtonReserveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReserveActionPerformed
+        int i =jTable1.getSelectedRow();
+        String idVols = jTable1.getValueAt(i, 0).toString();
+        ReservationVols res = new ReservationVols(this,true,idVols);
+        res.setVisible(true);
+    }//GEN-LAST:event_jButtonReserveActionPerformed
     
     private void iniTable(String tab)
     {
@@ -291,6 +325,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     private javax.swing.JButton JB_Deconnecter;
     private javax.swing.JLabel JLabel_Etat;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButtonReserve;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

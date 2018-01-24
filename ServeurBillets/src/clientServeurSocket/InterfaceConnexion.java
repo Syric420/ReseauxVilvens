@@ -8,11 +8,8 @@ package clientServeurSocket;
 import TICKMAP.ReponseTICKMAP;
 import TICKMAP.RequeteTICKMAP;
 import Utilities.*;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -190,19 +187,12 @@ public class InterfaceConnexion extends javax.swing.JDialog {
             //envoi des cles sym
             ObjectOutputStream oos =null;
             oos= new ObjectOutputStream(cliSock.getOutputStream());
-            //String str ="SALUT LES AMIS";
-            //byte[]req=Encryption.convertToBytes(str);
-            /*byte[]reqCrypt = Encryption.encryptRSA(pK, str);
-            Encryption crypt = new Encryption();
-            crypt.setMessage(reqCrypt);
-            oos.writeObject(crypt); oos.flush();*/
-            
-            //byte[]req=Encryption.convertToBytes(guiParent.getKeyCipher());
+
             byte[]reqCrypt = Encryption.encryptRSA(pK, guiParent.getKeyCipher());
             Encryption crypt = new Encryption();
             crypt.setMessage(reqCrypt);
             oos.writeObject(crypt); oos.flush();
-            //req=Encryption.convertToBytes(guiParent.getKeyHmac());
+
             reqCrypt = Encryption.encryptRSA(pK, guiParent.getKeyHmac());
             oos.writeObject(reqCrypt); oos.flush();
 
@@ -282,10 +272,4 @@ public class InterfaceConnexion extends javax.swing.JDialog {
     public void setLogged(boolean logged) {
         this.logged = logged;
     }
-     /*private Object convertFromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
-    try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-         ObjectInput in = new ObjectInputStream(bis)) {
-        return in.readObject();
-    }
-    }*/
 }

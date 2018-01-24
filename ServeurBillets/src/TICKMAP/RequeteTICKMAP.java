@@ -125,7 +125,20 @@ public class RequeteTICKMAP implements Requete, Serializable
         }
         
         if(rep.getChargeUtile().equals("LOGIN OK"))
+        {
             handshake(sock);
+            //envoit des vols
+            rep= new ReponseTICKMAP(ReponseTICKMAP.VOL_LOADED,Bc.findVols());
+            try
+            {
+                oos = new ObjectOutputStream(sock.getOutputStream());
+                oos.writeObject(rep); oos.flush();
+            }
+            catch (IOException e)
+            {
+                System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+            }
+        }
 
     }
     private void handshake(Socket sock)
@@ -135,10 +148,6 @@ public class RequeteTICKMAP implements Requete, Serializable
         try
         {
             ois = new ObjectInputStream(sock.getInputStream());
-            /*byte[]tmp = ((Encryption)ois.readObject()).getMessage();
-            byte[]messageClair=Encryption.decryptRSA(thread.getCléPrivée(), tmp); 
-            String var1 =(String)Encryption.convertFromBytes(messageClair);
-            System.out.println(var100);*/
             
             byte[] tmp = ((Encryption)ois.readObject()).getMessage();
             byte[] messageClair=Encryption.decryptRSA(thread.getCléPrivée(), tmp); 

@@ -64,8 +64,8 @@ public class ThreadClient extends Thread {
             certif = (X509Certificate)ks.getCertificate("serveur");
             cléPublique = certif.getPublicKey();            
             setCléPrivée((PrivateKey) ks.getKey("serveur", "123".toCharArray()));
-            System.out.println("*** Cle publique recuperee = "+cléPublique.toString());
-            System.out.println(" *** Cle privee recuperee = " + cléPrivée.toString());
+            /*System.out.println("*** Cle publique recuperee = "+cléPublique.toString());
+            System.out.println(" *** Cle privee recuperee = " + cléPrivée.toString());*/
 
         } catch (KeyStoreException ex) {
             Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);

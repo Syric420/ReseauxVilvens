@@ -16,6 +16,7 @@ public class ReponseTICKMAP implements Reponse, Serializable
 {
     public static int LOGIN_OK = 101;
     public static int LOGIN_FAIL = 102;
+    public static int VOL_LOADED = 103;
     
     private int codeRetour;
     private String chargeUtile;

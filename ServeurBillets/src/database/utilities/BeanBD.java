@@ -192,7 +192,7 @@ public class BeanBD {
         String str = "";
         String monVec[]={};
         try {
-            setRs(getInstruc().executeQuery("select * from sys.vols where HeureDepart = curdate();"));
+            setRs(getInstruc().executeQuery("select * from sys.vols where HeureDepart BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)"));
             
             ResultSetMetaData rsmd = getRs().getMetaData();
             int nbrCol = rsmd.getColumnCount();

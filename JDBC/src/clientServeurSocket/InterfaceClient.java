@@ -240,7 +240,9 @@ public class InterfaceClient extends javax.swing.JFrame {
         IntBagages = new InterfaceBagages(this,true,str,cliSock);
         IntBagages.setVisible(true);
         
-    }    private void LoadVols()
+    }    
+    
+    private void LoadVols()
     {
         ObjectOutputStream oos =null;
         RequeteLUGAP req = null;
