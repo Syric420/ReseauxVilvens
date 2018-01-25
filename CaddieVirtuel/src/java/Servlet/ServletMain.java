@@ -5,20 +5,32 @@
  */
 package Servlet;
 
+import PAYP.RequetePAYP;
+import ServerPayment.ThreadClientPay;
+import TICKMAP.RequeteTICKMAP;
+import Utilities.Encryption;
+import clientServeurSocket.InterfaceClient;
 import database.utilities.*;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URLEncoder;
+import java.security.Security;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -182,29 +194,103 @@ public class ServletMain extends HttpServlet {
                     str = request.getParameter("pushedbutton");
                     System.out.println(str);
                     String temp [] = str.split(";");
-                    if(temp[0].equals("CANCEL"))
-                    {
-                        String requete ="select PlacesRestantes from vols where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
-                        tmp = BeanBD.selectInt(requete);
-                        requete ="select NombreDePlaces from volsreserves where idVOlsReserves = '" + temp[1] + "';";
-                        int tmp2 = BeanBD.selectInt(requete);
-                        System.out.println("Nombre de places du vols : " + tmp + "Nombre annulé :" + tmp2);
-                        int var= tmp+ tmp2;
-                        String update="update vols set PlacesRestantes = '"+ var + "' where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
-                        System.out.println(update);
-                        BeanBD.Update(update);
-                        update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
-                        System.out.println(update);
-                        BeanBD.payeVols(update);
+                    
+                    Socket cliSockPay = null;
+                    
+                    Security.addProvider(new BouncyCastleProvider());
+                    
+                    X509Certificate certifPay;
+                    PublicKey cléPubliquePayment = null;
+                    X509Certificate certifOperator;
+                    PublicKey cléPubliqueOperator;
+                    PrivateKey cléPrivéeOperator;
+                     KeyStore ks;
+                    try {
+                        Security.addProvider(new BouncyCastleProvider());
+                        InputStream input = null;
+                        ks = KeyStore.getInstance("JCEKS");
+                        input = this.getClass().getResourceAsStream("/Cles/ClesLabo.jceks");
+                        ks.load(input,"123".toCharArray());
+                        certifPay = (X509Certificate)ks.getCertificate("serveur_payment");
+                        cléPubliquePayment = certifPay.getPublicKey(); 
 
-                    }
-                    else if(temp[0].equals("CONFIRM"))
-                    {
-                        String update="UPDATE volsreserves SET `Paye`='1' WHERE `idVolsReserves`='"+ temp[1] + "';";
-                        System.out.println(update);
-                        BeanBD.payeVols(update);
-                    }
 
+                        certifOperator = (X509Certificate)ks.getCertificate("tour_operator");
+                        cléPubliqueOperator = certifOperator.getPublicKey();
+                        cléPrivéeOperator = (PrivateKey) ks.getKey("serveur_payment", "123".toCharArray());
+                        String message ="";
+                        if(temp[0].equals("CANCEL"))
+                        {
+                            message = "CB" + "@" + Log + "@" + 50 + "@" + temp[1] +"@" + "CANCEL";
+                        }
+                        else if(temp[0].equals("CONFIRM"))
+                        {
+                            message = "CB" + "@" + Log + "@" + 50 + "@" + temp[1]+"@" + "CONFIRMED";
+                        }
+                        byte[] bytearray = Encryption.convertToBytes(message);
+                        byte[]reqCrypt = Encryption.encryptRSA(cléPubliquePayment, message);
+                        RequetePAYP pay = new RequetePAYP(RequetePAYP.REQUEST_PAY,reqCrypt);
+
+                        Signature s = Signature. getInstance("SHA1withRSA","BC");
+                        System.out.println("Initialisation de la signature");
+                        s.initSign(cléPrivéeOperator);
+                        System.out.println("Hachage du message");
+                        s.update(bytearray);
+                        System.out.println("Generation des bytes");
+                        byte[] signature = s.sign();            
+                        pay.setSignature(signature);
+                        
+                        cliSockPay = new Socket("192.168.1.3", 26085);
+                        ObjectOutputStream oos =null;
+                        oos= new ObjectOutputStream(cliSockPay.getOutputStream());
+                        oos.writeObject(pay); oos.flush();
+                        
+                        
+                    } catch (KeyStoreException ex) {
+                        Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (CertificateException ex) {
+                        Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ThreadClientPay.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+
+                    
+        {
+            try {
+                /*if(temp[0].equals("CANCEL"))
+                {
+                String requete ="select PlacesRestantes from vols where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                tmp = BeanBD.selectInt(requete);
+                requete ="select NombreDePlaces from volsreserves where idVOlsReserves = '" + temp[1] + "';";
+                int tmp2 = BeanBD.selectInt(requete);
+                System.out.println("Nombre de places du vols : " + tmp + "Nombre annulé :" + tmp2);
+                int var= tmp+ tmp2;
+                String update="update vols set PlacesRestantes = '"+ var + "' where idVols =(select idVols from volsreserves where idVOlsReserves = '" + temp[1] + "');";
+                System.out.println(update);
+                BeanBD.Update(update);
+                update="delete from volsreserves where idVolsReserves ='"+ temp[1] + "';";
+                System.out.println(update);
+                BeanBD.payeVols(update);
+                
+                }
+                else if(temp[0].equals("CONFIRM"))
+                {
+                String update="UPDATE volsreserves SET `Paye`='1' WHERE `idVolsReserves`='"+ temp[1] + "';";
+                System.out.println(update);
+                BeanBD.payeVols(update);
+                }
+                */
+                
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ServletMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
                     q = "select idVols,Destination,NombreDePlaces,HeureArrivee,HeureDepart,Paye from volsreserves natural join (vols) where utilisateur ='" + Log + "';" ;
                     donnee=BeanBD.selectVols(q);
                     rd = sc.getRequestDispatcher("/JSPInit.jsp");

@@ -295,7 +295,7 @@ public class ReservationVols extends javax.swing.JDialog {
             cliSockPay = new Socket(((InterfaceClient)Parent).IP_ADDRESS, ((InterfaceClient)Parent).PORT_PAYMENT);
             System.out.println(((InterfaceClient)Parent).IP_ADDRESS + " " + ((InterfaceClient)Parent).PORT_PAYMENT);
             ObjectOutputStream oos =null;
-            String message = jTextFieldCB.getText() + "@" + ((InterfaceClient)Parent).Login + "@" + prix + "@" + idVolsReserve;
+            String message = jTextFieldCB.getText() + "@" + ((InterfaceClient)Parent).Login + "@" + prix + "@" + idVolsReserve + "@CONFIRMED";
             byte[] str = Encryption.convertToBytes(message);
             byte[]reqCrypt = Encryption.encryptRSA(((InterfaceClient)Parent).getCléPubliquePayment(), message);
             RequetePAYP pay = new RequetePAYP(RequetePAYP.REQUEST_PAY,reqCrypt);

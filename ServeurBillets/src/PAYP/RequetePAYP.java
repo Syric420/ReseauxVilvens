@@ -98,31 +98,32 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             sign.update(messageClair);
             System.out.println("Verification de la signature construite");
             boolean ok = sign.verify(signature);
-            if(ok)
+            RequeteTICKMAP req;
+            if(ok && var.contains("CONFIRMED"))
             {
-                //envoit num cb
                 System.out.println("OK");
                 String []str = var.split("@");
                 
                 var = str[3] +"@OK";
                 System.out.println(var);
-                RequeteTICKMAP req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
-                ReadProperties rP ;
-                rP = new ReadProperties("/clientServeurSocket/Config.properties");
-                String IP_ADDRESS = rP.getProp("IP_ADDRESS");
-                int PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
-                Socket cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
-                ObjectOutputStream oos =null;
-                oos= new ObjectOutputStream(cliSock.getOutputStream());
-                oos.writeObject(req);               
+                req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
+               
                 
             }
             else
             {
                 System.out.println("fk");
                 var = var +"@@FAIL";
+                req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
             }
-                
+            ReadProperties rP ;
+            rP = new ReadProperties("/clientServeurSocket/Config.properties");
+            String IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            int PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            Socket cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+            ObjectOutputStream oos =null;
+            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            oos.writeObject(req);  
             
         } catch (IOException ex) {
             Logger.getLogger(RequetePAYP.class.getName()).log(Level.SEVERE, null, ex);

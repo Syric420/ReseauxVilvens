@@ -25,6 +25,7 @@ public class RequeteTICKMAP implements Requete, Serializable
     public static int REQUEST_DECONNECT = 2;   
     public static int REQUEST_BUYTICKETS = 3; 
     public static int REQUEST_CONFIRMATION = 4;
+    public static int REQUEST_WEBPAY = 5;
     private byte [] ByteArray;
     private byte [] MessageCrypte;
     private BeanBD Bc;
