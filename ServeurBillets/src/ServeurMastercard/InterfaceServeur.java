@@ -150,7 +150,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         {
             try {
                 ts.interrupt();
-                ts.getSSocket().close();
+                ts.getSslSSocket().close();
                 jButton1.setEnabled(true);
                 jButton2.setEnabled(false);
             } catch (IOException ex) {

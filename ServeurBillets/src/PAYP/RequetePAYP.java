@@ -16,6 +16,7 @@ import Utilities.Identify;
 import Utilities.ReadProperties;
 import clientServeurSocket.InterfaceClient;
 import database.utilities.*;
+import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -24,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.net.ssl.*;
 
 public class RequetePAYP implements ServerPayment.Requete, Serializable
 {
@@ -86,6 +88,8 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
     }*/
     private void pay(final Socket s,PublicKey cléPublique,PrivateKey cléPrivée)
     {
+        SSLSocket SslSocket;
+        Socket cliSock;
         try {
             ThreadClientPay thread = (ThreadClientPay) Thread.currentThread();
             
@@ -101,6 +105,29 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             System.out.println("Verification de la signature construite");
             boolean ok = sign.verify(signature);
             RequeteTICKMAP req;
+            
+            // *** Version sécurisée ***
+            // 1. Keystore
+            KeyStore ServerKs = KeyStore.getInstance("JKS");
+            String FICHIER_KEYSTORE = "c:\\makecert\\serveur_keystore";
+            char[] PASSWD_KEYSTORE = "azerty".toCharArray();
+            FileInputStream ServerFK = new FileInputStream (FICHIER_KEYSTORE);
+            ServerKs.load(ServerFK, PASSWD_KEYSTORE);
+            // 2. Contexte
+            SSLContext SslC = SSLContext.getInstance("SSLv3");
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            char[] PASSWD_KEY = "azerty".toCharArray();
+            kmf.init(ServerKs, PASSWD_KEY);
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(ServerKs);
+            SslC.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+            // 3. Factory
+            SSLSocketFactory SslSFac= SslC.getSocketFactory();
+            
+            
+            
+            
+            
             //On vérifie si l'utilisateur a assez sur son compte
             String var2 = var;
             String []str = var.split("@");
@@ -110,14 +137,18 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             rP = new ReadProperties("/ServerPayment/Config.properties");
             String IP_ADDRESS = rP.getProp("IP_ADDRESS");
             int PORT_MASTERCARD = Integer.parseInt(rP.getProp("PORT_MASTERCARD"));
-            Socket cliSock = new Socket(IP_ADDRESS, PORT_MASTERCARD);
+            
+            // 4. Socket
+            SslSocket = (SSLSocket) SslSFac.createSocket(IP_ADDRESS, PORT_MASTERCARD);
+            
+            
             ObjectOutputStream oos =null;
-            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            oos= new ObjectOutputStream(SslSocket.getOutputStream());
             oos.writeObject(requeteSeba);  
             
             ObjectInputStream ois =null;
             ReponseSEBATRAP rep;
-            ois = new ObjectInputStream(cliSock.getInputStream());
+            ois = new ObjectInputStream(SslSocket.getInputStream());
             rep = (ReponseSEBATRAP)ois.readObject();
             
             
@@ -143,7 +174,7 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
                 
                 requeteSeba = new RequeteSEBATRAP(RequeteSEBATRAP.REQUEST_PAIEMENT, var2);
                 oos =null;
-                oos= new ObjectOutputStream(cliSock.getOutputStream());
+                oos= new ObjectOutputStream(SslSocket.getOutputStream());
                 oos.writeObject(requeteSeba);  
                 
                 req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);

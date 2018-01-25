@@ -19,6 +19,7 @@ import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
+import javax.net.ssl.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -31,7 +32,7 @@ public class ThreadClient extends Thread {
     private SourceTaches tachesAExecuter;
     private String nom;
     private Runnable tacheEnCours;
-    private Socket mySock;
+    private SSLSocket mySock;
     private BeanBD Bc;
     private ConsoleServeur guiApplication;
     
@@ -43,7 +44,7 @@ public class ThreadClient extends Thread {
     
     private X509Certificate certifOperator;
     private PublicKey cléPubliqueOperator;
-    public ThreadClient(SourceTaches st, String n, Socket s, ConsoleServeur fs)
+    public ThreadClient(SourceTaches st, String n, SSLSocket s, ConsoleServeur fs)
     {
         tachesAExecuter = st;
         nom = n;
@@ -130,11 +131,11 @@ public class ThreadClient extends Thread {
         }
     }
 
-    public Socket getMySock() {
+    public SSLSocket getMySock() {
         return mySock;
     }
 
-    public void setMySock(Socket mySock) {
+    public void setMySock(SSLSocket mySock) {
         this.mySock = mySock;
     }
 
