@@ -52,6 +52,30 @@ public class BeanBD {
         }
         return var;
     }
+    public synchronized int findArgent(String user)
+    {
+         try {
+            
+            setRs(getInstruc().executeQuery("Select Argent from comptebancaire where Nom = '" + user + "';"));
+            //setRs(getInstruc().executeQuery("Select password from sys.login where user = '" + user + "';"));
+            getRs().next();
+            int s =getRs().getInt("Argent");
+            return s;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public synchronized void setArgent(String user, int argent)
+    {
+         try {
+            
+            getInstruc().executeUpdate("UPDATE comptebancaire SET Argent='"+argent+"' WHERE nom='"+user+"';");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public synchronized boolean reserveVols(String update,String insert)
     {
         try {

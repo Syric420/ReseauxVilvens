@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package PAYP;
+import SEBATRAP.ReponseSEBATRAP;
+import SEBATRAP.RequeteSEBATRAP;
 import java.io.*;
 import java.net.*;
 import Server.*;
@@ -99,15 +101,55 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             System.out.println("Verification de la signature construite");
             boolean ok = sign.verify(signature);
             RequeteTICKMAP req;
+            //On vérifie si l'utilisateur a assez sur son compte
+            String var2 = var;
+            String []str = var.split("@");
+            
+            RequeteSEBATRAP requeteSeba = new RequeteSEBATRAP(RequeteSEBATRAP.REQUEST_VERIF, var2);
+            ReadProperties rP ;
+            rP = new ReadProperties("/ServerPayment/Config.properties");
+            String IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            int PORT_MASTERCARD = Integer.parseInt(rP.getProp("PORT_MASTERCARD"));
+            Socket cliSock = new Socket(IP_ADDRESS, PORT_MASTERCARD);
+            ObjectOutputStream oos =null;
+            oos= new ObjectOutputStream(cliSock.getOutputStream());
+            oos.writeObject(requeteSeba);  
+            
+            ObjectInputStream ois =null;
+            ReponseSEBATRAP rep;
+            ois = new ObjectInputStream(cliSock.getInputStream());
+            rep = (ReponseSEBATRAP)ois.readObject();
+            
+            
+            if(rep.getCode()==ReponseSEBATRAP.VERIF_OK && ok==true)
+            {
+                ok=true;
+            }
+            else
+            {
+                ok = false;
+            }
+            
+            System.out.println("ok = "+ok);
+            System.out.println("rep = "+rep.getCode());
             if(ok && var.contains("CONFIRMED"))
             {
                 System.out.println("OK");
-                String []str = var.split("@");
+                
                 
                 var = str[3] +"@OK";
-                System.out.println(var);
+                //System.out.println(var);
+                //On envoie ici la requête paiement pour qu'il débite bien le compte bancaire de la personne
+                
+                requeteSeba = new RequeteSEBATRAP(RequeteSEBATRAP.REQUEST_PAIEMENT, var2);
+                oos =null;
+                oos= new ObjectOutputStream(cliSock.getOutputStream());
+                oos.writeObject(requeteSeba);  
+                
                 req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
-               
+
+                
+                
                 
             }
             else
@@ -116,12 +158,11 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
                 var = var +"@@FAIL";
                 req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
             }
-            ReadProperties rP ;
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
-            String IP_ADDRESS = rP.getProp("IP_ADDRESS");
+            IP_ADDRESS = rP.getProp("IP_ADDRESS");
             int PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
-            Socket cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
-            ObjectOutputStream oos =null;
+            cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+            oos =null;
             oos= new ObjectOutputStream(cliSock.getOutputStream());
             oos.writeObject(req);  
             
