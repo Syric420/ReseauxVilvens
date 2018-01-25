@@ -155,7 +155,7 @@ public class BeanBD {
         try {
             
             
-            setRs(getInstruc().executeQuery("Select password from login where user = 'Thib';"));
+            setRs(getInstruc().executeQuery("Select password from login where user = '" + user + "';"));
             //setRs(getInstruc().executeQuery("Select password from sys.login where user = '" + user + "';"));
             getRs().next();
             String s =getRs().getString("password");
