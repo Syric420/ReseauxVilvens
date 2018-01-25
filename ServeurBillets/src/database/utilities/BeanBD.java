@@ -63,6 +63,14 @@ public class BeanBD {
         }
         return true;
     }
+    public synchronized void payeVols(String update)
+    {
+        try {
+            getInstruc().executeUpdate(update);
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * @return the con
      */

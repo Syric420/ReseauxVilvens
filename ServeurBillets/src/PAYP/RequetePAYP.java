@@ -8,8 +8,10 @@ import java.io.*;
 import java.net.*;
 import Server.*;
 import ServerPayment.*;
+import TICKMAP.RequeteTICKMAP;
 import Utilities.Encryption;
 import Utilities.Identify;
+import Utilities.ReadProperties;
 import clientServeurSocket.InterfaceClient;
 import database.utilities.*;
 import java.security.MessageDigest;
@@ -104,6 +106,16 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
                 
                 var = str[3] +"@OK";
                 System.out.println(var);
+                RequeteTICKMAP req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
+                ReadProperties rP ;
+                rP = new ReadProperties("/clientServeurSocket/Config.properties");
+                String IP_ADDRESS = rP.getProp("IP_ADDRESS");
+                int PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+                Socket cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+                ObjectOutputStream oos =null;
+                oos= new ObjectOutputStream(cliSock.getOutputStream());
+                oos.writeObject(req);               
+                
             }
             else
             {

@@ -24,6 +24,7 @@ public class RequeteTICKMAP implements Requete, Serializable
     public static int REQUEST_CONNECT = 1;
     public static int REQUEST_DECONNECT = 2;   
     public static int REQUEST_BUYTICKETS = 3; 
+    public static int REQUEST_CONFIRMATION = 4;
     private byte [] ByteArray;
     private byte [] MessageCrypte;
     private BeanBD Bc;
@@ -74,6 +75,16 @@ public class RequeteTICKMAP implements Requete, Serializable
                     AchatTickets(s, cs);
                 }
             };
+            else 
+            if(getType() == REQUEST_CONFIRMATION)
+        
+            return new Runnable()
+            {
+                public void run()
+                {
+                    Confirm(s, cs);
+                }
+            };
             else return null;
     }
     /*public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
@@ -89,6 +100,22 @@ public class RequeteTICKMAP implements Requete, Serializable
             };
         else return null;
     }*/
+    private void Confirm(Socket sock, ConsoleServeur cs)
+    {
+        System.out.println("CONFIRMATION PAYMENT");
+        String [] str;
+        str = chargeUtile.split("@");
+        String update;
+        if(chargeUtile.contains("OK"))
+        {
+            update = "UPDATE volsreserves SET `Paye`='1' WHERE `idVolsReserves`='"+ str[0] + "';";
+        }
+        else
+            update="UPDATE volsreserves SET `Paye`='1' WHERE `idVolsReserves`='"+ str[0] + "';";
+        
+        System.out.println(update);
+        Bc.payeVols(update);
+    }
     private void AchatTickets(Socket sock, ConsoleServeur cs)
     {
         try {
