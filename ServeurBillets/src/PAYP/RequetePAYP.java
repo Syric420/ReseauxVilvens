@@ -100,9 +100,14 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             {
                 //envoit num cb
                 System.out.println("OK");
+                var = var +"@@OK";
             }
             else
+            {
                 System.out.println("fk");
+                var = var +"@@FAIL";
+            }
+                
             
         } catch (IOException ex) {
             Logger.getLogger(RequetePAYP.class.getName()).log(Level.SEVERE, null, ex);
