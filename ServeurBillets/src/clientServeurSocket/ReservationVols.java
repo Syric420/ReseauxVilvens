@@ -35,6 +35,7 @@ public class ReservationVols extends javax.swing.JDialog {
     private java.awt.Frame Parent;
     private String message;
     private int prix;
+    String idVolsReserve;
     public ReservationVols(java.awt.Frame parent, boolean modal,String str) {
         super(parent, modal);
         initComponents();
@@ -229,6 +230,7 @@ public class ReservationVols extends javax.swing.JDialog {
             String [] temp1, temp2;
             temp1 = var.split("@");
             prix = Integer.parseInt(temp1[1]);
+            idVolsReserve = temp1[3];
             temp2 = temp1[0].split(";");
             placesReservees = new int[temp2.length];
             jTextAreaReponse.setText("Voici les numeros de sieges attribués :");
@@ -293,7 +295,7 @@ public class ReservationVols extends javax.swing.JDialog {
             cliSockPay = new Socket(((InterfaceClient)Parent).IP_ADDRESS, ((InterfaceClient)Parent).PORT_PAYMENT);
             System.out.println(((InterfaceClient)Parent).IP_ADDRESS + " " + ((InterfaceClient)Parent).PORT_PAYMENT);
             ObjectOutputStream oos =null;
-            String message = jTextFieldCB.getText() + "@" + ((InterfaceClient)Parent).Login + "@" + prix + "@" + idVols;
+            String message = jTextFieldCB.getText() + "@" + ((InterfaceClient)Parent).Login + "@" + prix + "@" + idVolsReserve;
             byte[] str = Encryption.convertToBytes(message);
             byte[]reqCrypt = Encryption.encryptRSA(((InterfaceClient)Parent).getCléPubliquePayment(), message);
             RequetePAYP pay = new RequetePAYP(RequetePAYP.REQUEST_PAY,reqCrypt);

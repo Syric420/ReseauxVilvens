@@ -100,7 +100,10 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             {
                 //envoit num cb
                 System.out.println("OK");
-                var = var +"@@OK";
+                String []str = var.split("@");
+                
+                var = str[3] +"@OK";
+                System.out.println(var);
             }
             else
             {

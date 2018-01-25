@@ -119,7 +119,7 @@ public class RequeteTICKMAP implements Requete, Serializable
                 System.out.println("Places restantes : " + tmp);
                 String update="UPDATE vols SET `PlacesRestantes`='" + tmp + "' WHERE `idVols`='"+ arrayCol[0] + "';";
                 String insert = "INSERT INTO volsreserves  (`idVolsReserves`, `Utilisateur`, `idVols`, `NombreDePlaces`,`Paye`) VALUES ('"+ arrayCol[1] +  arrayCol[0] + tmp + "', '" + arrayCol[1] + "', '"+  arrayCol[0] + "', '" + nbreDemande + "', '0' );";
-                
+                String idVolsReserve = arrayCol[1] +  arrayCol[0] + tmp;
                 System.out.println(update);
                 System.out.println(insert);
                 Bc.reserveVols(update,insert);
@@ -131,7 +131,7 @@ public class RequeteTICKMAP implements Requete, Serializable
                     prix = prix + 50;
                 }
                 message = message + "@";
-                message = message + prix;
+                message = message + prix + "@" + arrayCol[0] + "@" + idVolsReserve;
                 byte[]reqCrypt = Encryption.encryptDES(thread.getKeyCipher(),message);
                 
                 crypt.setMessage(reqCrypt);
