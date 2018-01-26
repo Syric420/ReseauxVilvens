@@ -27,3 +27,6 @@
 /ServeurBillets/nbproject/private/
 /ServeurBillets/build/
 /ServeurBillets/dist/
+/ServeurBillets/src/Server/Config.properties
+/ServeurBillets/src/ServerPayment/Config.properties
+/ServeurBillets/src/database/utilities/Config.properties

@@ -6,22 +6,16 @@
 package PAYP;
 import java.io.*;
 import java.net.*;
-import Server.*;
 import ServerPayment.*;
 import TICKMAP.RequeteTICKMAP;
 import Utilities.Encryption;
-import Utilities.Identify;
 import Utilities.ReadProperties;
-import clientServeurSocket.InterfaceClient;
 import database.utilities.*;
-import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
 
 public class RequetePAYP implements ServerPayment.Requete, Serializable
 {
