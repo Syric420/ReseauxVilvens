@@ -8,13 +8,10 @@ import SEBATRAP.ReponseSEBATRAP;
 import SEBATRAP.RequeteSEBATRAP;
 import java.io.*;
 import java.net.*;
-import Server.*;
 import ServerPayment.*;
 import TICKMAP.RequeteTICKMAP;
 import Utilities.Encryption;
-import Utilities.Identify;
 import Utilities.ReadProperties;
-import clientServeurSocket.InterfaceClient;
 import database.utilities.*;
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -26,6 +23,7 @@ import java.util.logging.Logger;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.net.ssl.*;
+
 
 public class RequetePAYP implements ServerPayment.Requete, Serializable
 {
