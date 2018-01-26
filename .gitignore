@@ -30,3 +30,4 @@
 /ServeurBillets/src/Server/Config.properties
 /ServeurBillets/src/ServerPayment/Config.properties
 /ServeurBillets/src/database/utilities/Config.properties
+/ServeurBillets/src/clientServeurSocket/Config.properties
