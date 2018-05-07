@@ -33,6 +33,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         initComponents();
         TraceEvenements("Serveur#initialisation");
         TraceEvenements("Serveur#acquisition du port");
+        System.out.println("nbthreads = "+nbThreads);
         ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
         ts.start();
     }

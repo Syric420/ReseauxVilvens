@@ -27,7 +27,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  */
 public class ThreadClient extends Thread {
 
-
     private SourceTaches tachesAExecuter;
     private String nom;
     private Runnable tacheEnCours;
@@ -40,22 +39,20 @@ public class ThreadClient extends Thread {
     private PublicKey cléPublique;
     private SecretKey keyHmac;
     private SecretKey keyCipher;
-    public ThreadClient(SourceTaches st, String n, Socket s, ConsoleServeur fs )
+    public ThreadClient(SourceTaches st, String n, Socket s, ConsoleServeur fs, BeanBD BD )
     {
         tachesAExecuter = st;
         nom = n;
         mySock = s;
         guiApplication = fs;
-        Bc = new BeanBD();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
+        Bc = BD;
        
     }
     
     public void run()
     {        
-        KeyStore ks;
-        try {
+            KeyStore ks;
+            try {
             Security.addProvider(new BouncyCastleProvider());
             InputStream input = null;
             ks = KeyStore.getInstance("JCEKS");
@@ -83,47 +80,23 @@ public class ThreadClient extends Thread {
 
        while (!isInterrupted())
         {
-            if(mySock!=null)
-           {
-                
-                ObjectInputStream ois=null;
-                RequeteTICKMAP req = null;
-                try
-                {
-                    ois = new ObjectInputStream(mySock.getInputStream());
-                    req = (RequeteTICKMAP)ois.readObject();
-                    req.setBc(Bc);
-                    guiApplication.TraceEvenements("Serveur#Requête reçue");
-                }
-                catch (ClassNotFoundException e)
-                {
-                    System.err.println("Erreur de def de classe [" + e.getMessage() + "]");
-                }
-                catch (IOException e)
-                {
-                    System.err.println("Erreur ? [" + e.getMessage() + "]");
-                }
-                
-                Runnable travail = req.createRunnable(mySock, guiApplication,cléPublique);
-                if (travail != null)
-                {
-                    tachesAExecuter.recordTache(travail);
-                }
-                else System.out.println("Pas de mise en file");
-
-                try
-                {
-                    tacheEnCours = tachesAExecuter.getTache();
-                }
-                catch (InterruptedException e)
-                {
-                    System.out.println("Interruption : " + e.getMessage());
-                }
-                tacheEnCours.run();
-                }
+            tacheEnCours=null;
+            try
+            {
+                tacheEnCours = tachesAExecuter.getTache();
+            }
+            catch (InterruptedException e)
+            {
+                System.out.println("Interruption : " + e.getMessage());
+            }
+            if(tacheEnCours!=null)
+            tacheEnCours.run();
         }
     }
-
+/*
+    
+    */
+    
     public Socket getMySock() {
         return mySock;
     }
