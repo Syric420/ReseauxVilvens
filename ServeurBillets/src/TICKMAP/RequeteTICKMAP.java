@@ -113,8 +113,7 @@ public class RequeteTICKMAP implements Requete, Serializable
             update = "UPDATE volsreserves SET `Paye`='1' WHERE `idVolsReserves`='"+ str[0] + "';";
         }
         else
-            update="UPDATE volsreserves SET `Paye`='0' WHERE `idVolsReserves`='"+ str[0] + "';";
-        
+            update="UPDATE volsreserves SET `Paye`='0' WHERE `idVolsReserves`='"+ str[0] + "';";        
         System.out.println(update);
         Bc.payeVols(update);
     }

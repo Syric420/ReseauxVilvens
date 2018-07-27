@@ -240,7 +240,7 @@ public class ServletMain extends HttpServlet {
                         byte[] signature = s.sign();            
                         pay.setSignature(signature);
                         
-                        cliSockPay = new Socket("192.168.1.3", 26085);
+                        cliSockPay = new Socket("10.59.22.72", 26085);
                         ObjectOutputStream oos =null;
                         oos= new ObjectOutputStream(cliSockPay.getOutputStream());
                         oos.writeObject(pay); oos.flush();

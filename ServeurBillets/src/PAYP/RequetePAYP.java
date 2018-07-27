@@ -183,8 +183,8 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             }
             else
             {
-                System.out.println("fk");
-                var = var +"@@FAIL";
+                System.out.println("NOTOK");
+                var = var +"@FAIL";
                 req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
             }
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
