@@ -17,16 +17,19 @@ public class ListeTaches implements SourceTaches {
     {
         listeTaches = new LinkedList();
     }
+    @Override
     public synchronized Runnable getTache() throws InterruptedException
     {
         System.out.println("getTache avant wait");
         while (!existTaches()) wait();
         return (Runnable)listeTaches.remove();
     }
+    @Override
     public synchronized boolean existTaches()
     {
         return !listeTaches.isEmpty();
     }
+    @Override
     public synchronized void recordTache (Runnable r)
     {
         listeTaches.addLast(r);
