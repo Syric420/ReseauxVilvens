@@ -2,25 +2,13 @@ package ServeurMastercard;
 
 import SEBATRAP.*;
 import database.utilities.*;
-import Utilities.Encryption;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.Socket;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.net.ssl.*;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
