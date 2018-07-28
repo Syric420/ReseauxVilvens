@@ -32,3 +32,5 @@
 /ServeurBillets/src/database/utilities/Config.properties
 /ServeurBillets/src/clientServeurSocket/Config.properties
 /Serveur_FlightsManagement/nbproject/private/
+/Serveur_FlightsManagement/build/
+/Serveur_FlightsManagement/dist/
