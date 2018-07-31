@@ -1,6 +1,6 @@
 package Server;
 
-import ProtocoleFM.RequeteFM;
+import ProtocoleXML.RequeteXML;
 import database.utilities.BeanBD;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,11 +37,11 @@ public class ThreadClient extends Thread {
            {
                 
                 ObjectInputStream ois=null;
-                RequeteFM req = null;
+                RequeteXML req = null;
                 try
                 {
                     ois = new ObjectInputStream(mySock.getInputStream());
-                    req = (RequeteFM)ois.readObject();
+                    req = (RequeteXML)ois.readObject();
                     guiApplication.TraceEvenements("Serveur#Requête reçue");
                 }
                 catch (ClassNotFoundException e)
@@ -53,7 +53,7 @@ public class ThreadClient extends Thread {
                     System.err.println("Erreur ? [" + e.getMessage() + "]");
                 }
                 
-               /* if(req.getType()==RequeteFM.REQUEST_DECONNECT)
+               /* if(req.getType()==RequeteXML.REQUEST_DECONNECT)
                 {
                     guiApplication.TraceEvenements(req.getChargeUtile()+"#Requête deconnexion de ");
                     this.setMySock(null);

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package clientServeurSocket;
-import ProtocoleFM.RequeteFM;
+import ProtocoleXML.RequeteXML;
 import java.io.*;
 import java.net.*;
 
@@ -28,7 +28,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     private ObjectOutputStream oos;
     private JFileChooser fc = new JFileChooser();
     private Socket cliSock;
-    int PORT_CHECKIN;
+    int PORT_XML;
     String IP_ADDRESS;
     /**
      * Creates new form InterfaceClient
@@ -47,7 +47,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         try {
             rP = new ReadProperties("/clientServeurSocket/Config.properties");
             IP_ADDRESS = rP.getProp("IP_ADDRESS");
-            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
+            PORT_XML = Integer.parseInt(rP.getProp("PORT_XML"));
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,7 +55,7 @@ public class InterfaceClient extends javax.swing.JFrame {
         ois=null; oos=null; cliSock = null;
         try
         {
-            cliSock = new Socket(IP_ADDRESS, PORT_CHECKIN);
+            cliSock = new Socket(IP_ADDRESS, PORT_XML);
             System.out.println(cliSock.getInetAddress().toString());
         }
         catch (UnknownHostException e)
@@ -130,7 +130,7 @@ public class InterfaceClient extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         String chargeUtile;
         chargeUtile = "InterfaceClient avec socket ="+cliSock.toString()+" se déconnecte";
-        //RequeteLUGAP req = new RequeteFM(RequeteFM.REQUEST_DECONNECT, chargeUtile);;
+        //RequeteLUGAP req = new RequeteXML(RequeteXML.REQUEST_DECONNECT, chargeUtile);;
         try
         {
             oos = new ObjectOutputStream(cliSock.getOutputStream());
@@ -155,7 +155,7 @@ public class InterfaceClient extends javax.swing.JFrame {
             if(!jTextField1.getText().equals(""))
             {
                 doc = db.parse(new File(jTextField1.getText()));
-                RequeteFM req = new RequeteFM(RequeteFM.READ_XML, chargeUtile,doc);
+                RequeteXML req = new RequeteXML(RequeteXML.READ_XML, chargeUtile,doc);
                 oos = new ObjectOutputStream(cliSock.getOutputStream());
                 oos.writeObject(req); oos.flush();
             }

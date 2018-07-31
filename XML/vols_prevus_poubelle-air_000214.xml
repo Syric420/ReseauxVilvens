@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE listeVols SYSTEM "vols_prevus_poubelle-air_000214.dtd">
+
 <listeVols>
 	<compagnie lowcost="Y">
 		<nom>Poubelle-air</nom>
@@ -24,10 +32,10 @@
 			<prix>225.30</prix>
 		</vol>
 	</createFlights>
-		<createDestination>
-			<ville zoneFranche="F">Aurillac</ville>
-			<pays>France</pays>
-		</createDestination>
+        <createDestination>
+                <ville zoneFranche="F">Aurillac</ville>
+                <pays>France</pays>
+        </createDestination>
 	<createFlights>
 		<vol>
 			<date>27/12/2017</date>

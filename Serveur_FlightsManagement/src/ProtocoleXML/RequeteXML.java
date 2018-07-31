@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ProtocoleFM;
+package ProtocoleXML;
 import Server.ConsoleServeur;
 import java.io.*;
 import java.net.*;
@@ -18,20 +18,20 @@ import org.w3c.dom.NodeList;
  *
  * @author Vince
  */
-public class RequeteFM implements Requete, Serializable
+public class RequeteXML implements Requete, Serializable
 {
     public static int READ_XML = 1;
     private int type;
     private String chargeUtile;
     private Socket socketClient;
     private Document doc;
-    public RequeteFM(int t, String chu,Document document)
+    public RequeteXML(int t, String chu,Document document)
     {
         type = t; setChargeUtile(chu);
         doc=document;
     }
 
-    public RequeteFM(int t, String chu, Socket s)
+    public RequeteXML(int t, String chu, Socket s)
     {
         type = t; setChargeUtile(chu); socketClient =s;
     }

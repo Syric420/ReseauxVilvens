@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ProtocoleFM;
+package ProtocoleXML;
 
 import java.io.*;
 import Server.Reponse;
@@ -11,7 +11,7 @@ import Server.Reponse;
  *
  * @author Vince
  */
-public class ReponseFM implements Reponse, Serializable
+public class ReponseXML implements Reponse, Serializable
 {
     /*public static int KEY_GENERATED = 202;
     public static int WRONG_PASSWORD = 401;*/
@@ -25,7 +25,7 @@ public class ReponseFM implements Reponse, Serializable
     
     private int codeRetour;
     private String chargeUtile;
-    public ReponseFM(int c, String chu)
+    public ReponseXML(int c, String chu)
     {
         codeRetour = c; 
         setChargeUtile(chu);

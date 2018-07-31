@@ -24,8 +24,8 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     /**
      * Creates new form InterfaceServeur
      */
-    int PORT_CHECKIN;
-    int PORT_BAGAGES,nbThreads;
+    int PORT_XML;
+    int nbThreads;
     String IP_ADDRESS;
     ThreadServeur ts;
     public InterfaceServeur() {
@@ -33,7 +33,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         initComponents();
         TraceEvenements("Serveur#initialisation");
         TraceEvenements("Serveur#acquisition du port");
-        ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
+        ts = new ThreadServeur(PORT_XML, this, nbThreads);
         ts.start();
     }
     private void Conf()
@@ -41,8 +41,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         ReadProperties rP ;
         try {
             rP = new ReadProperties("/Server/Config.properties");
-            PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
-            PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
+            PORT_XML = Integer.parseInt(rP.getProp("PORT_XML"));
             nbThreads = Integer.parseInt(rP.getProp("NB_THREADS"));
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,7 +138,7 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         TraceEvenements("Serveur#acquisition du port");
-        ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
+        ts = new ThreadServeur(PORT_XML, this, nbThreads);
         ts.start();
         jButton1.setEnabled(false);
         jButton2.setEnabled(true);
