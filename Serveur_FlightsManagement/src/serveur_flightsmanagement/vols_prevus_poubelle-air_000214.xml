@@ -32,10 +32,10 @@ and open the template in the editor.
 			<prix>225.30</prix>
 		</vol>
 	</createFlights>
-		<createDestination>
-			<ville zoneFranche="F">Aurillac</ville>
-			<pays>France</pays>
-		</createDestination>
+        <createDestination>
+                <ville zoneFranche="F">Aurillac</ville>
+                <pays>France</pays>
+        </createDestination>
 	<createFlights>
 		<vol>
 			<date>27/12/2017</date>

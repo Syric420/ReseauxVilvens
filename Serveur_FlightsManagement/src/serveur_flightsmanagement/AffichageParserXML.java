@@ -122,33 +122,110 @@ public LinkedList list;
     public void affichageDonnées (Node noeud, int profondeur)
     {
         if (noeud == null) return; // arrêt de la descente récursive
-        String nom = noeud.getNodeName();
-        String valeur = noeud.getNodeValue();
-        switch(nom){
+        String name = noeud.getNodeName();
+        String valeur;
+        String str[];
+        String tmp[];
+        String lowcost="",nom="",pays="";
+        String ville="",zoneFranche="";
+        String date="",time="",prix="";
+        switch(name){
             case("compagnie"):
                 System.out.println("Compagnie: ");
-                loadNode(noeud);
-                //System.out.println("Nom : " + eElement.getElementsByTagName("nom").item(0).getTextContent());
-                //System.out.println("Pays : " + eElement.getElementsByTagName("pays").item(0).getTextContent());
+                valeur = loadNode(noeud);
+                //System.out.println("Résultats: " + valeur);
+                str = valeur.split(";");
+                lowcost="";
+                nom="";
+                pays="";
+                for(int i=0;i<str.length;i++)
+                {
+                    if(str[i].contains("lowcost"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        lowcost = tmp[1];
+                    }else if(str[i].contains("nom"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        nom = tmp[1];
+                    }else if(str[i].contains("pays"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        pays = tmp[1];
+                    }
+                }
                 break;
             case("createDestination"):
                 System.out.println("createDestination");
-                loadNode(noeud);
+                valeur = loadNode(noeud);
+                System.out.println("Résultats: " + valeur);
+                str = valeur.split(";");
+                ville="";
+                zoneFranche="";
+                pays="";
+                for(int i=0;i<str.length;i++)
+                {
+                    if(str[i].contains("ville"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        lowcost = tmp[1];
+                    }else if(str[i].contains("zoneFranche"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        nom = tmp[1];
+                    }else if(str[i].contains("pays"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        pays = tmp[1];
+                    }
+                }
+                System.out.println(ville + zoneFranche + pays);
                 break;
             case("createFlights"):
                 System.out.println("createFlights");
-                loadNode(noeud);
+                valeur = loadNode(noeud);
+                valeur = valeur.replace("\n\t\t\t", "");
+                System.out.println("Résultats: " + valeur.trim());
+                str = valeur.split("vol = ;");
+                for(int i=0;i<str.length;i++)
+                {
+                    String var[];
+                    var = str[i].split(";");
+                    //récupération des données de l'ensemble des vols
+                    date="";
+                    time="";
+                    prix="";
+                    for (int j=0; j< var.length;j++)
+                    {
+                        if(var[j].contains("date"))
+                        {
+                            tmp = var[j].split(" = ");
+                            System.out.println(tmp[0] + " : " + tmp[1]);
+                            date = tmp[1];
+                        }else if(var[j].contains("time"))
+                        {
+                            tmp = var[j].split(" = ");
+                            System.out.println(tmp[0] + " : " + tmp[1]);
+                            time = tmp[1];
+                        }else if(var[j].contains("prix"))
+                        {
+                            tmp = var[j].split(" = ");
+                            System.out.println(tmp[0] + " : " + tmp[1]);
+                            prix = tmp[1];
+                        }
+                    }
+                    System.out.println(date + time + prix);
+                }
                 break;
             case("listeVols"):
                 
         }
-        /*
-        if (valeur != null) valeur = valeur.trim();
-        // éliminations des textes vides
-        if (noeud.getNodeType() == Node.TEXT_NODE && valeur.equals("") ) ;
-        else System.out.println(nom + " : " + valeur + "   " + profondeur);
-
-        */
         NodeList enfants = noeud.getChildNodes();
         for (int i=0; i<enfants.getLength(); i++)
         {
@@ -156,31 +233,40 @@ public LinkedList list;
             affichageDonnées (enfants.item(i), profondeur+1);
         }
     }
-    public void loadNode(Node noeud)
+    public String loadNode(Node noeud)
     {
-        if (noeud == null) return;
+        String data = "";
+        if (noeud == null) return "";
         
+        //recherches des attributs
         NamedNodeMap attrs = noeud.getAttributes(); 
         if(attrs != null)
             for(int i = 0 ; i<attrs.getLength() ; i++) {
               Attr attribute = (Attr)attrs.item(i);     
-              System.out.println(attribute.getName()+" = "+attribute.getValue());
+              //System.out.println(attribute.getName()+" = "+attribute.getValue());
+              data = data + (attribute.getName()+" = "+attribute.getValue()) + ";";
             }
         NodeList enfants = noeud.getChildNodes();
+        //recherche des données des enfants. + recherche de leurs enfants potentiels
         for (int i=0; i<enfants.getLength(); i++)
         {
             if(enfants.item(i) != null)
             {
                 if(!enfants.item(i).getNodeName().equalsIgnoreCase("#text"))
-                    System.out.print(enfants.item(i).getNodeName() + " = ");
+                {
+                    //System.out.print(enfants.item(i).getNodeName() + " = ");
+                    data = data + (enfants.item(i).getNodeName() + " = ");
+                }  
                 NodeList tmp = enfants.item(i).getChildNodes();
                 if(tmp.item(0) != null)
-                    System.out.print(tmp.item(0).getNodeValue() + "\n");
-                loadNode (enfants.item(i));
+                {
+                    //System.out.println(tmp.item(0).getNodeValue());
+                    data = data + (tmp.item(0).getNodeValue()+ ";");
+                } 
+                data = data + loadNode (enfants.item(i));
             }
         }
-
-        
+        return data;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
