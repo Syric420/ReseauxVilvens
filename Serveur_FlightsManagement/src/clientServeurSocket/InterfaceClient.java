@@ -154,14 +154,23 @@ public class InterfaceClient extends javax.swing.JFrame {
             db = dbf.newDocumentBuilder();
             if(!jTextField1.getText().equals(""))
             {
-                doc = db.parse(new File(jTextField1.getText()));
-                RequeteXML req = new RequeteXML(RequeteXML.READ_XML, chargeUtile,doc);
+                FileInputStream fis = new FileInputStream(jTextField1.getText());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int b = 0;
+                do
+                {
+                    b = fis.read();
+                    if(b != -1) baos.write(b);
+                }
+                while(b != -1);
+                byte[] bFile = baos.toByteArray();
+                
+                //doc = db.parse(new File(jTextField1.getText()));
+                RequeteXML req = new RequeteXML(RequeteXML.READ_XML, chargeUtile,bFile);
                 oos = new ObjectOutputStream(cliSock.getOutputStream());
                 oos.writeObject(req); oos.flush();
             }
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);

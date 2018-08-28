@@ -4,7 +4,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<!DOCTYPE listeVols SYSTEM "listeVols.dtd">
+<!DOCTYPE listeVols SYSTEM "vols_prevus_poubelle-air_000214.dtd">
 
 <listeVols>
 	<compagnie lowcost="Y">

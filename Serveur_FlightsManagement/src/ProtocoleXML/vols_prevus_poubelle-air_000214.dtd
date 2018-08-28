@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/vols_prevus_poubelle-air_000214.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE listeVols SYSTEM "vols_prevus_poubelle-air_000214.dtd">
+
+    <listeVols>
+    ...
+    </listeVols>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT listeVols (compagnie|createDestination|createFlights)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT compagnie (nom|pays)*>
+<!ATTLIST compagnie
+    lowcost CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT nom (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT pays (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT createDestination (ville|pays)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT ville (#PCDATA)>
+<!ATTLIST ville
+    zoneFranche CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT createFlights (vol)*>
+<!ATTLIST createFlights
+    destination CDATA #IMPLIED
+    country CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT vol (date|time|prix)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT date (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT time (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT prix (#PCDATA)>
