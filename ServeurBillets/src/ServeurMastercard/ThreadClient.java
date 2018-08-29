@@ -32,15 +32,13 @@ public class ThreadClient extends Thread {
     
     private X509Certificate certifOperator;
     private PublicKey cléPubliqueOperator;
-    public ThreadClient(SourceTaches st, String n, SSLSocket s, ConsoleServeur fs)
+    public ThreadClient(SourceTaches st, String n, SSLSocket s, ConsoleServeur fs, BeanBD Bd)
     {
         tachesAExecuter = st;
         nom = n;
         guiApplication = fs;
         mySock = s;
-        Bc = new BeanBD();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
+        Bc= Bd;
        
     }
     

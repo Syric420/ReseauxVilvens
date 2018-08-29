@@ -89,6 +89,7 @@ public class ReservationVols extends javax.swing.JDialog {
 
         jComboBoxAcc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "1", "2", "3", "4" }));
 
+        jTextAreaReponse.setEditable(false);
         jTextAreaReponse.setColumns(20);
         jTextAreaReponse.setRows(5);
         jScrollPane1.setViewportView(jTextAreaReponse);

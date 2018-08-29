@@ -43,14 +43,12 @@ public class ThreadClientPay extends Thread {
     
     private X509Certificate certifOperator;
     private PublicKey cléPubliqueOperator;
-    public ThreadClientPay(SourceTaches st, String n, Socket s )
+    public ThreadClientPay(SourceTaches st, String n, Socket s, BeanBD Bd )
     {
         tachesAExecuter = st;
         nom = n;
         mySock = s;
-        Bc = new BeanBD();
-        Bc.setTypeBD("MySql");
-        Bc.connect();
+        Bc = Bd;
        
     }
     

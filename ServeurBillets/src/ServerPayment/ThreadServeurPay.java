@@ -1,6 +1,7 @@
 package ServerPayment;
 
 import ServerPayment.*;
+import database.utilities.BeanBD;
 import java.net.*;
 import java.io.*;
 /**
@@ -13,10 +14,13 @@ public class ThreadServeurPay extends Thread {
     private ServerSocket SSocket = null;
     private int nbThreads;
     private ThreadClientPay []thr;
+    private BeanBD Bc;
+    private SourceTaches tachesAExecuter;
     
     public ThreadServeurPay(int p, ConsoleServeur fs, int nb)
     {
         port = p;  guiApplication = fs; nbThreads = nb;
+        tachesAExecuter = new ListeTaches();
     }
     public void run()
     {
@@ -28,11 +32,14 @@ public class ThreadServeurPay extends Thread {
         {
             System.err.println("Erreur de port d'écoute ! ? [" + e + "]"); System.exit(1);
         }
+        Bc = new BeanBD();
+        Bc.setTypeBD("MySql");
+        Bc.connect();
          thr = new ThreadClientPay[nbThreads];
         // Démarrage du pool de threads
         for (int i=0; i<nbThreads; i++)
         {
-            thr[i] = new ThreadClientPay (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null);
+            thr[i] = new ThreadClientPay (tachesAExecuter, "Thread du pool n°" +String.valueOf(i), null, Bc);
             thr[i].start();
         }
 
