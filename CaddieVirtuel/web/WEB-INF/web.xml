@@ -11,24 +11,4 @@
         <servlet-name>ServletMain</servlet-name>
         <url-pattern>/ServletMain</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>ServletMain</servlet-name>
-        <servlet-class>Servlet.ServletMain</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletMain</servlet-name>
-        <servlet-class>Servlet.ServletMain</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletMain</servlet-name>
-        <servlet-class>Servlet.ServletMain</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletMain</servlet-name>
-        <servlet-class>Servlet.ServletMain</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ServletMain</servlet-name>
-        <servlet-class>Servlet.ServletMain</servlet-class>
-    </servlet>
 </web-app>
