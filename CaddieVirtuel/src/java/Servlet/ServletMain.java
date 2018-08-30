@@ -59,9 +59,10 @@ public class ServletMain extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         System.out.println("ProcessRequest");
         HttpSession session = request.getSession(true);
-       
+
         ServletContext sc = getServletContext();
         String Jsp[] = request.getParameterValues("Jsp");
+        
         System.out.println("ProcessRequest2");
         ResultSet r;
         String str, q;
