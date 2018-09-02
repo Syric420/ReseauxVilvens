@@ -5,8 +5,9 @@
  */
 package CompanyClasses;
 
+import database.utilities.BeanBD;
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
 
 /**
  *
@@ -23,23 +24,27 @@ public class PoubelleAir implements Company {
         
     }
     @Override
-    public void createDestination(String v, String p) {
-        System.out.println("CREATE DESTINATION : ville: " + v + " pays: " + p);
+    public void createDestination(String v, String p,BeanBD Bc) {
+        //System.out.println("CREATE DESTINATION : ville: " + v + " pays: " + p);
+        Bc.addDestination(v,p);
     }
 
     @Override
-    public void createFlight(String v, String p, Date d, Time t, double pr) {
-        System.out.println("TEST 2");
+    public void createFlight(String v, String p, Date d, Time t, double pr,BeanBD Bc,int nTickets) {
+        //System.out.println("createFlight : VILLE : " + v + " PAYS: " + p + " DATE: " + d.toString() + " TIME: " + t.toString() + " PRIX : " + pr);
+        Bc.addFlight(v,p,d,t,pr,nTickets);
     }
 
     @Override
-    public void cancelDestination(String v, String p) {
+    public void cancelDestination(String v, String p,BeanBD Bc) {
         System.out.println("TEST 3");
+        Bc.delDestination(v,p);
     }
 
     @Override
-    public void cancelFlights(String v, String p, Date d, Time t) {
+    public void cancelFlights(String v, String p, Date d, Time t,BeanBD Bc) {
         System.out.println("TEST 4");
+        Bc.delFlight(v, p, d, t);
     }
     
 }

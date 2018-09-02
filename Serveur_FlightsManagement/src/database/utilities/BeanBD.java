@@ -108,6 +108,48 @@ public class BeanBD {
             return 0;
         }
     }
+    public void addDestination(String ville,String pays)
+    {
+        try 
+        {
+            getInstruc().executeUpdate("INSERT INTO `sys`.`destination` (`NomDestination`, `Pays`) VALUES ('"+ ville + "', '" + pays + "');");
+        } catch (SQLException ex) {
+            //Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void delDestination(String ville,String pays)
+    {
+        try 
+        {
+            System.out.println("DELETE FROM `sys`.`destination` WHERE `NomDestination`='"+ ville.trim() + "'and`Pays`='" + pays + "';");
+            getInstruc().executeUpdate("DELETE FROM `sys`.`destination` WHERE `NomDestination`='"+ ville.trim() + "'and`Pays`='" + pays + "';");
+            System.out.println("DELETE FROM `sys`.`vols` WHERE `Destination`='"+ ville.trim() + "';");
+            getInstruc().executeUpdate("DELETE FROM `sys`.`vols` WHERE `Destination`='"+ ville.trim() + "';");
+        } catch (SQLException ex) {
+            //Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void addFlight(String ville,String pays, Date d, Time t,Double pr,int nTickets)
+    {
+        try 
+        {
+            System.out.println("INSERT INTO `sys`.`vols`  (`Destination`, `HeureDepart`, `PlacesRestantes`, `Time`, `Prix`)"+ " VALUES ('"+ ville + "', '" + d + "','" + nTickets + "','" + t + "','" + pr + "');");
+            getInstruc().executeUpdate("INSERT INTO `sys`.`vols`  (`Destination`, `HeureDepart`, `PlacesRestantes`, `Time`, `Prix`)"
+                    + " VALUES ('"+ ville + "', '" + d + "','" + nTickets + "','" + t + "','" + pr + "');");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        public void delFlight(String ville,String pays, Date d, Time t)
+    {
+        try 
+        {
+            System.out.println("DELETE FROM `sys`.`vols` WHERE `Destination`='"+ ville.trim() + "'and`HeureDepart`='" + d + "'and`Time`='" + t + "';");
+            getInstruc().executeUpdate("DELETE FROM `sys`.`vols` WHERE `Destination`='"+ ville.trim() + "'and`HeureDepart`='" + d + "'and`Time`='" + t + "';");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @return the rs

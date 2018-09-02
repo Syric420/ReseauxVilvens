@@ -10,10 +10,18 @@ import java.net.*;
 import Server.*;
 import Utilities.ReadProperties;
 import clientServeurSocket.InterfaceClient;
+import database.utilities.BeanBD;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.lang.reflect.*;
 import java.io.*;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,7 +30,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  *
@@ -41,18 +51,27 @@ public class RequeteXML implements Requete, Serializable
     String tmp[];
     String lowcost="",nom="",pays="";
     String ville="",zoneFranche="";
-    String date="",time="",prix="";
+    Date date;
+    Time time;
+    double prix;
     String compagnie="";
     String nTickets="";
     Class cClass = null;
     Method infoMethodes[];
     ReadProperties rP=null ;
+    private BeanBD Bc;
     
     public RequeteXML(int t, String chu,byte[] b)
     {
         type = t; setChargeUtile(chu);
         bFile=b;
 
+    }
+    public RequeteXML(int t, String chu,byte[] b,BeanBD B)
+    {
+        type = t; setChargeUtile(chu);
+        bFile=b;
+        Bc = B;
     }
 
     public RequeteXML(int t, String chu, Socket s)
@@ -75,6 +94,7 @@ public class RequeteXML implements Requete, Serializable
     }
     private void readXML(final Socket s, final ConsoleServeur cs)
     {
+        boolean format = true;
         try {
             InputStream iStream = new ByteArrayInputStream(bFile); 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -82,15 +102,45 @@ public class RequeteXML implements Requete, Serializable
             dbf.setNamespaceAware(true);
             DocumentBuilder db;
             db = dbf.newDocumentBuilder();
+            db.setErrorHandler(new ErrorHandler()
+            {
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException
+                {
+                    System.err.println("fatalError: " + exception);
+                }
+
+                @Override
+                public void error(SAXParseException exception) throws SAXException
+                {
+                    System.err.println("error: " + exception);
+                    throw exception;
+
+                }
+
+                @Override
+                public void warning(SAXParseException exception) throws SAXException
+                {
+                    System.err.println("warning: " + exception);
+                    
+                }
+            });
             doc = db.parse(iStream);
             affichageDonnées(doc);
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
             Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+            format = false;
         } catch (IOException ex) {
             Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if(format)
+            //send message OK
+            System.out.println("format OK");
+        else
+            //send message NOK
+            System.out.println("format NOK");
     }
     
     public String getChargeUtile() { return chargeUtile; }
@@ -168,31 +218,6 @@ public class RequeteXML implements Requete, Serializable
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                {
-                    infoMethodes = cClass.getDeclaredMethods();
-                    Class infoParametres[] = infoMethodes[2].getParameterTypes();
-                    Object parametres[] = new Object[infoParametres.length];
-                    for (int i=0; i<infoMethodes.length; i++)
-                    {
-                        System.out.println("méthode["+i+"] = "+infoMethodes[i]);
-                    }
-                    try {
-                        parametres[0]= new String("TEST");
-                        parametres[1]= new String("TEST");
-                        Object obj = cClass.newInstance();
-                        System.out.println("ICI");
-                        System.out.println("méthode[0] = "+infoMethodes[2]);
-                        infoMethodes[2].invoke(obj, parametres);
-                    } catch (InstantiationException ex) {
-                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
                 
                 break;
             case("createDestination"):
@@ -237,6 +262,7 @@ public class RequeteXML implements Requete, Serializable
                     try {
                         parametres[0]= new String(ville);
                         parametres[1]= new String(pays);
+                        parametres[2]= Bc;
                         Object obj = cClass.newInstance();
                         infoMethodes[indice].invoke(obj, parametres);
                     } catch (InstantiationException ex) {
@@ -256,34 +282,271 @@ public class RequeteXML implements Requete, Serializable
                 valeur = valeur.replace("\n\t\t\t", "");
                 System.out.println("Résultats: " + valeur.trim());
                 str = valeur.split("vol = ;");
-                for(int i=0;i<str.length;i++)
+                boolean attDest = false;
+                {
+                    String var[];
+                    var = str[0].split(";");
+                    for(int i=0;i<var.length;i++)
+                    {
+                        if(var[i].contains("destination"))
+                            {
+                                tmp = var[i].split(" = ");
+                                System.out.println("VILLE HONOLULU" +  tmp[0] + " : " + tmp[1]);
+                                ville = tmp[1];
+                                attDest=true;
+                            }else if(var[i].contains("country"))
+                            {
+                                tmp = var[i].split(" = ");
+                                System.out.println(tmp[0] + " : " + tmp[1]);
+                                pays = tmp[1];
+                                attDest=true;
+                            }
+                    }
+                }
+
+                for(int i=1;i<str.length;i++)
                 {
                     String var[];
                     var = str[i].split(";");
                     //récupération des données de l'ensemble des vols
-                    date="";
-                    time="";
-                    prix="";
                     for (int j=0; j< var.length;j++)
                     {
                         if(var[j].contains("date"))
                         {
                             tmp = var[j].split(" = ");
                             System.out.println(tmp[0] + " : " + tmp[1]);
-                            date = tmp[1];
+                            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            try {
+                                date = format.parse(tmp[1]);
+                                System.out.println(date.toString());
+                            } catch (ParseException ex) {
+                                Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         }else if(var[j].contains("time"))
                         {
                             tmp = var[j].split(" = ");
+                            try {
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+                                java.util.Date d1 =(java.util.Date)sdf.parse(tmp[1]);
+                                time = new java.sql.Time(d1.getTime());
+                            } catch (ParseException ex) {
+                                Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             System.out.println(tmp[0] + " : " + tmp[1]);
-                            time = tmp[1];
                         }else if(var[j].contains("prix"))
                         {
                             tmp = var[j].split(" = ");
                             System.out.println(tmp[0] + " : " + tmp[1]);
-                            prix = tmp[1];
+                            prix = Double.parseDouble(tmp[1]);
                         }
                     }
-                    System.out.println(date + time + prix);
+                    //ajout de la nouvelle destination
+                    if(attDest)
+                    {
+                    infoMethodes = cClass.getDeclaredMethods();
+                    int indice = 0;
+                    for(indice = 0 ; indice<infoMethodes.length ; indice++)
+                    {
+                        if(infoMethodes[indice].getName().contains("createDestination"))
+                            break;
+                    }
+                    Class infoParametres[] = infoMethodes[indice].getParameterTypes();
+                    Object parametres[] = new Object[infoParametres.length];
+                    System.out.println(ville + zoneFranche + pays);
+                    try {
+                        parametres[0]= new String(ville);
+                        parametres[1]= new String(pays);
+                        parametres[2]= Bc;
+                        Object obj = cClass.newInstance();
+                        infoMethodes[indice].invoke(obj, parametres);
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalArgumentException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvocationTargetException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
+                    //ajout des vols
+                    {
+
+                        infoMethodes = cClass.getDeclaredMethods();
+                        int indice = 0;
+                        for(indice = 0 ; indice<infoMethodes.length ; indice++)
+                        {
+                            if(infoMethodes[indice].getName().contains("createFlight"))
+                                break;
+                        }
+                        Class infoParametres[] = infoMethodes[indice].getParameterTypes();
+                        Object parametres[] = new Object[infoParametres.length];
+                        System.out.println(ville + zoneFranche + pays);
+                        try {
+                            java.sql.Date DateTemp = new java.sql.Date(date.getTime());
+
+
+                            parametres[0]= new String(ville);
+                            parametres[1]= new String(pays);
+                            parametres[2]= DateTemp;
+                            parametres[3]= time;
+                            parametres[4]= new Double(prix);
+                            parametres[5]= Bc;
+                            parametres[6]= Integer.parseInt(nTickets);
+                            Object obj = cClass.newInstance();
+                            infoMethodes[indice].invoke(obj, parametres);
+                        } catch (InstantiationException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalAccessException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalArgumentException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InvocationTargetException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                break;
+                case("cancelDestination"):
+                System.out.println("cancelDestination");
+                valeur = loadNode(noeud);
+                System.out.println("Résultats: " + valeur);
+                str = valeur.split(";");
+                ville="";
+                zoneFranche="";
+                pays="";
+                
+                for(int i=0;i<str.length;i++)
+                {
+                    if(str[i].contains("ville"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        ville = tmp[1];
+                    }else if(str[i].contains("pays"))
+                    {
+                        tmp = str[i].split(" = ");
+                        System.out.println(tmp[0] + " : " + tmp[1]);
+                        pays = tmp[1];
+                    }
+                }
+                {
+                    infoMethodes = cClass.getDeclaredMethods();
+                    int indice = 0;
+                    for(indice = 0 ; indice<infoMethodes.length ; indice++)
+                    {
+                        if(infoMethodes[indice].getName().contains("cancelDestination"))
+                            break;
+                    }
+                    Class infoParametres[] = infoMethodes[indice].getParameterTypes();
+                    Object parametres[] = new Object[infoParametres.length];
+                    System.out.println(ville + zoneFranche + pays);
+                    try {
+                        parametres[0]= new String(ville);
+                        parametres[1]= new String(pays);
+                        parametres[2]= Bc;
+                        Object obj = cClass.newInstance();
+                        infoMethodes[indice].invoke(obj, parametres);
+                    } catch (InstantiationException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IllegalArgumentException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InvocationTargetException ex) {
+                        Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+                case("cancelFlights"):
+                System.out.println("cancelFlights");
+                valeur = loadNode(noeud);
+                valeur = valeur.replace("\n\t\t\t", "");
+                System.out.println("Résultats: " + valeur.trim());
+                str = valeur.split("vol = ;");
+                {
+                    String var[];
+                    var = str[0].split(";");
+                    for(int i=0;i<var.length;i++)
+                    {
+                        if(var[i].contains("destination"))
+                            {
+                                tmp = var[i].split(" = ");
+                                ville = tmp[1];
+                            }else if(var[i].contains("country"))
+                            {
+                                tmp = var[i].split(" = ");
+                                System.out.println(tmp[0] + " : " + tmp[1]);
+                                pays = tmp[1];
+                            }
+                    }
+                }
+
+                for(int i=0;i<str.length;i++)
+                {
+                    String var[];
+                    var = str[i].split(";");
+                    //récupération des données de l'ensemble des vols
+                    for (int j=0; j< var.length;j++)
+                    {
+                        if(var[j].contains("date"))
+                        {
+                            tmp = var[j].split(" = ");
+                            System.out.println(tmp[0] + " : " + tmp[1]);
+                            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                            try {
+                                date = format.parse(tmp[1]);
+                                System.out.println(date.toString());
+                            } catch (ParseException ex) {
+                                Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }else if(var[j].contains("time"))
+                        {
+                            tmp = var[j].split(" = ");
+                            try {
+                                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+                                java.util.Date d1 =(java.util.Date)sdf.parse(tmp[1]);
+                                time = new java.sql.Time(d1.getTime());
+                            } catch (ParseException ex) {
+                                Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            System.out.println(tmp[0] + " : " + tmp[1]);
+                        }
+                    }
+
+                    {
+
+                        infoMethodes = cClass.getDeclaredMethods();
+                        int indice = 0;
+                        for(indice = 0 ; indice<infoMethodes.length ; indice++)
+                        {
+                            if(infoMethodes[indice].getName().contains("cancelFlight"))
+                                break;
+                        }
+                        Class infoParametres[] = infoMethodes[indice].getParameterTypes();
+                        Object parametres[] = new Object[infoParametres.length];
+                        System.out.println(ville + zoneFranche + pays);
+                        try {
+                            java.sql.Date DateTemp = new java.sql.Date(date.getTime());
+
+
+                            parametres[0]= new String(ville);
+                            parametres[1]= new String(pays);
+                            parametres[2]= DateTemp;
+                            parametres[3]= time;
+                            parametres[4]= Bc;
+                            Object obj = cClass.newInstance();
+                            infoMethodes[indice].invoke(obj, parametres);
+                        } catch (InstantiationException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalAccessException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalArgumentException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InvocationTargetException ex) {
+                            Logger.getLogger(RequeteXML.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
                 break;
             case("listeVols"):
@@ -330,6 +593,20 @@ public class RequeteXML implements Requete, Serializable
             }
         }
         return data;
+    }
+
+    /**
+     * @return the Bc
+     */
+    public BeanBD getBc() {
+        return Bc;
+    }
+
+    /**
+     * @param Bc the Bc to set
+     */
+    public void setBc(BeanBD Bc) {
+        this.Bc = Bc;
     }
     
 }

@@ -25,7 +25,7 @@ public class ThreadClient extends Thread {
         guiApplication = fs;
         Bc = new BeanBD();
         Bc.setTypeBD("MySql");
-        //Bc.connect();
+        Bc.connect();
        
     }
     
@@ -42,6 +42,7 @@ public class ThreadClient extends Thread {
                 {
                     ois = new ObjectInputStream(mySock.getInputStream());
                     req = (RequeteXML)ois.readObject();
+                    req.setBc(Bc);
                     guiApplication.TraceEvenements("Serveur#Requête reçue");
                 }
                 catch (ClassNotFoundException e)
