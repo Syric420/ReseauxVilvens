@@ -25,16 +25,19 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
      * Creates new form InterfaceServeur
      */
     int PORT_CHECKIN;
-    int PORT_BAGAGES,nbThreads;
+    int PORT_CHECKINC,nbThreads;
     String IP_ADDRESS;
     ThreadServeur ts;
+    ThreadCheckIn tc;
     public InterfaceServeur() {
         Conf();
         initComponents();
         TraceEvenements("Serveur#initialisation");
         TraceEvenements("Serveur#acquisition du port");
         ts = new ThreadServeur(PORT_CHECKIN, this, nbThreads);
+        tc = new ThreadCheckIn(PORT_CHECKINC);
         ts.start();
+        tc.start();
     }
     private void Conf()
     {
@@ -42,7 +45,8 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         try {
             rP = new ReadProperties("/Server/Config.properties");
             PORT_CHECKIN = Integer.parseInt(rP.getProp("PORT_CHECKIN"));
-            PORT_BAGAGES = Integer.parseInt(rP.getProp("PORT_BAGAGES"));
+            PORT_CHECKINC = Integer.parseInt(rP.getProp("PORT_CHECKINC"));
+            IP_ADDRESS = rP.getProp("IP_ADDRESS_CHECKIN");
             nbThreads = Integer.parseInt(rP.getProp("NB_THREADS"));
         } catch (IOException ex) {
             Logger.getLogger(InterfaceClient.class.getName()).log(Level.SEVERE, null, ex);
