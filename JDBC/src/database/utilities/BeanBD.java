@@ -134,6 +134,27 @@ public class BeanBD {
         }
         return null;
     }
+    public boolean findTicket(String idTicket, int nbPassagers)
+    {
+        int i=0;
+        try {
+            rs = instruc.executeQuery("SELECT * FROM tickets where idtickets = '"+idTicket +"';");
+            
+            if(!rs.isBeforeFirst())
+                System.err.println("Pas de data pour ticket : "+idTicket);
+            else
+            {
+                rs.next();
+                i = rs.getInt("NbPassagers");
+            }
+            
+            if (i==nbPassagers)
+                return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     public String findBagages(String Requete)
     {
         
