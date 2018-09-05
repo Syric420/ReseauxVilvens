@@ -122,36 +122,30 @@ int connectToServ(char * ip, int port )
     hSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (hSocket == -1)
     {
-        printf("Erreur de creation de la socket %d\n", errno);
+        printf("ToServ: Erreur de creation de la socket %d\n", errno);
         exit(1);
     }
-    else printf("Creation de la socket OK\n");
+    else printf("ToServ: Creation de la socket OK\n");
+    fflush(stdout);
     
-    if (!inet_aton(ip, &adresseIP))
-        exit(0);
-    if ( (infosHost = gethostbyaddr((const void *)&adresseIP,sizeof(ip),AF_INET ))==NULL)
-    {
-        printf("Erreur d'acquisition d'infos sur le host distant %d\n", errno);
-        return -1;
-    }
-    else printf("Acquisition infos host distant OK\n");
-    memcpy(&adresseIP, infosHost->h_addr, infosHost->h_length);
-    printf("Adresse IP = %s\n",inet_ntoa(adresseIP));
+    
     /* 3. Préparation de la structure sockaddr_in */
     memset(&adresseSocket, 0, sizeof(struct sockaddr_in));
     adresseSocket.sin_family = AF_INET; /* Domaine */
     adresseSocket.sin_port = htons(port); /* conversion port au format réseau */
-    memcpy(&adresseSocket.sin_addr, infosHost->h_addr,infosHost->h_length);
+    //memcpy(&adresseSocket.sin_addr, infosHost->h_addr,infosHost->h_length);
+    adresseSocket.sin_addr.s_addr = inet_addr(ip);
+    
     /* 4. Tentative de connexion */
     tailleSockaddr_in = sizeof(struct sockaddr_in);
     if (( ret = connect(hSocket, (struct sockaddr *)&adresseSocket, tailleSockaddr_in) )
     == -1)
     {
-        printf("Erreur sur connect de la socket %d\n", errno);
+        printf("ToServ: Erreur sur connect de la socket %d\n", errno);
         close(hSocket);
         return -1;
     }
-    else printf("Connect socket OK\n");
+    else printf("ToServ: Connect socket OK\n");
     
     return hSocket;
 }

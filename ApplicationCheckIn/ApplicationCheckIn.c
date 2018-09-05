@@ -244,7 +244,7 @@ int addLugagge(int i,int Poids)
     strcpy(msgClient, "FIN");
     fflush(stdout);
     stop = 1;
-    printf("FIN\n",i);
+    //printf("FIN\n",i);
     sendSize(hSocket,msgClient,MAXSTRING);
     return Poids;
   }

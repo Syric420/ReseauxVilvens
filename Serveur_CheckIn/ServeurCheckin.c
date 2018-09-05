@@ -12,6 +12,7 @@ char Login_csv[80]={0},Ticket_csv[80] ={0}, AdresseIPServ[80]={0}, AdresseIPServ
 userLogin vecLogin[20];//a mettre en * et gérer malloc
 ticket vecTicket[20];//a mettre en * et gérer malloc
 int hSocketEcoute;
+int sockBagages;
 
 int main()
 {
@@ -41,11 +42,14 @@ int main()
   pthread_cond_init(&condIndiceCourant, NULL);
   /* Si la socket n'est pas utilisee, le descripteur est a -1 */
   for (i=0; i<NB_MAX_CLIENTS; i++) hSocketConnectee[i] = -1;
-
+    
   hSocketEcoute=confSockSrv(AdresseIPServ,Port_Service);
   fflush(stdin);
 
-
+   
+   
+   
+   
   /* 6. Lancement des threads */
   for (i=0; i<NB_MAX_CLIENTS; i++)
   {
@@ -383,7 +387,7 @@ int main()
     size_t len = 0;
     ssize_t read;
     int trouve =0;
-    char buffer [90];
+    char buffer [MAXSTRING];
     fflush(stdout);
     id_Ticket[strlen(id_Ticket)-1]=NULL;
     
@@ -399,13 +403,29 @@ int main()
       printf("IDTicket : %s\nPassagers : %d", id_Ticket, nbrPassagers);
       sprintf(buffer, "%s;%d", id_Ticket, nbrPassagers);
       
-      //Connexion au serveur + demande de ticket
+      //demande de ticket
+      sockBagages = connectToServ(AdresseIPServBagage , Port_Bagage );
+      sprintf(buffer, "%s;%d;",id_Ticket , nbrPassagers);
       
-      int sock = connectToServ(AdresseIPServBagage , Port_Bagage );
-      sendSize(sock,buffer,MAXSTRING);
+      sendSize(sockBagages,buffer,MAXSTRING);
       
       
+      if(receiveSize(sockBagages, buffer, MAXSTRING)==0)
+        {
+          printf("Erreur sur le recv de la socket connectee : %d\n", errno);
+          exit(0);
+        }
+      printf("Buffer = %c\n", buffer[0]);
       fflush(stdout);
+      
+      if(buffer[0]=='O')
+      {
+          trouve=1;
+      }
+      else if(buffer[0]=='N')
+      {
+          trouve=0;
+      }
     }
     return trouve;
   }
