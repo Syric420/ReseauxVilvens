@@ -108,6 +108,7 @@ public class RequeteXML implements Requete, Serializable
                 public void fatalError(SAXParseException exception) throws SAXException
                 {
                     System.err.println("fatalError: " + exception);
+                    throw exception;
                 }
 
                 @Override
@@ -291,7 +292,6 @@ public class RequeteXML implements Requete, Serializable
                         if(var[i].contains("destination"))
                             {
                                 tmp = var[i].split(" = ");
-                                System.out.println("VILLE HONOLULU" +  tmp[0] + " : " + tmp[1]);
                                 ville = tmp[1];
                                 attDest=true;
                             }else if(var[i].contains("country"))
