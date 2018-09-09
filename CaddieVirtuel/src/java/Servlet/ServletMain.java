@@ -48,6 +48,7 @@ public class ServletMain extends HttpServlet {
         BeanBD = new BeanBD();
         BeanBD.setTypeBD("mysql");
         BeanBD.connect();
+        
     }
     
     @Override
@@ -56,10 +57,13 @@ public class ServletMain extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        System.out.println("ProcessRequest");
         HttpSession session = request.getSession(true);
-       
+
         ServletContext sc = getServletContext();
-        String Jsp[] = request.getParameterValues("Jsp"); 
+        String Jsp[] = request.getParameterValues("Jsp");
+        
+        System.out.println("ProcessRequest2");
         ResultSet r;
         String str, q;
         
@@ -68,15 +72,17 @@ public class ServletMain extends HttpServlet {
         String Login;
         String donnee[][];
         RequestDispatcher rd;
+        System.out.println("ProcessRequest3");
         if(Jsp == null)
         {
             response.sendRedirect("JSPLogin.jsp");
             return;           
         }
-
+        System.out.println("ProcessRequest4");
         switch(Jsp[0])
         {
             case "JSPLogin":
+                System.out.println("Dans Login");
                 NewUser = request.getParameter("NewUser");
                 if(NewUser != null)
                 if(NewUser.equals("ON"))
@@ -240,7 +246,7 @@ public class ServletMain extends HttpServlet {
                         byte[] signature = s.sign();            
                         pay.setSignature(signature);
                         
-                        cliSockPay = new Socket("10.59.22.72", 26085);
+                        cliSockPay = new Socket("localhost", 26085);
                         ObjectOutputStream oos =null;
                         oos= new ObjectOutputStream(cliSockPay.getOutputStream());
                         oos.writeObject(pay); oos.flush();

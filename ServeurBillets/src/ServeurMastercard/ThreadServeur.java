@@ -1,5 +1,6 @@
 package ServeurMastercard;
 
+import database.utilities.BeanBD;
 import java.net.*;
 import java.io.*;
 import java.security.KeyManagementException;
@@ -25,10 +26,13 @@ public class ThreadServeur extends Thread {
     private SSLSocket SslSocket = null;
     private int nbThreads;
     private ThreadClient []thr;
+    private BeanBD Bc;
+    private SourceTaches tachesAExecuter;
     
     public ThreadServeur(int p, ConsoleServeur fs, int nb)
     {
         port = p;  guiApplication = fs; nbThreads = nb;
+        tachesAExecuter = new ListeTaches();
     }
     public void run()
     {
@@ -67,11 +71,14 @@ public class ThreadServeur extends Thread {
         } catch (KeyManagementException ex) {
             Logger.getLogger(ThreadServeur.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Bc = new BeanBD();
+        Bc.setTypeBD("MySql");
+        Bc.connect();
          thr = new ThreadClient[nbThreads];
         // Démarrage du pool de threads
         for (int i=0; i<nbThreads; i++)
         {
-            thr[i] = new ThreadClient (new ListeTaches(), "Thread du pool n°" +String.valueOf(i), null, guiApplication);
+            thr[i] = new ThreadClient (tachesAExecuter, "Thread du pool n°" +String.valueOf(i), null, guiApplication, Bc);
             thr[i].start();
         }
 

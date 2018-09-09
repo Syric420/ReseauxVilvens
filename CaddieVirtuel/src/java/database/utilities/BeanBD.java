@@ -17,8 +17,8 @@ public class BeanBD {
     private Connection con;
     private Statement instruc;
     private ResultSet rs;
-    private int line;
-    private int colonne;
+    private int line = 0;
+    private int colonne = 0;
     public BeanBD()
     {
         typeBD = "";
