@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE listeVols SYSTEM "listeVols.dtd">
+
+<listeVols>
+	<compagnie lowcost="Y">
+		<nom>Poubelle-air</nom>
+		<pays>Boursoulavie</pays>
+	</compagnie>
+    <cancelFlights destination="Saint-Hélier" country="Jersey">
+        <vol>
+            <date>27/12/2017</date>
+            <time>14:30</time>
+        </vol>
+	</cancelFlights>
+    <cancelDestination>
+		<ville>Aurillac</ville>
+		<pays>France</pays>
+	</cancelDestination>
+    <cancelFlights destination="Honolulu" country="Hawaï">
+		<vol>
+			<date>28/12/2017</date>
+			<time>5:15</time>
+		</vol>
+	</cancelFlights>
+</listeVols>
