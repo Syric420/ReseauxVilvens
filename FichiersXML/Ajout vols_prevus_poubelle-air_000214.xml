@@ -12,7 +12,7 @@ and open the template in the editor.
 		<pays>Boursoulavie</pays>
 	</compagnie>
 	<createDestination>
-		<ville zoneFranche="T"> Saint-Hélier</ville>
+		<ville zoneFranche="T">Saint-Hélier</ville>
 		<pays>Jersey</pays>
 	</createDestination>
 	<createFlights>
@@ -48,6 +48,6 @@ and open the template in the editor.
 			<date>28/12/2017</date>
 			<time>5:15</time>
 			<prix>652.35</prix>
-		</vol>
+		</vol>sdfahvyfuqzybq
 	</createFlights>
 </listeVols>

@@ -4,7 +4,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<!DOCTYPE listeVols SYSTEM "listeVols.dtd">
+<!DOCTYPE listeVols SYSTEM "vols_prevus_poubelle-air_000214.dtd">
 
 <listeVols>
 	<compagnie lowcost="Y">
@@ -43,6 +43,24 @@ and open the template in the editor.
 			<prix>98.00</prix>
 		</vol>
 	</createFlights>
+        <cancelFlights>
+                <vol>
+                        <ville> Saint-Hélier</ville>
+                        <pays>Jersey</pays>
+                        <date>27/12/2017</date>
+                        <time>10:30</time>
+                </vol>
+	</cancelFlights>
+        <cancelDestination>
+		<ville> Saint-Hélier</ville>
+		<pays>Jersey</pays>
+	</cancelDestination>
+        <cancelFlights destination="Honolulu" country="Hawaï">
+		<vol>
+			<date>28/12/2017</date>
+			<time>5:15</time>
+		</vol>
+	</cancelFlights>
 	<createFlights destination="Honolulu" country="Hawaï">
 		<vol>
 			<date>28/12/2017</date>
