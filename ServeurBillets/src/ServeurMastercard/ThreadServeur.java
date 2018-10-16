@@ -22,8 +22,8 @@ import javax.net.ssl.*;
 public class ThreadServeur extends Thread {
     private int port;
     private ConsoleServeur guiApplication;
-    private SSLServerSocket SslSSocket = null;
-    private SSLSocket SslSocket = null;
+    private ServerSocket ServerSocket = null;
+    private Socket Socket = null;
     private int nbThreads;
     private ThreadClient []thr;
     private BeanBD Bc;
@@ -55,7 +55,7 @@ public class ThreadServeur extends Thread {
             // 3. Factory
             SSLServerSocketFactory SslSFac= SslC.getServerSocketFactory();
             // 4. Socket
-            SslSSocket = (SSLServerSocket) SslSFac.createServerSocket(port);
+            ServerSocket = new ServerSocket(port);
         }
         catch (IOException e)
         {
@@ -90,12 +90,13 @@ public class ThreadServeur extends Thread {
             {
                 System.out.println("************ Serveur en attente");
                // CSocket = getSSocket().accept();
-                setSslSocket((SSLSocket) getSslSSocket().accept());
-                guiApplication.TraceEvenements(SslSocket.getRemoteSocketAddress().toString()+"#accept");
+                //setSslSocket((SSLSocket) getSslSSocket().accept());
+                Socket = ServerSocket.accept();
+                guiApplication.TraceEvenements(Socket.getRemoteSocketAddress().toString()+"#accept");
                 //On assigne la socket à un thread Client
                 int i = ChercheThreadDispo();
                 System.out.println("Thread dispo = Thread n"+i);
-                thr[i].setMySock(SslSocket);
+                thr[i].setMySock(Socket);
             }
             catch (IOException e)
             {
@@ -118,32 +119,5 @@ public class ThreadServeur extends Thread {
         return -1;
     }
 
-    /**
-     * @return the SslSSocket
-     */
-    public SSLServerSocket getSslSSocket() {
-        return SslSSocket;
-    }
-
-    /**
-     * @param SslSSocket the SslSSocket to set
-     */
-    public void setSslSSocket(SSLServerSocket SslSSocket) {
-        this.SslSSocket = SslSSocket;
-    }
-
-    /**
-     * @return the SslSocket
-     */
-    public SSLSocket getSslSocket() {
-        return SslSocket;
-    }
-
-    /**
-     * @param SslSocket the SslSocket to set
-     */
-    public void setSslSocket(SSLSocket SslSocket) {
-        this.SslSocket = SslSocket;
-    }
 
 }

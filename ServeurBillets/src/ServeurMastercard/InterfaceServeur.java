@@ -148,14 +148,9 @@ public class InterfaceServeur extends javax.swing.JFrame implements ConsoleServe
         // TODO add your handling code here:
         if(ts.isAlive())
         {
-            try {
                 ts.interrupt();
-                ts.getSslSSocket().close();
                 jButton1.setEnabled(true);
                 jButton2.setEnabled(false);
-            } catch (IOException ex) {
-                Logger.getLogger(InterfaceServeur.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
             
     }//GEN-LAST:event_jButton2ActionPerformed

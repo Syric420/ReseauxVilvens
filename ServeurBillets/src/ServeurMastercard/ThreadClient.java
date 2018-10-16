@@ -4,6 +4,7 @@ import SEBATRAP.*;
 import database.utilities.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
@@ -20,7 +21,7 @@ public class ThreadClient extends Thread {
     private SourceTaches tachesAExecuter;
     private String nom;
     private Runnable tacheEnCours;
-    private SSLSocket mySock;
+    private Socket mySock;
     private BeanBD Bc;
     private ConsoleServeur guiApplication;
     
@@ -117,11 +118,11 @@ public class ThreadClient extends Thread {
         }
     }
 
-    public SSLSocket getMySock() {
+    public Socket getMySock() {
         return mySock;
     }
 
-    public void setMySock(SSLSocket mySock) {
+    public void setMySock(Socket mySock) {
         this.mySock = mySock;
     }
 

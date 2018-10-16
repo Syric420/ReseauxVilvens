@@ -86,7 +86,7 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
     }*/
     private void pay(final Socket s,PublicKey cléPublique,PrivateKey cléPrivée)
     {
-        SSLSocket SslSocket;
+        Socket socket;
         Socket cliSock;
         try {
             ThreadClientPay thread = (ThreadClientPay) Thread.currentThread();
@@ -120,7 +120,7 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             tmf.init(ServerKs);
             SslC.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             // 3. Factory
-            SSLSocketFactory SslSFac= SslC.getSocketFactory();
+            //SocketFactory SslSFac= SslC.getSocketFactory();
             
             
             
@@ -137,16 +137,16 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
             int PORT_MASTERCARD = Integer.parseInt(rP.getProp("PORT_MASTERCARD"));
             
             // 4. Socket
-            SslSocket = (SSLSocket) SslSFac.createSocket(IP_ADDRESS, PORT_MASTERCARD);
+            socket = new Socket(IP_ADDRESS, PORT_MASTERCARD);
             
             
             ObjectOutputStream oos =null;
-            oos= new ObjectOutputStream(SslSocket.getOutputStream());
+            oos= new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(requeteSeba);  
             
             ObjectInputStream ois =null;
             ReponseSEBATRAP rep;
-            ois = new ObjectInputStream(SslSocket.getInputStream());
+            ois = new ObjectInputStream(socket.getInputStream());
             rep = (ReponseSEBATRAP)ois.readObject();
             
             
@@ -172,7 +172,7 @@ public class RequetePAYP implements ServerPayment.Requete, Serializable
                 
                 requeteSeba = new RequeteSEBATRAP(RequeteSEBATRAP.REQUEST_PAIEMENT, var2);
                 oos =null;
-                oos= new ObjectOutputStream(SslSocket.getOutputStream());
+                oos= new ObjectOutputStream(socket.getOutputStream());
                 oos.writeObject(requeteSeba);  
                 
                 req = new RequeteTICKMAP(RequeteTICKMAP.REQUEST_CONFIRMATION,var);
